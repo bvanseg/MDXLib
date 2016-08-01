@@ -1,47 +1,25 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+# Everything
+/*
 
-# Folder config file
-Desktop.ini
+# Directories
+!/src
+!/gradle
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
+# files
+!/.gitignore
+!/.gitmodules
+!/CONTRIBUTING.MD
+!/LICENSE.txt
+!/README.md
+!/gradle.properties
+!/build.gradle
+!/gradlew
+!/gradlew.bat
 .DS_Store
-.AppleDouble
-.LSOverride
 
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+# Do not include gradle.properties, in contains sensitive information.
+# Create an empty file called gradle.properties and enter the following:
+#
+# curseForgeApiKey=00000-00000-00000-00000-00000
+#
+gradle.properties

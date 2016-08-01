@@ -1,0 +1,16 @@
+[
+{
+  "modid": "amdxlib",
+  "name": "AMDXLib",
+  "description": "AMDXLib (Arisux Minecraft Development Library X) is a Minecraft Mod Development Library used by the Arisux Technology Group Minecraft Mod Development Team to develop Minecraft Mods. This library is open source.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://arisux.com/dev/java/minecraft/amdxlib/",
+  "updateUrl": "http://arisux.com/dev/java/minecraft/amdxlib/update",
+  "authorList": ["Ri5ux"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
