@@ -62,6 +62,12 @@ public class Access
     }
 
     @SideOnly(Side.CLIENT)
+    public float getTorchFlickerY()
+    {
+        return Reflect.getFloat(Game.minecraft().entityRenderer, "torchFlickerY", "field_78512_g");
+    }
+
+    @SideOnly(Side.CLIENT)
     public void setTorchFlickerX(float value)
     {
         Reflect.set(EntityRenderer.class, Game.minecraft().entityRenderer, "torchFlickerX", "field_78514_e", value);
