@@ -38,7 +38,12 @@ jar {
 	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar"
 }
 
-dependencies {
+curse {
+    displayName = "${project.archivesBaseName} ${project.version}"
+    artifact = file("${project.buildDir}/libs/[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar")
+    projectId = '248278'
+    apiKey = project.curseForgeApiKey
+    releaseType = 'beta'
 }
 
 processResources
