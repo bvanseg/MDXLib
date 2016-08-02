@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.arisux.amdxlib.lib.GlStateManager;
+import com.arisux.amdxlib.lib.client.render.OpenGL;
 
 public class SystemInfo
 {
@@ -30,12 +30,12 @@ public class SystemInfo
 
     public static String gpu()
     {
-        return GlStateManager.getString(GL11.GL_RENDERER);
+        return OpenGL.getString(GL11.GL_RENDERER);
     }
 
     public static String gpuVendor()
     {
-        return GlStateManager.getString(GL11.GL_VENDOR);
+        return OpenGL.getString(GL11.GL_VENDOR);
     }
 
     public static String cpu()

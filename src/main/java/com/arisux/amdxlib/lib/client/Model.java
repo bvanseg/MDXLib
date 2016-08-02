@@ -1,23 +1,25 @@
 package com.arisux.amdxlib.lib.client;
 
 import com.arisux.amdxlib.AMDXLib;
-import com.arisux.amdxlib.lib.RenderUtil;
+import com.arisux.amdxlib.lib.game.Game;
+import com.arisux.amdxlib.lib.util.Math;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 
 @SideOnly(Side.CLIENT)
-public class ModelBaseWrapper extends ModelBase
+public class Model extends ModelBase
 {
     
     public static final float DEFAULT_BOX_TRANSLATION = 0.0625F;
 
-    public ModelBaseWrapper()
+    public Model()
     {
         super();
     }
@@ -92,7 +94,7 @@ public class ModelBaseWrapper extends ModelBase
 
     public static void draw(ModelRenderer modelRenderer)
     {
-        modelRenderer.render(ModelBaseWrapper.DEFAULT_BOX_TRANSLATION);
+        modelRenderer.render(Model.DEFAULT_BOX_TRANSLATION);
     }
     
     public static void draw(ModelRenderer[] group)
@@ -120,41 +122,41 @@ public class ModelBaseWrapper extends ModelBase
     {
         if (o == null)
         {
-            this.render(new RenderObject(new Object[] { null, 0F, 0F, 0F, 0F, 0F }), ModelBaseWrapper.DEFAULT_BOX_TRANSLATION);
+            this.render(new RenderObject(new Object[] { null, 0F, 0F, 0F, 0F, 0F }), Model.DEFAULT_BOX_TRANSLATION);
             return;
         }
         
         if (o instanceof IRenderObject)
         {
-            this.render((IRenderObject) o, ModelBaseWrapper.DEFAULT_BOX_TRANSLATION);
+            this.render((IRenderObject) o, Model.DEFAULT_BOX_TRANSLATION);
             return;
         }
 
         if (o instanceof TileEntity)
         {
-            this.render(new RenderObject(new Object[] { o }), ModelBaseWrapper.DEFAULT_BOX_TRANSLATION);
+            this.render(new RenderObject(new Object[] { o }), Model.DEFAULT_BOX_TRANSLATION);
             return;
         }
         
         if (o instanceof EntityLivingBase)
         {
             EntityLivingBase entityLiving = (EntityLivingBase) o;
-            float renderPartialTicks = RenderUtil.getRenderPartialTicks();
-            float yawOffset = RenderUtil.interpolateRotation(entityLiving.prevRenderYawOffset, entityLiving.renderYawOffset, renderPartialTicks);
-            float yawHead = RenderUtil.interpolateRotation(entityLiving.prevRotationYawHead, entityLiving.rotationYawHead, renderPartialTicks);
+            float renderPartialTicks = Game.partialTicks();
+            float yawOffset = Math.interpolateRotation(entityLiving.prevRenderYawOffset, entityLiving.renderYawOffset, renderPartialTicks);
+            float yawHead = Math.interpolateRotation(entityLiving.prevRotationYawHead, entityLiving.rotationYawHead, renderPartialTicks);
             float swingProgress = (entityLiving.limbSwing - entityLiving.limbSwingAmount * (1.0F - renderPartialTicks));
             float swingProgressPrevious = (entityLiving.prevLimbSwingAmount + (entityLiving.limbSwingAmount - entityLiving.prevLimbSwingAmount) * renderPartialTicks);
             float idleProgress = (entityLiving.ticksExisted + renderPartialTicks);
             float headRotateAngleY = (yawHead - yawOffset);
             float headRotationPitch = (entityLiving.prevRotationPitch + (entityLiving.rotationPitch - entityLiving.prevRotationPitch) * renderPartialTicks);
             
-            this.render(new RenderObject(new Object[] { o, swingProgress, swingProgressPrevious, idleProgress, headRotateAngleY, headRotationPitch }), ModelBaseWrapper.DEFAULT_BOX_TRANSLATION);
+            this.render(new RenderObject(new Object[] { o, swingProgress, swingProgressPrevious, idleProgress, headRotateAngleY, headRotationPitch }), Model.DEFAULT_BOX_TRANSLATION);
             return;
         }
 
         if (o instanceof Entity)
         {
-            this.render(new RenderObject(new Object[] { o, 0F, 0F, 0F, 0F, 0F }), ModelBaseWrapper.DEFAULT_BOX_TRANSLATION);
+            this.render(new RenderObject(new Object[] { o, 0F, 0F, 0F, 0F, 0F }), Model.DEFAULT_BOX_TRANSLATION);
             return;
         }
     }
@@ -262,7 +264,7 @@ public class ModelBaseWrapper extends ModelBase
      * @param modelClass - A class extending ModelBaseExtension which will be instantaniated. 
      * @return Instance of the class specified in the modelClass parameter.
      */
-    public static ModelBaseWrapper createExtendedModelBase(Class<? extends ModelBaseWrapper> modelClass)
+    public static Model createExtendedModelBase(Class<? extends Model> modelClass)
     {
         try
         {
@@ -280,5 +282,10 @@ public class ModelBaseWrapper extends ModelBase
     public float getIdleProgress(Entity entity, float renderPartialTicks)
     {
         return ((float) entity.ticksExisted + renderPartialTicks);
+    }
+
+    public static ModelBase getMainModel(RendererLivingEntity renderer)
+    {
+        return AMDXLib.access().getMainModel(renderer);
     }
 }

@@ -6,8 +6,12 @@ import java.util.Arrays;
 import com.arisux.amdxlib.AMDXLib;
 import com.arisux.amdxlib.lib.world.CoordData;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class Blocks
@@ -106,5 +110,17 @@ public class Blocks
     public static float getBlockHardness(Block blockParent)
     {
         return AMDXLib.access().getBlockResistance(blockParent);
+    }
+
+    /**
+     * @param block - Block to get the ResourceLocation from
+     * @param side - Side to get the ResourceLocation from
+     * @return The ResourceLocation of the side of the specified Block
+     */
+    @SideOnly(Side.CLIENT)
+    public static ResourceLocation getBlockTexture(Block block, int side)
+    {
+        IIcon icon = block.getBlockTextureFromSide(side);
+        return new ResourceLocation(getDomain(block).replace(":", ""), "textures/blocks/" + icon.getIconName().replace(getDomain(block), "") + ".png");
     }
 }

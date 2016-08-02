@@ -1,7 +1,8 @@
-package com.arisux.amdxlib.lib.client;
+package com.arisux.amdxlib.lib.client.render;
 
-import com.arisux.amdxlib.lib.GlStateManager;
-import com.arisux.amdxlib.lib.RenderUtil.PlayerResourceManager;
+import com.arisux.amdxlib.lib.client.Model;
+import com.arisux.amdxlib.lib.client.TexturedModel;
+import com.arisux.amdxlib.lib.client.PlayerResourceStorage;
 import com.arisux.amdxlib.lib.game.Game;
 
 import net.minecraft.client.Minecraft;
@@ -13,13 +14,16 @@ import net.minecraftforge.client.IItemRenderer;
 public abstract class ItemRenderer implements IItemRenderer
 {
     protected Minecraft                             mc = Game.minecraft();
-    protected PlayerResourceManager                 resourceManager;
-    private ModelTexMap<? extends ModelBaseWrapper> modelTexMap;
-    private boolean                                 rendersInFirstPerson, rendersInThirdPerson, rendersInInventory, rendersInWorld;
+    private TexturedModel<? extends Model> modelTexMap;
+    protected PlayerResourceStorage                 resourceStorage;
+    private boolean                                 rendersInFirstPerson;
+    private boolean                                 rendersInThirdPerson;
+    private boolean                                 rendersInInventory;
+    private boolean                                 rendersInWorld;
 
-    public ItemRenderer(ModelTexMap<? extends ModelBaseWrapper> modelTexMap)
+    public ItemRenderer(TexturedModel<? extends Model> modelTexMap)
     {
-        this.resourceManager = new PlayerResourceManager();
+        this.resourceStorage = new PlayerResourceStorage();
         this.modelTexMap = modelTexMap;
         this.rendersInFirstPerson = true;
         this.rendersInThirdPerson = true;
@@ -63,27 +67,27 @@ public abstract class ItemRenderer implements IItemRenderer
             switch (type)
             {
                 case EQUIPPED:
-                    GlStateManager.pushMatrix();
+                    OpenGL.pushMatrix();
                     this.renderThirdPerson(item, data);
-                    GlStateManager.popMatrix();
+                    OpenGL.popMatrix();
                     break;
                 case EQUIPPED_FIRST_PERSON:
-                    GlStateManager.pushMatrix();
+                    OpenGL.pushMatrix();
                     this.renderFirstPerson(item, data);
-                    GlStateManager.popMatrix();
+                    OpenGL.popMatrix();
                     break;
                 case INVENTORY:
-                    GlStateManager.pushMatrix();
-                    GlStateManager.rotate(-45, 1, 0, 0);
-                    GlStateManager.rotate(180, 0, 1, 0);
-                    GlStateManager.translate(-16, 0, 0);
+                    OpenGL.pushMatrix();
+                    OpenGL.rotate(-45, 1, 0, 0);
+                    OpenGL.rotate(180, 0, 1, 0);
+                    OpenGL.translate(-16, 0, 0);
                     this.renderInInventory(item, data);
-                    GlStateManager.popMatrix();
+                    OpenGL.popMatrix();
                     break;
                 case ENTITY:
-                    GlStateManager.pushMatrix();
+                    OpenGL.pushMatrix();
                     this.renderInWorld(item, data);
-                    GlStateManager.popMatrix();
+                    OpenGL.popMatrix();
                     break;
                 default:
                     break;
@@ -139,12 +143,12 @@ public abstract class ItemRenderer implements IItemRenderer
         return this;
     }
 
-    public ModelTexMap<? extends ModelBaseWrapper> getModelTexMap()
+    public TexturedModel<? extends Model> getModelTexMap()
     {
         return modelTexMap;
     }
 
-    public ModelBaseWrapper getModel()
+    public Model getModel()
     {
         return this.getModelTexMap().getModel();
     }

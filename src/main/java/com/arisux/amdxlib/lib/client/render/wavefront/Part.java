@@ -3,7 +3,7 @@ package com.arisux.amdxlib.lib.client.render.wavefront;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import com.arisux.amdxlib.lib.GlStateManager;
+import com.arisux.amdxlib.lib.client.render.OpenGL;
 import com.arisux.amdxlib.lib.client.render.UV;
 import com.arisux.amdxlib.lib.client.render.Vertex;
 
@@ -44,41 +44,41 @@ public class Part
 
     public void draw(float angle, float x, float y, float z)
     {
-        GlStateManager.pushMatrix();
+        OpenGL.pushMatrix();
         {
-            GlStateManager.translate(oX, oY, oZ);
-            GlStateManager.rotate(angle, x, y, z);
-            GlStateManager.translate(-oX, -oY, -oZ);
+            OpenGL.translate(oX, oY, oZ);
+            OpenGL.rotate(angle, x, y, z);
+            OpenGL.translate(-oX, -oY, -oZ);
             this.draw();
         }
-        GlStateManager.popMatrix();
+        OpenGL.popMatrix();
     }
 
     public void draw(float angle, float x, float y, float z, float angle2, float x2, float y2, float z2)
     {
-        GlStateManager.pushMatrix();
+        OpenGL.pushMatrix();
         {
-            GlStateManager.translate(oX, oY, oZ);
-            GlStateManager.rotate(angle, x, y, z);
-            GlStateManager.translate(oX2, oY2, oZ2);
-            GlStateManager.rotate(angle2, x2, y2, z2);
-            GlStateManager.translate(-oX2, -oY2, -oZ2);
-            GlStateManager.translate(-oX, -oY, -oZ);
+            OpenGL.translate(oX, oY, oZ);
+            OpenGL.rotate(angle, x, y, z);
+            OpenGL.translate(oX2, oY2, oZ2);
+            OpenGL.rotate(angle2, x2, y2, z2);
+            OpenGL.translate(-oX2, -oY2, -oZ2);
+            OpenGL.translate(-oX, -oY, -oZ);
             this.draw();
         }
-        GlStateManager.popMatrix();
+        OpenGL.popMatrix();
     }
 
     public void drawNoBind(float angle, float x, float y, float z)
     {
-        GlStateManager.pushMatrix();
+        OpenGL.pushMatrix();
         {
-            GlStateManager.translate(oX, oY, oZ);
-            GlStateManager.rotate(angle, x, y, z);
-            GlStateManager.translate(-oX, -oY, -oZ);
+            OpenGL.translate(oX, oY, oZ);
+            OpenGL.rotate(angle, x, y, z);
+            OpenGL.translate(-oX, -oY, -oZ);
             this.drawNoBind();
         }
-        GlStateManager.popMatrix();
+        OpenGL.popMatrix();
     }
 
     public void drawNoBind()

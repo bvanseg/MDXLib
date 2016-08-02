@@ -1,4 +1,4 @@
-package com.arisux.amdxlib.lib.client;
+package com.arisux.amdxlib.lib.client.render;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

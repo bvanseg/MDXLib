@@ -1,4 +1,4 @@
-package com.arisux.amdxlib.lib;
+package com.arisux.amdxlib.lib.client.render;
 
 import static org.lwjgl.opengl.GL11.GL_CLAMP;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
@@ -21,16 +21,21 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.arisux.amdxlib.lib.game.Game;
+import com.arisux.amdxlib.lib.world.tile.IRotatable;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class GlStateManager
+public class OpenGL
 {
     public static ArrayList<Framebuffer> frameBuffers = new ArrayList<Framebuffer>();
     public static boolean lightmapTexUnitTextureEnable;
@@ -324,11 +329,11 @@ public class GlStateManager
     public static void disableLightMapping()
     {
         char light = 61680;
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL_ONE, GL_ONE);
-        GlStateManager.depthMask(true);
+        OpenGL.enableBlend();
+        OpenGL.blendFunc(GL_ONE, GL_ONE);
+        OpenGL.depthMask(true);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) light % 65536 / 1.0F, (float) light / 65536 / 1.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     /**
@@ -337,10 +342,10 @@ public class GlStateManager
     public static void enableLightMapping()
     {
         char light = 61680;
-        GlStateManager.disableBlend();
-        GlStateManager.depthMask(true);
-        GlStateManager.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) light % 65536 / 1.0F, (float) light / 65536 / 1.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        OpenGL.disableBlend();
+        OpenGL.depthMask(true);
+        OpenGL.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) light % 65536 / 1.0F, (float) light / 65536 / 1.0F);
+        OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     /** 
@@ -348,13 +353,13 @@ public class GlStateManager
      */
     public static void disableLight()
     {
-        GlStateManager.setActiveTexture(GlStateManager.lightmapTexUnit);
-        if (lightmapTexUnitTextureEnable = GlStateManager.getBoolean(GL11.GL_TEXTURE_2D))
+        OpenGL.setActiveTexture(OpenGL.lightmapTexUnit);
+        if (lightmapTexUnitTextureEnable = OpenGL.getBoolean(GL11.GL_TEXTURE_2D))
         {
-            GlStateManager.disableTexture2d();
+            OpenGL.disableTexture2d();
         }
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.disableLighting();
+        OpenGL.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        OpenGL.disableLighting();
     }
 
     /**
@@ -362,13 +367,13 @@ public class GlStateManager
      */
     public static void enableLight()
     {
-        GlStateManager.setActiveTexture(GlStateManager.lightmapTexUnit);
+        OpenGL.setActiveTexture(OpenGL.lightmapTexUnit);
         if (lightmapTexUnitTextureEnable)
         {
-            GlStateManager.enableTexture2d();
+            OpenGL.enableTexture2d();
         }
-        GlStateManager.setActiveTexture(GlStateManager.defaultTexUnit);
-        GlStateManager.enableLighting();
+        OpenGL.setActiveTexture(OpenGL.defaultTexUnit);
+        OpenGL.enableLighting();
     }
 
     public static void blendClear()
@@ -381,10 +386,10 @@ public class GlStateManager
      */
     public static void antiAlias2d()
     {
-        GlStateManager.texParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        GlStateManager.texParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        GlStateManager.texParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        GlStateManager.texParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        OpenGL.texParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        OpenGL.texParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        OpenGL.texParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        OpenGL.texParameter(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     }
 
     public static void enableFog()
@@ -418,8 +423,8 @@ public class GlStateManager
 
         if (textureObject != null)
         {
-            GlStateManager.bindTexture(GL11.GL_TEXTURE_2D, textureObject.getGlTextureId());
-            GlStateManager.copyTexSubImage(GL11.GL_TEXTURE_2D, 0, index, index, x, y, w, h);
+            OpenGL.bindTexture(GL11.GL_TEXTURE_2D, textureObject.getGlTextureId());
+            OpenGL.copyTexSubImage(GL11.GL_TEXTURE_2D, 0, index, index, x, y, w, h);
         }
     }
 
@@ -432,11 +437,75 @@ public class GlStateManager
 
     public static void destroyFrameBuffer(Framebuffer buffer)
     {
-        GlStateManager.enableDepthTest();
+        OpenGL.enableDepthTest();
         if (buffer.framebufferObject >= 0)
         {
             buffer.deleteFramebuffer();
         }
         frameBuffers.remove(buffer);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void rotate(TileEntity tile)
+    {
+        if (tile instanceof IRotatable)
+        {
+            IRotatable rotatable = (IRotatable) tile;
+    
+            if (rotatable != null && rotatable.getDirection() != null)
+            {
+                if (rotatable.getDirection() != null)
+                {
+                    if (rotatable.getDirection() == ForgeDirection.NORTH)
+                    {
+                        rotate(180F, 0F, 1F, 0F);
+                    }
+                    else if (rotatable.getDirection() == ForgeDirection.SOUTH)
+                    {
+                        rotate(0F, 0F, 0F, 0F);
+                    }
+                    else if (rotatable.getDirection() == ForgeDirection.WEST)
+                    {
+                        rotate(-90F, 0F, 1F, 0F);
+                    }
+                    else if (rotatable.getDirection() == ForgeDirection.EAST)
+                    {
+                        rotate(90F, 0F, 1F, 0F);
+                    }
+                }
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void rotateOpposite(TileEntity tile)
+    {
+        if (tile instanceof IRotatable)
+        {
+            IRotatable rotatable = (IRotatable) tile;
+    
+            if (rotatable != null && rotatable.getDirection() != null)
+            {
+                if (rotatable.getDirection() != null)
+                {
+                    if (rotatable.getDirection() == ForgeDirection.SOUTH)
+                    {
+                        rotate(180F, 0F, 1F, 0F);
+                    }
+                    else if (rotatable.getDirection() == ForgeDirection.NORTH)
+                    {
+                        rotate(0F, 0F, 0F, 0F);
+                    }
+                    else if (rotatable.getDirection() == ForgeDirection.EAST)
+                    {
+                        rotate(-90F, 0F, 1F, 0F);
+                    }
+                    else if (rotatable.getDirection() == ForgeDirection.WEST)
+                    {
+                        rotate(90F, 0F, 1F, 0F);
+                    }
+                }
+            }
+        }
     }
 }

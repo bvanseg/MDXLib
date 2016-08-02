@@ -1,93 +1,52 @@
-package com.arisux.amdxlib.lib;
+package com.arisux.amdxlib.lib.client.render;
 
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.vecmath.Vector2d;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.arisux.amdxlib.AMDXLib;
-import com.arisux.amdxlib.lib.client.GuiElements.GuiCustomScreen;
-import com.arisux.amdxlib.lib.client.PlayerResource;
-import com.arisux.amdxlib.lib.client.ScaledResolution;
+import com.arisux.amdxlib.lib.client.gui.GuiCustomScreen;
 import com.arisux.amdxlib.lib.game.Game;
 import com.arisux.amdxlib.lib.game.GameResources;
 import com.arisux.amdxlib.lib.util.Math;
+import com.arisux.amdxlib.lib.util.Remote;
 import com.arisux.amdxlib.lib.world.block.Blocks;
-import com.arisux.amdxlib.lib.world.tile.IRotatable;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-public class RenderUtil
+public class Draw
 {
-    public static final GuiCustomScreen guiHook = new GuiCustomScreen();
-    /**
-     * Converts 4 RGBA values into a single hexadecimal color value.
-     * 
-     * @param alpha - Alpha value ranged from 0-255
-     * @param red - Red value ranged from 0-255
-     * @param green - Green value ranged from 0-255
-     * @param blue - Blue value ranged from 0-255
-     * @return Hexadecimal created from the provided RGBA values.
-     */
-    public static int createHexRGBA(int alpha, int red, int green, int blue)
+    public static interface ITooltipLineHandler
     {
-        org.lwjgl.util.Color color = new org.lwjgl.util.Color(alpha, red, green, blue);
-        ByteBuffer dest = ByteBuffer.allocate(4);
-
-        color.writeRGBA(dest);
-        dest.rewind();
-
-        return dest.getInt();
+        public Dimension getSize();
+    
+        public void draw(int x, int y);
     }
-
+    
     /**
      * Draws a rectangle at the specified coordinates, with the 
      * specified width, height and color.
@@ -100,7 +59,7 @@ public class RenderUtil
      */
     public static void drawRect(int x, int y, int w, int h, int color)
     {
-        drawGradientRect(x, y, w, h, color, color);
+        Draw.drawGradientRect(x, y, w, h, color, color);
     }
 
     /**
@@ -116,7 +75,7 @@ public class RenderUtil
      */
     public static void drawGradientRect(int x, int y, int w, int h, int color1, int color2)
     {
-        drawGradientRect(x, y, x + w, y + h, 0, color1, color2);
+        Draw.drawGradientRect(x, y, x + w, y + h, 0, color1, color2);
     }
 
     /**
@@ -133,8 +92,8 @@ public class RenderUtil
      */
     public static void drawGradientRect(int x, int y, int w, int h, int zLevel, int color1, int color2)
     {
-        GlStateManager.disableTexture2d();
-        GlStateManager.shadeSmooth();
+        OpenGL.disableTexture2d();
+        OpenGL.shadeSmooth();
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA_F((color1 >> 16 & 255) / 255.0F, (color1 >> 8 & 255) / 255.0F, (color1 & 255) / 255.0F, (color1 >> 24 & 255) / 255.0F);
@@ -144,8 +103,8 @@ public class RenderUtil
         tessellator.addVertex(x, h, zLevel);
         tessellator.addVertex(w, h, zLevel);
         tessellator.draw();
-        GlStateManager.shadeFlat();
-        GlStateManager.enableTexture2d();
+        OpenGL.shadeFlat();
+        OpenGL.enableTexture2d();
     }
 
     /**
@@ -159,7 +118,7 @@ public class RenderUtil
      */
     public static void drawQuad(int x, int y, int w, int h)
     {
-        drawQuad(x, y, w, h, -90);
+        Draw.drawQuad(x, y, w, h, -90);
     }
 
     /**
@@ -174,7 +133,7 @@ public class RenderUtil
      */
     public static void drawQuad(int x, int y, int w, int h, int z)
     {
-        drawQuad(x, y, w, h, z, 0, 1, 0, 1);
+        Draw.drawQuad(x, y, w, h, z, 0, 1, 0, 1);
     }
 
     /**
@@ -190,7 +149,7 @@ public class RenderUtil
      */
     public static void drawQuad(int x, int y, int w, int h, int u, int v)
     {
-        drawQuad(x, y, w, h, -90, u, v);
+        Draw.drawQuad(x, y, w, h, -90, u, v);
     }
 
     /**
@@ -233,7 +192,7 @@ public class RenderUtil
      */
     public static void drawQuad(int x, int y, int w, int h, float minU, float maxU, float minV, float maxV)
     {
-        drawQuad(x, y, w, h, -90, minU, maxU, minV, maxV);
+        Draw.drawQuad(x, y, w, h, -90, minU, maxU, minV, maxV);
     }
 
     /**
@@ -273,18 +232,18 @@ public class RenderUtil
     public static void drawString(String text, int x, int y, int color, boolean shadow)
     {
         text = I18n.format(text);
-
+    
         if (shadow)
         {
             Game.fontRenderer().drawStringWithShadow(text, x, y, color);
         }
-
+    
         if (!shadow)
         {
             Game.fontRenderer().drawString(text, x, y, color);
         }
-
-        GlStateManager.color3i(0xFFFFFF);
+    
+        OpenGL.color3i(0xFFFFFF);
     }
 
     /**
@@ -313,7 +272,7 @@ public class RenderUtil
      */
     public static void drawStringAlignCenter(String text, int x, int y, int w, int h, int color, boolean shadow)
     {
-        drawString(text, x + (w - getStringRenderWidth(StatCollector.translateToLocal(text))) / 2, y + (h - 8) / 2, color, shadow);
+        drawString(text, x + (w - Draw.getStringRenderWidth(StatCollector.translateToLocal(text))) / 2, y + (h - 8) / 2, color, shadow);
     }
 
     /**
@@ -340,7 +299,7 @@ public class RenderUtil
      */
     public static void drawStringAlignCenter(String text, int x, int y, int color, boolean shadow)
     {
-        drawString(text, x - getStringRenderWidth(StatCollector.translateToLocal(text)) / 2, y, color, shadow);
+        drawString(text, x - Draw.getStringRenderWidth(StatCollector.translateToLocal(text)) / 2, y, color, shadow);
     }
 
     /**
@@ -367,7 +326,7 @@ public class RenderUtil
      */
     public static void drawStringAlignRight(String text, int x, int y, int color, boolean shadow)
     {
-        drawString(text, x - getStringRenderWidth(StatCollector.translateToLocal(text)), y, color, shadow);
+        drawString(text, x - Draw.getStringRenderWidth(StatCollector.translateToLocal(text)), y, color, shadow);
     }
 
     /**
@@ -393,55 +352,6 @@ public class RenderUtil
     }
 
     /**
-     * Compatibility version of the ScaledResolution class. Returns the current game display resolution.
-     * @return Returns an instance of the compatibility version of ScaledResolution.
-     */
-    public static com.arisux.amdxlib.lib.client.ScaledResolution scaledDisplayResolution()
-    {
-        return new com.arisux.amdxlib.lib.client.ScaledResolution(Game.minecraft(), Game.minecraft().displayWidth, Game.minecraft().displayHeight);
-    }
-
-    /**
-     * @return Returns a Vector2d instance containing the mouse's scaled coordinates in-game.
-     */
-    public static Vector2d scaledMousePosition()
-    {
-        final int scaledWidth = scaledDisplayResolution().getScaledWidth();
-        final int scaledHeight = scaledDisplayResolution().getScaledHeight();
-        final int mouseX = Mouse.getX() * scaledWidth / Game.minecraft().displayWidth;
-        final int mouseY = scaledHeight - Mouse.getY() * scaledHeight / Game.minecraft().displayHeight - 1;
-        return new Vector2d(mouseX, mouseY);
-    }
-
-    /**
-     * @return Returns the current game display width and height as a Dimension
-     */
-    public static Dimension displayResolution()
-    {
-        Minecraft mc = Game.minecraft();
-        return new Dimension(mc.displayWidth, mc.displayHeight);
-    }
-
-    /**
-     * @return Returns the mouse location in-game.
-     */
-    public static Point getMouseLocation()
-    {
-        ScaledResolution size = scaledDisplayResolution();
-        Dimension res = displayResolution();
-        return new Point(Mouse.getX() * size.getScaledWidth() / res.width, size.getScaledHeight() - Mouse.getY() * size.getScaledHeight() / res.height - 1);
-    }
-
-    /**
-     * Binds a texture to OpenGL using Minecraft's render engine.
-     * @param resource - The ResourceLocation of the resource to bind.
-     */
-    public static void bindTexture(ResourceLocation resource)
-    {
-        Game.minecraft().renderEngine.bindTexture(resource);
-    }
-
-    /**
      * Draws a tooltip at the specified cordinates.
      * 
      * @param x - x coordinate
@@ -450,20 +360,12 @@ public class RenderUtil
      */
     public static void drawToolTip(int x, int y, String text)
     {
-        drawMultilineToolTip(x, y, Arrays.asList(text));
+        Draw.drawMultilineToolTip(x, y, Arrays.asList(text));
     }
 
     public static final String TOOLTIP_LINESPACE = "\u00A7h";
     public static final String TOOLTIP_HANDLER = "\u00A7x";
-    private static List<ITooltipLineHandler> tipLineHandlers = new ArrayList<ITooltipLineHandler>();
-
-    public static interface ITooltipLineHandler
-    {
-        public Dimension getSize();
-
-        public void draw(int x, int y);
-    }
-
+    public static List<Draw.ITooltipLineHandler> tipLineHandlers = new ArrayList<Draw.ITooltipLineHandler>();
     public static int getTipLineId(ITooltipLineHandler handler)
     {
         tipLineHandlers.add(handler);
@@ -488,11 +390,11 @@ public class RenderUtil
         {
             return;
         }
-
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableDepthTest();
-        GlStateManager.disableStandardItemLighting();
-
+    
+        OpenGL.disableRescaleNormal();
+        OpenGL.disableDepthTest();
+        OpenGL.disableStandardItemLighting();
+    
         int w = 0;
         int h = -2;
         for (int i = 0; i < list.size(); i++)
@@ -503,20 +405,20 @@ public class RenderUtil
             w = java.lang.Math.max(w, d.width);
             h += d.height;
         }
-
+    
         if (x < 8)
         {
             x = 8;
         }
-        else if (x > scaledDisplayResolution().getScaledWidth() - w - 8)
+        else if (x > Screen.scaledDisplayResolution().getScaledWidth() - w - 8)
         {
             x -= 24 + w;
         }
-        y = (int) Math.clip(y, 8, scaledDisplayResolution().getScaledHeight() - 8 - h);
-
-        guiHook.incZLevel(300);
-        drawTooltipBox(x - 4, y - 4, w + 7, h + 7);
-
+        y = (int) Math.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
+    
+        Draw.guiHook.incZLevel(300);
+        Draw.drawTooltipBox(x - 4, y - 4, w + 7, h + 7);
+    
         for (String s : list)
         {
             ITooltipLineHandler line = getTipLine(s);
@@ -531,12 +433,12 @@ public class RenderUtil
                 y += s.endsWith(TOOLTIP_LINESPACE) ? 12 : 10;
             }
         }
-
+    
         tipLineHandlers.clear();
-        guiHook.incZLevel(-300);
-
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableRescaleNormal();
+        Draw.guiHook.incZLevel(-300);
+    
+        OpenGL.enableDepthTest();
+        OpenGL.enableRescaleNormal();
     }
 
     /**
@@ -580,10 +482,10 @@ public class RenderUtil
      */
     public static void drawProgressBar(String label, int maxProgress, int curProgress, int posX, int posY, int barWidth, int barHeight, int stringPosY, int color, boolean barStyle)
     {
-        GlStateManager.pushMatrix();
+        OpenGL.pushMatrix();
         {
             Gui.drawRect(posX + 0, posY + 0, posX + barWidth, posY + 5 + barHeight, 0x77000000);
-
+    
             if (!barStyle && curProgress > maxProgress / barWidth)
             {
                 Gui.drawRect(posX + 1, posY + 1, posX + ((((curProgress * maxProgress) / maxProgress) * barWidth) / maxProgress) - 1, posY + 4 + barHeight, color);
@@ -594,19 +496,19 @@ public class RenderUtil
                 int spaceBetweenBars = 1;
                 int amountOfBars = 70;
                 int widthOfBar = (barWidth / amountOfBars - spaceBetweenBars);
-
+    
                 for (int x = 1; x <= amountOfBars - ((curProgress * amountOfBars) / maxProgress); x++)
                 {
                     int barStartX = (posX + widthOfBar) * (x) - widthOfBar;
-
+    
                     Gui.drawRect(barStartX + spaceBetweenBars * x, posY + 1, barStartX + widthOfBar + spaceBetweenBars * x, posY + 4 + barHeight, color);
                     Gui.drawRect(barStartX + spaceBetweenBars * x, posY + 2 + (barHeight / 2), barStartX + widthOfBar + spaceBetweenBars * x, posY + 4 + barHeight, 0x55000000);
                 }
             }
-
+    
             Game.fontRenderer().drawStringWithShadow(label, posX + (barWidth / 2) - Game.fontRenderer().getStringWidth(label) + (Game.fontRenderer().getStringWidth(label) / 2), (posY - 1) + stringPosY, 0xFFFFFFFF);
         }
-        GlStateManager.popMatrix();
+        OpenGL.popMatrix();
     }
 
     /**
@@ -648,7 +550,7 @@ public class RenderUtil
         int y1 = y;
         int x2 = x + w;
         int y2 = y + h;
-
+    
         Gui.drawRect(x1, y1, x2, y2, fillColor);
         Gui.drawRect(x1, y1, x2, y2 - h + borderWidth, borderColor);
         Gui.drawRect(x1, y1 + h - borderWidth, x2, y2, borderColor);
@@ -660,9 +562,9 @@ public class RenderUtil
      * Draws an overlay across the entire screen using the specified ResourceLocation
      * @param resource - The ResourceLocation to draw
      */
-    public static void renderOverlay(ResourceLocation resource)
+    public static void drawOverlay(ResourceLocation resource)
     {
-        renderOverlay(resource, 1.0F, 1.0F, 1.0F, 1.0F);
+        Draw.drawOverlay(resource, 1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     /**
@@ -672,9 +574,9 @@ public class RenderUtil
      * @param resource - The ResourceLocation to draw
      * @param a - Alpha value to render the overlay at. For transparency.
      */
-    public static void renderOverlay(ResourceLocation resource, float a)
+    public static void drawOverlay(ResourceLocation resource, float a)
     {
-        renderOverlay(resource, 1.0F, 1.0F, 1.0F, a);
+        Draw.drawOverlay(resource, 1.0F, 1.0F, 1.0F, a);
     }
 
     /**
@@ -686,9 +588,9 @@ public class RenderUtil
      * @param g - Green value to render the overlay at.
      * @param b - Blue value to render the overlay at.
      */
-    public static void renderOverlay(ResourceLocation resource, float r, float g, float b)
+    public static void drawOverlay(ResourceLocation resource, float r, float g, float b)
     {
-        renderOverlay(resource, r, g, b, 1.0F);
+        Draw.drawOverlay(resource, r, g, b, 1.0F);
     }
 
     /**
@@ -701,73 +603,21 @@ public class RenderUtil
      * @param b - Blue value to render the overlay at.
      * @param a - Alpha value to render the overlay at. For transparency.
      */
-    public static void renderOverlay(ResourceLocation resource, float r, float g, float b, float a)
+    public static void drawOverlay(ResourceLocation resource, float r, float g, float b, float a)
     {
-        GlStateManager.enableBlend();
-        GlStateManager.disableDepthTest();
-        GlStateManager.depthMask(false);
-        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(r, g, b, a);
-        GlStateManager.disableAlphaTest();
-        bindTexture(resource);
-        drawQuad(0, 0, scaledDisplayResolution().getScaledWidth(), scaledDisplayResolution().getScaledHeight());
-        GlStateManager.depthMask(true);
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableAlphaTest();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableBlend();
-    }
-
-    /**
-     * Saves a screenshot to the specified location. Default folder is the working directory: ".minecraft/"
-     * 
-     * @param filename - File path and name to save the screenshot at.
-     * @param x - x coordinate to start screen capture
-     * @param y - y coordinate to start screen capture
-     * @param width - Width to capture screen at.
-     * @param height - Height to capture screen at.
-     */
-    public static void saveScreenshot(String filename, int x, int y, int width, int height)
-    {
-        File file = new File(Game.minecraft().mcDataDir.getPath());
-        AMDXLib.log().info("Saving screenshot to " + file.getPath());
-
-        if (!file.exists())
-        {
-            file.mkdirs();
-        }
-
-        if (Game.minecraft().ingameGUI != null && Keyboard.isKeyDown(Keyboard.KEY_F3) && Keyboard.isKeyDown(Keyboard.KEY_U))
-        {
-            try
-            {
-                GlStateManager.readBuffer(GL11.GL_FRONT);
-                int bpp = 4;
-                ByteBuffer pixels = BufferUtils.createByteBuffer(width * height * bpp);
-                GlStateManager.readPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-
-                String format = "png";
-                BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-                for (int px = x; px < width; px++)
-                {
-                    for (int py = y; py < height; py++)
-                    {
-                        int i = (px + (width * py)) * bpp;
-                        int r = pixels.get(i) & 0xFF;
-                        int g = pixels.get(i + 1) & 0xFF;
-                        int b = pixels.get(i + 2) & 0xFF;
-                        image.setRGB(px, height - (py + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
-                    }
-                }
-
-                ImageIO.write(image, format, new File(file, filename));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+        OpenGL.enableBlend();
+        OpenGL.disableDepthTest();
+        OpenGL.depthMask(false);
+        OpenGL.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        OpenGL.color(r, g, b, a);
+        OpenGL.disableAlphaTest();
+        Draw.bindTexture(resource);
+        drawQuad(0, 0, Screen.scaledDisplayResolution().getScaledWidth(), Screen.scaledDisplayResolution().getScaledHeight());
+        OpenGL.depthMask(true);
+        OpenGL.enableDepthTest();
+        OpenGL.enableAlphaTest();
+        OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
+        OpenGL.disableBlend();
     }
 
     /**
@@ -778,7 +628,7 @@ public class RenderUtil
      */
     public static void drawModel(ModelBase model, ResourceLocation resource)
     {
-        drawModel(null, model, resource, 0, 0, 0);
+        Draw.drawModel(null, model, resource, 0, 0, 0);
     }
 
     /**
@@ -793,7 +643,7 @@ public class RenderUtil
      */
     public static void drawModel(ModelBase model, ResourceLocation resource, double posX, double posY, double posZ)
     {
-        drawModel(null, model, resource, posX, posY, posZ);
+        Draw.drawModel(null, model, resource, posX, posY, posZ);
     }
 
     /**
@@ -806,7 +656,7 @@ public class RenderUtil
      */
     public static void drawModel(Entity entity, ModelBase model, ResourceLocation resource)
     {
-        drawModel(entity, model, resource, 0, 0, 0);
+        Draw.drawModel(entity, model, resource, 0, 0, 0);
     }
 
     /**
@@ -822,9 +672,9 @@ public class RenderUtil
      */
     public static void drawModel(Entity entity, ModelBase model, ResourceLocation resource, double posX, double posY, double posZ)
     {
-        GlStateManager.disableCullFace();
-        bindTexture(resource);
-        GlStateManager.translate(posX, posY, posZ);
+        OpenGL.disableCullFace();
+        Draw.bindTexture(resource);
+        OpenGL.translate(posX, posY, posZ);
         model.render(entity, 0, 0, 0, 0, 0, 0.625F);
     }
 
@@ -840,19 +690,19 @@ public class RenderUtil
      */
     public static void drawShowcaseModel(ModelBase model, ResourceLocation resource, int x, int y, float scale)
     {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y - (scale * 0.43f), 10);
-        GlStateManager.scale(0.06f * scale, 0.06f * scale, 1);
-        GlStateManager.rotate(-20, 1, 0, 0);
-        GlStateManager.rotate(205, 0, 1, 0);
-        GlStateManager.disableCullFace();
-        GlStateManager.enableDepthTest();
-        bindTexture(resource);
+        OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
+        OpenGL.pushMatrix();
+        OpenGL.translate(x, y - (scale * 0.43f), 10);
+        OpenGL.scale(0.06f * scale, 0.06f * scale, 1);
+        OpenGL.rotate(-20, 1, 0, 0);
+        OpenGL.rotate(205, 0, 1, 0);
+        OpenGL.disableCullFace();
+        OpenGL.enableDepthTest();
+        Draw.bindTexture(resource);
         model.render(null, 0F, 0F, 0F, 0F, 0F, 0.0625F);
-        GlStateManager.enableCullFace();
-        GlStateManager.disableDepthTest();
-        GlStateManager.popMatrix();
+        OpenGL.enableCullFace();
+        OpenGL.disableDepthTest();
+        OpenGL.popMatrix();
     }
 
     /**
@@ -868,25 +718,18 @@ public class RenderUtil
      */
     public static void drawEntity(int x, int y, int scale, float yaw, float pitch, Entity entity)
     {
-        GlStateManager.enable(GL11.GL_COLOR_MATERIAL);
-        GlStateManager.pushMatrix();
+        OpenGL.enable(GL11.GL_COLOR_MATERIAL);
+        OpenGL.pushMatrix();
         {
-            GlStateManager.translate(x, y, 100.0F);
-            GlStateManager.scale(-scale, scale, scale);
-            GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
+            OpenGL.translate(x, y, 100.0F);
+            OpenGL.scale(-scale, scale, scale);
+            OpenGL.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+            OpenGL.rotate(yaw, 0.0F, 1.0F, 0.0F);
+            OpenGL.rotate(pitch, 1.0F, 0.0F, 0.0F);
             RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-            GlStateManager.enableLightMapping();
+            OpenGL.enableLightMapping();
         }
-        GlStateManager.popMatrix();
-    }
-
-    public static void lightingHelper(Entity entity, float offset)
-    {
-        int brightness = entity.worldObj.getLightBrightnessForSkyBlocks(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY + offset / 16.0F), MathHelper.floor_double(entity.posZ), 0);
-        GlStateManager.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        OpenGL.popMatrix();
     }
 
     /**
@@ -901,58 +744,11 @@ public class RenderUtil
      */
     public static void drawPlayerFace(String username, int x, int y, int width, int height)
     {
-        ResourceLocation resource = downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), AbstractClientPlayer.locationStevePng, false);
-
-        bindTexture(resource);
+        ResourceLocation resource = Remote.downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), AbstractClientPlayer.locationStevePng, false);
+    
+        Draw.bindTexture(resource);
         drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.25F, 0.5F);
         drawQuad(x, y, width, height, 90, 0.75F, 0.625F, 0.25F, 0.5F);
-    }
-
-    /**
-     * Download a resource from the specified URL and convert it to a ResourceLocation.
-     * Provide a fallback in case a network connection is not present.
-     * 
-     * @param URL - URL of the resource to download
-     * @param fallback - Fallback resource in case the download fails
-     * @return Return the downloaded ResourceLocation
-     */
-    public static ResourceLocation downloadResource(String URL, ResourceLocation fallback)
-    {
-        return downloadResource(URL, fallback, false);
-    }
-
-    /**
-     * Download a resource from the specified URL and convert it to a ResourceLocation.
-     * Provide a fallback in case a network connection is not present.
-     * 
-     * @param URL - URL of the resource to download
-     * @param fallback - Fallback resource in case the download fails
-     * @param forceDownload - Force re-downloading of the specified resource.
-     * @return Return the downloaded ResourceLocation
-     */
-    public static ResourceLocation downloadResource(String URL, ResourceLocation fallback, boolean forceDownload)
-    {
-        ResourceLocation resource = new ResourceLocation(URL);
-        TextureManager texturemanager = Game.minecraft().getTextureManager();
-        Object object = forceDownload ? null : texturemanager.getTexture(resource);
-
-        if (object == null)
-        {
-            object = new ThreadDownloadImageData((File) null, URL, fallback, null);
-            texturemanager.loadTexture(resource, (ITextureObject) object);
-        }
-
-        return resource;
-    }
-
-    /**
-     * Get the full path of the specified ResourceLocation. Format: domain:path/to/resource.png
-     * @param resource - The ResourceLocation to retrieve a path of.
-     * @return The full path of the resource, including the domain.
-     */
-    public static String getResourcePath(ResourceLocation resource)
-    {
-        return String.format("%s:%s", resource.getResourceDomain(), resource.getResourcePath());
     }
 
     /**
@@ -966,7 +762,7 @@ public class RenderUtil
      */
     public static void drawResource(ResourceLocation resource, int posX, int posY, int width, int height)
     {
-        drawResource(resource, posX, posY, width, height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+        Draw.drawResource(resource, posX, posY, width, height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -984,7 +780,7 @@ public class RenderUtil
      */
     public static void drawResource(ResourceLocation resource, int posX, int posY, int width, int height, float r, float g, float b, float a)
     {
-        drawResource(resource, posX, posY, width, height, r, g, b, a, 1.0f, 1.0f);
+        Draw.drawResource(resource, posX, posY, width, height, r, g, b, a, 1.0f, 1.0f);
     }
 
     /**
@@ -1004,10 +800,10 @@ public class RenderUtil
      */
     public static void drawResource(ResourceLocation resource, int posX, int posY, int width, int height, float r, float g, float b, float a, float u, float v)
     {
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        bindTexture(resource);
-        GlStateManager.color(r, g, b, a);
+        OpenGL.disableLighting();
+        OpenGL.disableFog();
+        Draw.bindTexture(resource);
+        OpenGL.color(r, g, b, a);
         drawQuad(posX, posY, width, height, 0, 0, u, 0, v);
     }
 
@@ -1022,7 +818,7 @@ public class RenderUtil
      */
     public static void drawResourceCentered(ResourceLocation resource, int posX, int posY, int width, int height)
     {
-        drawResourceCentered(resource, posX, posY, width, height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+        Draw.drawResourceCentered(resource, posX, posY, width, height, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -1040,7 +836,7 @@ public class RenderUtil
      */
     public static void drawResourceCentered(ResourceLocation resource, int posX, int posY, int width, int height, float r, float g, float b, float a)
     {
-        drawResourceCentered(resource, posX, posY, width, height, r, g, b, a, 1.0f, 1.0f);
+        Draw.drawResourceCentered(resource, posX, posY, width, height, r, g, b, a, 1.0f, 1.0f);
     }
 
     /**
@@ -1060,10 +856,10 @@ public class RenderUtil
      */
     public static void drawResourceCentered(ResourceLocation resource, int posX, int posY, int width, int height, float r, float g, float b, float a, float u, float v)
     {
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        bindTexture(resource);
-        GlStateManager.color(r, g, b, a);
+        OpenGL.disableLighting();
+        OpenGL.disableFog();
+        Draw.bindTexture(resource);
+        OpenGL.color(r, g, b, a);
         drawQuad(posX - (width / 2), posY, width, height, 0, 0, u, 0, v);
     }
 
@@ -1084,7 +880,7 @@ public class RenderUtil
         float v = (float) (index / 16) / 16.0F;
         float mV = v + tS;
         
-        bindTexture(GameResources.particleTexture);
+        Draw.bindTexture(GameResources.particleTexture);
         drawQuad(x, y, width, height, 0, u, mU, v, mV);
     }
 
@@ -1100,10 +896,10 @@ public class RenderUtil
     public static void drawItemIcon(Item item, int x, int y, int width, int height)
     {
         IIcon icon = item.getIcon(new ItemStack(item), 1);
-
+    
         if (icon != null)
         {
-            bindTexture(Game.minecraft().getTextureManager().getResourceLocation(item.getSpriteNumber()));
+            Draw.bindTexture(Game.minecraft().getTextureManager().getResourceLocation(item.getSpriteNumber()));
             drawQuad(x, y, width, height, 0, icon.getMinU(), icon.getMaxU(), icon.getMinV(), icon.getMaxV());
         }
     }
@@ -1120,7 +916,7 @@ public class RenderUtil
      */
     public static void drawBlockSide(Block block, int side, int x, int y, int width, int height)
     {
-        drawBlockSide(block, side, x, y, width, height, 1, 1);
+        Draw.drawBlockSide(block, side, x, y, width, height, 1, 1);
     }
 
     /**
@@ -1138,86 +934,11 @@ public class RenderUtil
     public static void drawBlockSide(Block block, int side, int x, int y, int width, int height, float u, float v)
     {
         IIcon icon = block.getBlockTextureFromSide(side);
-
+    
         if (icon != null)
         {
-            bindTexture(getBlockSideResourceLocation(block, side));
+            Draw.bindTexture(Blocks.getBlockTexture(block, side));
             drawQuad(x, y, width, height, 0, 0, u, 0, v);
-        }
-    }
-
-    /**
-     * @param block - Block to get the ResourceLocation from
-     * @param side - Side to get the ResourceLocation from
-     * @return The ResourceLocation of the side of the specified Block
-     */
-    public static ResourceLocation getBlockSideResourceLocation(Block block, int side)
-    {
-        IIcon icon = block.getBlockTextureFromSide(side);
-        return new ResourceLocation(Blocks.getDomain(block).replace(":", ""), "textures/blocks/" + icon.getIconName().replace(Blocks.getDomain(block), "") + ".png");
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static void rotate(TileEntity tile)
-    {
-        if (tile instanceof IRotatable)
-        {
-            IRotatable rotatable = (IRotatable) tile;
-
-            if (rotatable != null && rotatable.getDirection() != null)
-            {
-                if (rotatable.getDirection() != null)
-                {
-                    if (rotatable.getDirection() == ForgeDirection.NORTH)
-                    {
-                        GlStateManager.rotate(180F, 0F, 1F, 0F);
-                    }
-                    else if (rotatable.getDirection() == ForgeDirection.SOUTH)
-                    {
-                        GlStateManager.rotate(0F, 0F, 0F, 0F);
-                    }
-                    else if (rotatable.getDirection() == ForgeDirection.WEST)
-                    {
-                        GlStateManager.rotate(-90F, 0F, 1F, 0F);
-                    }
-                    else if (rotatable.getDirection() == ForgeDirection.EAST)
-                    {
-                        GlStateManager.rotate(90F, 0F, 1F, 0F);
-                    }
-                }
-            }
-        }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static void rotateOpposite(TileEntity tile)
-    {
-        if (tile instanceof IRotatable)
-        {
-            IRotatable rotatable = (IRotatable) tile;
-
-            if (rotatable != null && rotatable.getDirection() != null)
-            {
-                if (rotatable.getDirection() != null)
-                {
-                    if (rotatable.getDirection() == ForgeDirection.SOUTH)
-                    {
-                        GlStateManager.rotate(180F, 0F, 1F, 0F);
-                    }
-                    else if (rotatable.getDirection() == ForgeDirection.NORTH)
-                    {
-                        GlStateManager.rotate(0F, 0F, 0F, 0F);
-                    }
-                    else if (rotatable.getDirection() == ForgeDirection.EAST)
-                    {
-                        GlStateManager.rotate(-90F, 0F, 1F, 0F);
-                    }
-                    else if (rotatable.getDirection() == ForgeDirection.WEST)
-                    {
-                        GlStateManager.rotate(90F, 0F, 1F, 0F);
-                    }
-                }
-            }
         }
     }
 
@@ -1234,46 +955,46 @@ public class RenderUtil
     public static void drawRecipe(Object obj, int x, int y, int size, int slotPadding, int backgroundColor)
     {
         IRecipe irecipe = obj instanceof Item ? (Game.getRecipe(obj)) : obj instanceof Block ? (Game.getRecipe(obj)) : null;
-
+    
         if (irecipe == null)
         {
             return;
         }
-
+    
         for (int gX = 0; gX < 3; ++gX)
         {
             for (int gY = 0; gY < 3; ++gY)
             {
-                RenderUtil.drawRect(x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size, backgroundColor);
-
+                drawRect(x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size, backgroundColor);
+    
                 if (irecipe instanceof ShapedRecipes)
                 {
                     ItemStack slotStack = ((ShapedRecipes) irecipe).recipeItems[gX + gY * 3];
-
+    
                     if (slotStack != null)
                     {
-                        RenderUtil.drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                        drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                     }
                 }
-
+    
                 if (irecipe instanceof ShapedOreRecipe)
                 {
                     ShapedOreRecipe recipe = (ShapedOreRecipe) irecipe;
-
+    
                     for (Object o : recipe.getInput())
                     {
                         try
                         {
                             Class<?> unmodifiableArrayList = Class.forName("net.minecraftforge.oredict.OreDictionary$UnmodifiableArrayList");
-
+    
                             if (unmodifiableArrayList.isInstance(o))
                             {
                                 String domain = o.toString().contains("item.") ? o.toString().substring(o.toString().indexOf("x") + 1, o.toString().indexOf("item.")).equalsIgnoreCase("") ? "minecraft" : o.toString().substring(o.toString().indexOf("x") + 1, o.toString().indexOf("item.")) : "null";
                                 Item item = GameRegistry.findItem(domain, o.toString().substring(o.toString().indexOf(".") + 1, o.toString().indexOf("@")));
-
+    
                                 if (item != null)
                                 {
-                                    RenderUtil.drawItemIcon(item, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                    drawItemIcon(item, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                 }
                             }
                             else if ((gX + gY * 3) < recipe.getInput().length)
@@ -1281,10 +1002,10 @@ public class RenderUtil
                                 if (recipe.getInput()[gX + gY * 3] instanceof ItemStack)
                                 {
                                     ItemStack slotStack = (ItemStack) recipe.getInput()[gX + gY * 3];
-
+    
                                     if (slotStack != null)
                                     {
-                                        RenderUtil.drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                        drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                     }
                                 }
                             }
@@ -1299,101 +1020,31 @@ public class RenderUtil
         }
     }
 
-    /** 
-     * Returns a rotation angle that is between two other rotation angles. 'angle1' and 'angle2' are the angles between which
-     * to interpolate, 'progress' is probably a float between 0.0 and 1.0 that determines the progress between the two angles.
-     * Example: angle1 = 30, angle2 = 50, progress = 0.5, return = 40
+    /**
+     * Binds a texture to OpenGL using Minecraft's render engine.
+     * @param resource - The ResourceLocation of the resource to bind.
      */
-    public static float interpolateRotation(float angle1, float angle2, float progress)
+    public static void bindTexture(ResourceLocation resource)
     {
-        float angle = angle2 - angle1;
-        angle = angle < -180F ? angle += 360F : angle;
-        return angle1 + (progress * (angle = angle >= 180F ? angle -= 360F : angle));
+        Game.minecraft().renderEngine.bindTexture(resource);
     }
 
     /**
-     * Used for assigning ResourceLocations to specific players.
+     * Get the full path of the specified ResourceLocation. Format: domain:path/to/resource.png
+     * @param resource - The ResourceLocation to retrieve a path of.
+     * @return The full path of the resource, including the domain.
      */
-    public static class PlayerResourceManager
+    public static String getResourcePath(ResourceLocation resource)
     {
-        private ArrayList<PlayerResource> playerResources = new ArrayList<PlayerResource>();
-
-        public PlayerResource createPlayerResource(String username)
-        {
-            if (getResource(username) == null)
-            {
-                this.playerResources.add(new PlayerResource(username));
-            }
-
-            return getResource(username);
-        }
-
-        public void removeResource(String username)
-        {
-            this.playerResources.remove(getResource(username));
-        }
-
-        public ArrayList<PlayerResource> getResources()
-        {
-            return this.playerResources;
-        }
-
-        public PlayerResource getResource(String username)
-        {
-            for (PlayerResource player : this.playerResources)
-            {
-                if (player.getName().equalsIgnoreCase(username))
-                {
-                    return player;
-                }
-            }
-
-            return null;
-        }
+        return String.format("%s:%s", resource.getResourceDomain(), resource.getResourcePath());
     }
 
-    public static float getRenderPartialTicks()
+    public static final GuiCustomScreen guiHook = new GuiCustomScreen();
+    public static void lightingHelper(Entity entity, float offset)
     {
-        return AMDXLib.access().getRenderPartialTicks();
+        int brightness = entity.worldObj.getLightBrightnessForSkyBlocks(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY + offset / 16.0F), MathHelper.floor_double(entity.posZ), 0);
+        OpenGL.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
+        OpenGL.color(1.0F, 1.0F, 1.0F);
     }
 
-    public static int[] getLightmapColors()
-    {
-        return AMDXLib.access().getLightmapColors();
-    }
-
-    public static DynamicTexture getLightmapTexture()
-    {
-        return AMDXLib.access().getLightmapTexture();
-    }
-
-    public static void setLightmapUpdateNeeded(boolean b)
-    {
-        AMDXLib.access().setLightmapUpdateNeeded(b);
-    }
-
-    public static float getBossColorModifier()
-    {
-        return AMDXLib.access().getBossColorModifier();
-    }
-
-    public static float getTorchFlickerX()
-    {
-        return AMDXLib.access().getTorchFlickerX();
-    }
-
-    public static float getBossColorModifierPrev()
-    {
-        return AMDXLib.access().getBossColorModifierPrev();
-    }
-
-    public static ResourceLocation getEntityTexture(Render render, Entity entity)
-    {
-        return AMDXLib.access().getEntityTexture(render, entity);
-    }
-
-    public static ModelBase getMainModel(RendererLivingEntity renderer)
-    {
-        return AMDXLib.access().getMainModel(renderer);
-    }
 }

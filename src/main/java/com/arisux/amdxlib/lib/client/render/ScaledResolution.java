@@ -1,4 +1,4 @@
-package com.arisux.amdxlib.lib.client;
+package com.arisux.amdxlib.lib.client.render;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

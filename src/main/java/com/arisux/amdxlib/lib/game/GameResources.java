@@ -1,6 +1,6 @@
 package com.arisux.amdxlib.lib.game;
 
-import com.arisux.amdxlib.lib.client.Texture;
+import com.arisux.amdxlib.lib.client.render.Texture;
 
 public class GameResources
 {

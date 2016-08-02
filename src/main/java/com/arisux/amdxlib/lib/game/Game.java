@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -34,6 +35,12 @@ public class Game
     public static FontRenderer fontRenderer()
     {
         return Game.minecraft().fontRendererObj;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static float partialTicks()
+    {
+        return AMDXLib.access().getRenderPartialTicks();
     }
 
     @SideOnly(Side.CLIENT)
@@ -170,5 +177,35 @@ public class Game
         }
     
         return null;
+    }
+
+    public static DynamicTexture getLightmapTexture()
+    {
+        return AMDXLib.access().getLightmapTexture();
+    }
+
+    public static int[] getLightmapColors()
+    {
+        return AMDXLib.access().getLightmapColors();
+    }
+
+    public static void setLightmapUpdateNeeded(boolean b)
+    {
+        AMDXLib.access().setLightmapUpdateNeeded(b);
+    }
+
+    public static float getBossColorModifier()
+    {
+        return AMDXLib.access().getBossColorModifier();
+    }
+
+    public static float getTorchFlickerX()
+    {
+        return AMDXLib.access().getTorchFlickerX();
+    }
+
+    public static float getBossColorModifierPrev()
+    {
+        return AMDXLib.access().getBossColorModifierPrev();
     }
 }

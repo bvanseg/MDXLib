@@ -1,4 +1,4 @@
-package com.arisux.amdxlib.lib.world.entity;
+package com.arisux.amdxlib.lib.world.entity.player;
 
 import java.util.List;
 
@@ -108,7 +108,6 @@ public class Players
     {
         return getPlayerForUsername(commandSender.getEntityWorld(), commandSender.getCommandSenderName());
     }
-
 
     public static List<EntityPlayer> getPlayersInWorld(World world)
     {

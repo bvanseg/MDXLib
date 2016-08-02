@@ -1,6 +1,4 @@
-package com.arisux.amdxlib.lib.client;
-
-import com.arisux.amdxlib.lib.RenderUtil;
+package com.arisux.amdxlib.lib.client.render;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,6 +24,6 @@ public class Texture extends ResourceLocation
     @SideOnly(Side.CLIENT)
     public void bind()
     {
-        RenderUtil.bindTexture(this);
+        Draw.bindTexture(this);
     }
 }

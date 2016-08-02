@@ -1,9 +1,12 @@
-package com.arisux.amdxlib.lib.client;
+package com.arisux.amdxlib.lib.client.render;
 
-import com.arisux.amdxlib.lib.world.entity.Players;
+import com.arisux.amdxlib.lib.world.entity.player.Players;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ResourceLocation;
 
+@SideOnly(Side.CLIENT)
 public class PlayerResource
 {
     private String name, uuid;
@@ -26,22 +29,22 @@ public class PlayerResource
         uuidThread.start();
     }
 
-    public String getName()
+    public String playerName()
     {
         return name;
     }
 
-    public String getUUID()
+    public String playerUUID()
     {
         return uuid;
     }
 
-    public ResourceLocation getResource()
+    public ResourceLocation get()
     {
         return this.resource;
     }
 
-    public ResourceLocation setResource(ResourceLocation resource)
+    public ResourceLocation store(ResourceLocation resource)
     {
         return this.resource = resource;
     }

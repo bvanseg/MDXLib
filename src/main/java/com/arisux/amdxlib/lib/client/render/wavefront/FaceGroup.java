@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import com.arisux.amdxlib.lib.GlStateManager;
-import com.arisux.amdxlib.lib.RenderUtil;
 import com.arisux.amdxlib.lib.client.render.Color;
+import com.arisux.amdxlib.lib.client.render.Draw;
+import com.arisux.amdxlib.lib.client.render.OpenGL;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -29,7 +29,7 @@ public class FaceGroup
     {
         if (resource != null)
         {
-            RenderUtil.bindTexture(resource);
+            Draw.bindTexture(resource);
         }
     }
 
@@ -42,9 +42,9 @@ public class FaceGroup
         }
         else
         {
-            GlStateManager.disableTexture2d();
+            OpenGL.disableTexture2d();
             drawNoBind();
-            GlStateManager.enableTexture2d();
+            OpenGL.enableTexture2d();
         }
     }
 
@@ -55,12 +55,12 @@ public class FaceGroup
             listReady = true;
             glList = GL11.glGenLists(1);
 
-            GlStateManager.newList(glList, GL11.GL_COMPILE);
+            OpenGL.newList(glList, GL11.GL_COMPILE);
             this.drawVertex();
-            GlStateManager.endList();
+            OpenGL.endList();
         }
 
-        GlStateManager.callList(glList);
+        OpenGL.callList(glList);
     }
 
     private void drawVertex()
@@ -79,16 +79,16 @@ public class FaceGroup
                 switch (f.vertexNbr)
                 {
                     case 3:
-                        GlStateManager.begin(GL11.GL_TRIANGLES);
+                        OpenGL.begin(GL11.GL_TRIANGLES);
                         break;
                     case 4:
-                        GlStateManager.begin(GL11.GL_QUADS);
+                        OpenGL.begin(GL11.GL_QUADS);
                         break;
                     case 6:
-                        GlStateManager.begin(GL11.GL_TRIANGLE_STRIP);
+                        OpenGL.begin(GL11.GL_TRIANGLE_STRIP);
                         break;
                     case 8:
-                        GlStateManager.begin(GL11.GL_TRIANGLE_STRIP);
+                        OpenGL.begin(GL11.GL_TRIANGLE_STRIP);
                         break;
                 }
 
@@ -97,25 +97,25 @@ public class FaceGroup
 
             if (this.color != null)
             {
-                GlStateManager.color(this.color.r, this.color.g, this.color.b);
+                OpenGL.color(this.color.r, this.color.g, this.color.b);
             }
 
-            GlStateManager.normal(f.normal.x, f.normal.y, f.normal.z);
+            OpenGL.normal(f.normal.x, f.normal.y, f.normal.z);
 
             for (int idx = 0; idx < mode; idx++)
             {
                 if (f.uv[idx] != null)
                 {
-                    GlStateManager.texCoord(f.uv[idx].u, f.uv[idx].v);
+                    OpenGL.texCoord(f.uv[idx].u, f.uv[idx].v);
                 }
 
-                GlStateManager.vertex(f.vertex[idx].x, f.vertex[idx].y, f.vertex[idx].z);
+                OpenGL.vertex(f.vertex[idx].x, f.vertex[idx].y, f.vertex[idx].z);
             }
         }
 
         if (mode != 0)
         {
-            GlStateManager.end();
+            OpenGL.end();
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.arisux.amdxlib.lib.client;
 
-import com.arisux.amdxlib.lib.GlStateManager;
+import com.arisux.amdxlib.lib.client.render.OpenGL;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -8,7 +8,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.MathHelper;
 
 @SideOnly(Side.CLIENT)
-public class ModelBipedWrapper extends ModelBaseWrapper
+public class SpecialModelBiped extends Model
 {
     public ModelRenderer bipedHead;
     public ModelRenderer bipedHeadwear;
@@ -24,17 +24,17 @@ public class ModelBipedWrapper extends ModelBaseWrapper
     public boolean isSneak;
     public boolean aimedBow;
 
-    public ModelBipedWrapper()
+    public SpecialModelBiped()
     {
         this(0.0F);
     }
 
-    public ModelBipedWrapper(float scale)
+    public SpecialModelBiped(float scale)
     {
         this(scale, 0.0F, 64, 32);
     }
 
-    public ModelBipedWrapper(float scale, float yOffset, int textureWidth, int textureHeight)
+    public SpecialModelBiped(float scale, float yOffset, int textureWidth, int textureHeight)
     {
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
@@ -181,18 +181,18 @@ public class ModelBipedWrapper extends ModelBaseWrapper
         {
             float scale = 2.0F;
 
-            GlStateManager.pushMatrix();
+            OpenGL.pushMatrix();
             {
-                GlStateManager.scale(1.5F / scale, 1.5F / scale, 1.5F / scale);
-                GlStateManager.translate(0.0F, 16.0F * boxTranslation, 0.0F);
+                OpenGL.scale(1.5F / scale, 1.5F / scale, 1.5F / scale);
+                OpenGL.translate(0.0F, 16.0F * boxTranslation, 0.0F);
                 this.bipedHead.render(boxTranslation);
             }
-            GlStateManager.popMatrix();
+            OpenGL.popMatrix();
 
-            GlStateManager.pushMatrix();
+            OpenGL.pushMatrix();
             {
-                GlStateManager.scale(1.0F / scale, 1.0F / scale, 1.0F / scale);
-                GlStateManager.translate(0.0F, 24.0F * boxTranslation, 0.0F);
+                OpenGL.scale(1.0F / scale, 1.0F / scale, 1.0F / scale);
+                OpenGL.translate(0.0F, 24.0F * boxTranslation, 0.0F);
                 this.bipedBody.render(boxTranslation);
                 this.bipedRightArm.render(boxTranslation);
                 this.bipedLeftArm.render(boxTranslation);
@@ -200,7 +200,7 @@ public class ModelBipedWrapper extends ModelBaseWrapper
                 this.bipedLeftLeg.render(boxTranslation);
                 this.bipedHeadwear.render(boxTranslation);
             }
-            GlStateManager.popMatrix();
+            OpenGL.popMatrix();
         }
         else
         {

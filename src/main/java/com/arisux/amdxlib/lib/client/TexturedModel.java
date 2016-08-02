@@ -1,15 +1,17 @@
 package com.arisux.amdxlib.lib.client;
 
+import com.arisux.amdxlib.lib.client.render.Texture;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelTexMap<MODEL extends ModelBaseWrapper>
+public class TexturedModel<MODEL extends Model>
 {
     private Texture texture;
     private MODEL model;
     
-    public ModelTexMap(MODEL model, Texture texture)
+    public TexturedModel(MODEL model, Texture texture)
     {
         this.model = model;
         this.texture = texture;

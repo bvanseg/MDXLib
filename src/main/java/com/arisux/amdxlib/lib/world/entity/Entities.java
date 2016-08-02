@@ -7,8 +7,11 @@ import com.arisux.amdxlib.AMDXLib;
 import com.arisux.amdxlib.lib.world.CoordData;
 import com.arisux.amdxlib.lib.world.Worlds;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +21,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -478,5 +482,16 @@ public class Entities
     public static void setLookHelper(EntityLiving living, EntityLookHelper lookHelper)
     {
         AMDXLib.access().setLookHelper(living, lookHelper);
+    }
+
+    /**
+     * @param render - The Render instance of the Entity to obtain a ResourceLocation from.
+     * @param entity - The Entity to obtain the ResourceLocation for.
+     * @return The ResourceLocation of the Entity.
+     */
+    @SideOnly(Side.CLIENT)
+    public static ResourceLocation getEntityTexture(Render render, Entity entity)
+    {
+        return AMDXLib.access().getEntityTexture(render, entity);
     }
 }

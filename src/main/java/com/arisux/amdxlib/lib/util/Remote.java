@@ -1,6 +1,7 @@
 package com.arisux.amdxlib.lib.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.arisux.amdxlib.AMDXLib;
+import com.arisux.amdxlib.lib.game.Game;
+
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 
 public class Remote
 {
@@ -108,5 +115,42 @@ public class Remote
 
         is.close();
         os.close();
+    }
+
+    /**
+     * Download a resource from the specified URL and convert it to a ResourceLocation.
+     * Provide a fallback in case a network connection is not present.
+     * 
+     * @param URL - URL of the resource to download
+     * @param fallback - Fallback resource in case the download fails
+     * @return Return the downloaded ResourceLocation
+     */
+    public static ResourceLocation downloadResource(String URL, ResourceLocation fallback)
+    {
+        return Remote.downloadResource(URL, fallback, false);
+    }
+
+    /**
+     * Download a resource from the specified URL and convert it to a ResourceLocation.
+     * Provide a fallback in case a network connection is not present.
+     * 
+     * @param URL - URL of the resource to download
+     * @param fallback - Fallback resource in case the download fails
+     * @param forceDownload - Force re-downloading of the specified resource.
+     * @return Return the downloaded ResourceLocation
+     */
+    public static ResourceLocation downloadResource(String URL, ResourceLocation fallback, boolean forceDownload)
+    {
+        ResourceLocation resource = new ResourceLocation(URL);
+        TextureManager texturemanager = Game.minecraft().getTextureManager();
+        Object object = forceDownload ? null : texturemanager.getTexture(resource);
+    
+        if (object == null)
+        {
+            object = new ThreadDownloadImageData((File) null, URL, fallback, null);
+            texturemanager.loadTexture(resource, (ITextureObject) object);
+        }
+    
+        return resource;
     }
 }
