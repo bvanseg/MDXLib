@@ -68,7 +68,7 @@ public class TriangulatedWavefrontModel
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning(String.format("[WavefrontAPI] Error loading model for mod with id %s: %s", modid, path));
+            AMDXLib.log().warn(String.format("[WavefrontAPI] Error loading model for mod with id %s: %s", modid, path));
             e.printStackTrace();
             return false;
         }
@@ -79,7 +79,7 @@ public class TriangulatedWavefrontModel
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning(String.format("[WavefrontAPI] Error (%s) loading origins for model for mod with id %s: %s", e, modid, path));
+            AMDXLib.log().warn(String.format("[WavefrontAPI] Error (%s) loading origins for model for mod with id %s: %s", e, modid, path));
         }
 
         xDim = xMax - xMin;
@@ -100,7 +100,7 @@ public class TriangulatedWavefrontModel
 
         if (stream == null || fileModel == null || path == null)
         {
-            AMDXLib.log().warning("OBJ Loading Failed: " + path);
+            AMDXLib.log().warn("OBJ Loading Failed: " + path);
             stream.close();
             return false;
         }
@@ -187,7 +187,7 @@ public class TriangulatedWavefrontModel
 
         if (stream == null || fileTexture == null || path == null)
         {
-            AMDXLib.log().warning("MTL Loading failed: " + path);
+            AMDXLib.log().warn("MTL Loading failed: " + path);
             stream.close();
             return false;
         }

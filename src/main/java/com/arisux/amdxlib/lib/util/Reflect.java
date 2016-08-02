@@ -59,7 +59,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning(String.format("Failed setting field %s to %s: %s", fieldName, value, e));
+            AMDXLib.log().warn(String.format("Failed setting field %s to %s: %s", fieldName, value, e));
         }
     }
 
@@ -80,7 +80,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning(String.format("Failed getting field %s: %s", fieldName, e));
+            AMDXLib.log().warn(String.format("Failed getting field %s: %s", fieldName, e));
         }
         return null;
     }

@@ -14,7 +14,7 @@ public class IdentityRemapModule
     @EventHandler
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
-        AMDXLib.log().warning("Invalid mappings found, searching for new mappings...");
+        AMDXLib.log().warn("Invalid mappings found, searching for new mappings...");
 
         for (MissingMapping mapping : event.getAll())
         {
@@ -31,7 +31,7 @@ public class IdentityRemapModule
                     }
                     catch (ClassNotFoundException e)
                     {
-                        AMDXLib.log().warning("Invalid mappings were detected, but the mod targetted for the new mappings is not present: " + mod.getClassLocation());
+                        AMDXLib.log().warn("Invalid mappings were detected, but the mod targetted for the new mappings is not present: " + mod.getClassLocation());
                     }
                 }
             }
@@ -49,7 +49,7 @@ public class IdentityRemapModule
                     }
                     catch (ClassNotFoundException e)
                     {
-                        AMDXLib.log().warning("Invalid mappings were detected, but the mod targetted for the new mappings is not present: " + newMapping.getModIdentityMap().getClassLocation());
+                        AMDXLib.log().warn("Invalid mappings were detected, but the mod targetted for the new mappings is not present: " + newMapping.getModIdentityMap().getClassLocation());
                     }
                 }
             }

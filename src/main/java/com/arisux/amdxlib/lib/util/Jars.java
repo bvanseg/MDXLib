@@ -118,7 +118,7 @@ public class Jars
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning(String.format("Error extracting %s: %s", compressedFile.getAbsolutePath(), e));
+            AMDXLib.log().warn(String.format("Error extracting %s: %s", compressedFile.getAbsolutePath(), e));
             e.printStackTrace();
         }
         finally
@@ -131,7 +131,7 @@ public class Jars
                 }
                 catch (Exception e)
                 {
-                    AMDXLib.log().warning(String.format("Error closing compressed file: %s", e));
+                    AMDXLib.log().warn(String.format("Error closing compressed file: %s", e));
                     e.printStackTrace();
                 }
             }

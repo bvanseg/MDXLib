@@ -75,7 +75,7 @@ public class Remote
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning(e.toString() + ": " + url);
+            AMDXLib.log().warn(e.toString() + ": " + url);
 
             if (connection != null)
             {

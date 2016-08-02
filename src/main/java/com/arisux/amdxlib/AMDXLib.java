@@ -6,10 +6,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.Logger;
 
 import com.arisux.amdxlib.lib.client.render.wavefront.TriangulatedWavefrontModel;
 import com.arisux.amdxlib.lib.game.Access;
@@ -312,7 +312,7 @@ public class AMDXLib
             }
             else
             {
-                AMDXLib.log().warning("Error converting item mapping [" + mapping.name + "@" + mapping.id + "]");
+                AMDXLib.log().warn("Error converting item mapping [" + mapping.name + "@" + mapping.id + "]");
             }
         }
 
@@ -329,7 +329,7 @@ public class AMDXLib
             }
             else
             {
-                AMDXLib.log().warning("Error converting block mapping. [" + mapping.name + "@" + mapping.id + "]");
+                AMDXLib.log().warn("Error converting block mapping. [" + mapping.name + "@" + mapping.id + "]");
             }
         }
     }

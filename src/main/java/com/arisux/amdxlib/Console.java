@@ -1,33 +1,34 @@
 package com.arisux.amdxlib;
 
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Console
 {
-    public static final Logger logger = Logger.getLogger("AMDXLib");
-    
+    public static Logger logger = LogManager.getLogger("AMDXLib");;
+
     public static void copyright()
     {
-        Console.logger.info("[AMDXLib] Copyright(C) 2016-2017 Arisux Technology Group");
+        logger.info("Copyright(C) 2016-2017 Arisux Technology Group");
     }
     
     public static void preInit()
     {
-        Console.logger.info("[AMDXLib] Preparing to initialize...");
+        logger.info("Preparing to initialize...");
     }
     
     public static void init()
     {
-        Console.logger.info("[AMDXLib] Initializing...");
+        logger.info("Initializing...");
     }
     
     public static void postInit()
     {
-        Console.logger.info("[AMDXLib] Initialized. Running post initialization tasks...");
+        logger.info("Initialized. Running post initialization tasks...");
     }
     
     public static void postInitComplete()
     {
-        Console.logger.info("[AMDXLib] Initialization complete.");
+        logger.info("Initialization complete.");
     }
 }

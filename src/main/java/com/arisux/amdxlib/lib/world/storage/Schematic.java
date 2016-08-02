@@ -37,7 +37,7 @@ public class Schematic
 
         if (!materials.equals("Alpha"))
         {
-            AMDXLib.log().warning("Unsupported schematic format: " + file);
+            AMDXLib.log().warn("Unsupported schematic format: " + file);
             return;
         }
 

@@ -363,7 +363,7 @@ public class Entities
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning("Failed to construct entity: " + (c != null ? c.getName() : c));
+            AMDXLib.log().warn("Failed to construct entity: " + (c != null ? c.getName() : c));
             e.printStackTrace();
         }
         return null;
@@ -441,7 +441,7 @@ public class Entities
                         }
                         catch (Throwable throwable)
                         {
-                            AMDXLib.log().warning("Exception while handling entity collision with block.");
+                            AMDXLib.log().warn("Exception while handling entity collision with block.");
                         }
                     }
                 }

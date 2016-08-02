@@ -251,7 +251,7 @@ public class Model extends ModelBase
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning("Error creating new model instance.");
+            AMDXLib.log().warn("Error creating new model instance.");
             e.printStackTrace();
         }
 
@@ -272,7 +272,7 @@ public class Model extends ModelBase
         }
         catch (Exception e)
         {
-            AMDXLib.log().warning("Error creating new model instance.");
+            AMDXLib.log().warn("Error creating new model instance.");
             e.printStackTrace();
         }
 
