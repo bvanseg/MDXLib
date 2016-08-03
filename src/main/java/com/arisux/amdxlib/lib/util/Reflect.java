@@ -15,7 +15,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of double %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return 0D;
@@ -29,7 +29,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of float %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return 0F;
@@ -43,7 +43,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of integer %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return 0;
@@ -57,7 +57,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of boolean %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return false;
@@ -71,7 +71,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of long %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return 0L;
@@ -85,7 +85,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of byte %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return 0;
@@ -99,7 +99,7 @@ public class Reflect
         }
         catch (Exception e)
         {
-            ;
+            AMDXLib.log().warn("Failed to change the access of string %s. This is a severe problem and needs to be reported: %s", obfName, e);
         }
 
         return "";
@@ -112,17 +112,16 @@ public class Reflect
 
     public static void set(Class<?> clazz, Object obj, String deobfName, String obfName, Object value)
     {
-        String fieldName = Game.isDevEnvironment() ? deobfName : obfName;
-
         try
         {
+            String fieldName = Game.isDevEnvironment() ? deobfName : obfName;
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(obj, value);
         }
         catch (Exception e)
         {
-            AMDXLib.log().warn(String.format("Failed setting field %s to %s: %s", fieldName, value, e));
+            e.printStackTrace();
         }
     }
 
@@ -133,18 +132,18 @@ public class Reflect
 
     public static Object get(Class<?> clazz, Object obj, String deobfName, String obfName)
     {
-        String fieldName = Game.isDevEnvironment() ? deobfName : obfName;
-
         try
         {
+            String fieldName = Game.isDevEnvironment() ? deobfName : obfName;
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(obj);
         }
         catch (Exception e)
         {
-            AMDXLib.log().warn(String.format("Failed getting field %s: %s", fieldName, e));
+            e.printStackTrace();
         }
+
         return null;
     }
 }

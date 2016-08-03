@@ -23,8 +23,8 @@ group= "com.arisux.amdxlib"
 archivesBaseName = "AMDXLib"
 
 tasks.withType(JavaCompile) {
-	sourceCompatibility = "1.6"
-	targetCompatibility = "1.6"
+	sourceCompatibility = "1.7"
+	targetCompatibility = "1.7"
 	options.encoding = 'UTF-8'
 }
 
@@ -36,6 +36,10 @@ minecraft {
 
 jar {
 	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar"
+    
+    manifest {
+        attributes 'FMLAT': 'accessTransformer.cfg'
+    }
 }
 
 curse {

@@ -1,16 +1,13 @@
 package com.arisux.amdxlib.lib.game;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-
-import com.arisux.amdxlib.lib.util.Reflect;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -21,194 +18,214 @@ import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
-import net.minecraft.util.Timer;
 
 public class Access
 {
     @SideOnly(Side.CLIENT)
     public float getRenderPartialTicks()
     {
-        return ((Timer) Reflect.get(Minecraft.class, Game.minecraft(), "timer", "field_71428_T")).renderPartialTicks;
+        return Game.minecraft().timer.renderPartialTicks;
     }
 
     @SideOnly(Side.CLIENT)
     public int getRightClickDelayTimer()
     {
-        return Reflect.getInt(Game.minecraft(), "rightClickDelayTimer", "field_71467_ac");
+        return Game.minecraft().rightClickDelayTimer;
     }
 
     @SideOnly(Side.CLIENT)
     public void setRightClickDelayTimer(int value)
     {
-        Reflect.set(Minecraft.class, Game.minecraft(), "rightClickDelayTimer", "field_71467_ac", value);
+        Game.minecraft().rightClickDelayTimer = value;
     }
 
     @SideOnly(Side.CLIENT)
     public Session getSession()
     {
-        return (Session) Reflect.get(Minecraft.class, Game.minecraft(), "session", "field_71449_j");
+        return Game.minecraft().session;
     }
 
     @SideOnly(Side.CLIENT)
     public void setEquippedProgress(float value)
     {
-        Reflect.set(ItemRenderer.class, Game.minecraft().entityRenderer.itemRenderer, "equippedProgress", "field_78454_c", value);
+        Game.minecraft().entityRenderer.itemRenderer.equippedProgress = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getTorchFlickerX()
     {
-        return Reflect.getFloat(Game.minecraft().entityRenderer, "torchFlickerX", "field_78514_e");
+        return Game.minecraft().entityRenderer.torchFlickerX;
     }
 
     @SideOnly(Side.CLIENT)
     public float getTorchFlickerY()
     {
-        return Reflect.getFloat(Game.minecraft().entityRenderer, "torchFlickerY", "field_78512_g");
+        return Game.minecraft().entityRenderer.torchFlickerY;
     }
 
     @SideOnly(Side.CLIENT)
     public void setTorchFlickerX(float value)
     {
-        Reflect.set(EntityRenderer.class, Game.minecraft().entityRenderer, "torchFlickerX", "field_78514_e", value);
+        Game.minecraft().entityRenderer.torchFlickerX = value;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setTorchFlickerYX(float value)
+    {
+        Game.minecraft().entityRenderer.torchFlickerY = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getBossColorModifier()
     {
-        return Reflect.getFloat(Game.minecraft().entityRenderer, "bossColorModifier", "field_82831_U");
+        return Game.minecraft().entityRenderer.bossColorModifier;
     }
 
     @SideOnly(Side.CLIENT)
     public void setBossColorModifier(float value)
     {
-        Reflect.set(EntityRenderer.class, Game.minecraft().entityRenderer, "bossColorModifier", "field_82831_U", value);
+        Game.minecraft().entityRenderer.bossColorModifier = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getBossColorModifierPrev()
     {
-        return Reflect.getFloat(Game.minecraft().entityRenderer, "bossColorModifierPrev", "field_82832_V");
+        return Game.minecraft().entityRenderer.bossColorModifierPrev;
     }
 
     @SideOnly(Side.CLIENT)
     public void getBossColorModifierPrev(float value)
     {
-        Reflect.set(EntityRenderer.class, Game.minecraft().entityRenderer, "bossColorModifierPrev", "field_82832_V", value);
+        Game.minecraft().entityRenderer.bossColorModifierPrev = value;
     }
 
     @SideOnly(Side.CLIENT)
     public int[] getLightmapColors()
     {
-        return (int[]) Reflect.get(EntityRenderer.class, Game.minecraft().entityRenderer, "lightmapColors", "field_78504_Q");
+        return Game.minecraft().entityRenderer.lightmapColors;
     }
 
     @SideOnly(Side.CLIENT)
     public DynamicTexture getLightmapTexture()
     {
-        return (DynamicTexture) Reflect.get(EntityRenderer.class, Game.minecraft().entityRenderer, "lightmapTexture", "field_78513_d");
+        return Game.minecraft().entityRenderer.lightmapTexture;
     }
 
     @SideOnly(Side.CLIENT)
     public boolean isLightmapUpdateNeeded()
     {
-        return Reflect.getBoolean(Game.minecraft().entityRenderer, "lightmapUpdateNeeded", "field_78536_aa");
+        return Game.minecraft().entityRenderer.lightmapUpdateNeeded;
     }
 
     @SideOnly(Side.CLIENT)
     public void setLightmapUpdateNeeded(boolean value)
     {
-        Reflect.set(EntityRenderer.class, Game.minecraft().entityRenderer, "lightmapUpdateNeeded", "field_78536_aa", value);
+        Game.minecraft().entityRenderer.lightmapUpdateNeeded = value;
     }
 
     public void setMoveHelper(EntityLiving living, EntityMoveHelper moveHelper)
     {
-        Reflect.set(EntityLiving.class, living, "moveHelper", "field_70765_h", moveHelper);
+        living.moveHelper = moveHelper;
     }
 
     public void setNavigator(EntityLiving living, PathNavigate navigator)
     {
-        Reflect.set(EntityLiving.class, living, "navigator", "field_70699_by", navigator);
+        living.navigator = navigator;
     }
 
     public void setLookHelper(EntityLiving living, EntityLookHelper lookHelper)
     {
-        Reflect.set(EntityLiving.class, living, "lookHelper", "field_70749_g", lookHelper);
+        living.lookHelper = lookHelper;
     }
 
     public double getMoveHelperPosX(EntityMoveHelper moveHelper)
     {
-        return (Double) Reflect.get(EntityMoveHelper.class, moveHelper, "posX", "field_75646_b");
+        return moveHelper.posX;
     }
 
     public double getMoveHelperPosY(EntityMoveHelper moveHelper)
     {
-        return (Double) Reflect.get(EntityMoveHelper.class, moveHelper, "posY", "field_75647_c");
+        return moveHelper.posY;
     }
 
     public double getMoveHelperPosZ(EntityMoveHelper moveHelper)
     {
-        return (Double) Reflect.get(EntityMoveHelper.class, moveHelper, "posZ", "field_75644_d");
+        return moveHelper.posZ;
     }
 
     public double getMoveHelperSpeed(EntityMoveHelper moveHelper)
     {
-        return (Double) Reflect.get(EntityMoveHelper.class, moveHelper, "speed", "field_75645_e");
+        return moveHelper.speed;
     }
 
     public double getLookHelperPosX(EntityLookHelper lookHelper)
     {
-        return (Double) Reflect.get(EntityLookHelper.class, lookHelper, "posX", "field_75656_e");
+        return lookHelper.posX;
     }
 
     public double getLookHelperPosY(EntityLookHelper lookHelper)
     {
-        return (Double) Reflect.get(EntityLookHelper.class, lookHelper, "posY", "field_75653_f");
+        return lookHelper.posY;
     }
 
     public double getLookHelperPosZ(EntityLookHelper lookHelper)
     {
-        return (Double) Reflect.get(EntityLookHelper.class, lookHelper, "posZ", "field_75654_g");
+        return lookHelper.posZ;
     }
 
     public boolean getLookHelperIsLooking(EntityLookHelper lookHelper)
     {
-        return (Boolean) Reflect.get(EntityLookHelper.class, lookHelper, "isLooking", "field_75655_d");
+        return lookHelper.isLooking;
     }
 
     public float getBlockResistance(Block block)
     {
-        return (Float) Reflect.get(Block.class, block, "blockResistance", "field_149781_w");
+        return block.blockResistance;
     }
 
     public float getBlockHardness(Block block)
     {
-        return (Float) Reflect.get(Block.class, block, "blockHardness", "field_149782_v");
+        return block.blockHardness;
     }
 
     public String getBlockTextureName(Block block)
     {
-        return (String) Reflect.get(Block.class, block, "textureName", "field_149768_d");
+        return block.textureName;
     }
 
     public ModelBase getMainModel(RendererLivingEntity renderLiving)
     {
-        return (ModelBase) Reflect.get(RendererLivingEntity.class, renderLiving, "mainModel", "field_77045_g");
+        return renderLiving.mainModel;
+    }
+
+    static final MethodHandle getEntityTexture;
+
+    static
+    {
+        try
+        {
+            Method method = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
+            method.setAccessible(true);
+            getEntityTexture = MethodHandles.publicLookup().unreflect(method);
+        }
+        catch (Exception exception)
+        {
+            throw new RuntimeException();
+        }
+
     }
 
     public ResourceLocation getEntityTexture(Render render, Entity entity)
     {
         try
         {
-            Method getEntityTexture = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
-            getEntityTexture.setAccessible(true);
-            return (ResourceLocation) getEntityTexture.invoke(render, new Object[] { entity });
+            return ((ResourceLocation) getEntityTexture.invokeExact(render, (Entity) entity));
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
             e.printStackTrace();
         }
-
+        
         return null;
     }
 }
