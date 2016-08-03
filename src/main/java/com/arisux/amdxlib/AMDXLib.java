@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
 
+import com.arisux.amdxlib.lib.client.Notification;
 import com.arisux.amdxlib.lib.client.render.wavefront.TriangulatedWavefrontModel;
 import com.arisux.amdxlib.lib.game.Access;
 import com.arisux.amdxlib.lib.game.ModIdentityMap;
@@ -28,9 +29,17 @@ public class AMDXLib
     public static final String                          MODID   = "amdxlib";
     public static final String                          VERSION = "1.0.0";
 
+    /** Provides access to core Minecraft methods that have restricted access **/
     private static Access                               access;
+
+    /** The registry that contains all of the triangulated wavefront models currently registered **/
     private HashMap<String, TriangulatedWavefrontModel> modelRegistry;
+
+    /** The registry that contains all currently registered schematics **/
     private ArrayList<Schematic>                        schematicRegistry;
+
+    /** A queue for notifications that will be displayed     on screen **/
+    private static ArrayList<Notification>                     notificationsInQueue;
 
     /** Entire mods that will be remapped **/
     private static ArrayList<ModIdentityMap>            remappedMods;
@@ -43,6 +52,7 @@ public class AMDXLib
         access = new Access();
         modelRegistry = new HashMap<String, TriangulatedWavefrontModel>();
         schematicRegistry = new ArrayList<Schematic>();
+        notificationsInQueue = new ArrayList<Notification>();
         remappedMods = new ArrayList<ModIdentityMap>();
         remappedIdentities = new ArrayList<IdentityMap>();
     }
@@ -60,6 +70,16 @@ public class AMDXLib
     public static Logger log()
     {
         return Console.logger;
+    }
+    
+    public static void sendNotification(Notification notification)
+    {
+        notificationsInQueue.add(notification);
+    }
+    
+    public static ArrayList<Notification> getNotificationsInQueue()
+    {
+        return notificationsInQueue;
     }
 
     /**

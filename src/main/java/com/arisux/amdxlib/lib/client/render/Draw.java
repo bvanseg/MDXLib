@@ -1047,4 +1047,42 @@ public class Draw
         OpenGL.color(1.0F, 1.0F, 1.0F);
     }
 
+    public static ArrayList<String> wrapString(String string, int width)
+    {
+        ArrayList<String> strings = new ArrayList<String>();
+        int stringWidth = getStringRenderWidth(string);
+    
+        if (stringWidth > width)
+        {
+            String currentLine = "";
+    
+            for (String word : string.split(" "))
+            {
+                int wordWidth = getStringRenderWidth(word);
+                int currentLineWidth = getStringRenderWidth(currentLine);
+    
+                if ((currentLineWidth + wordWidth) <= width)
+                {
+                    currentLine = currentLine.isEmpty() ? word : currentLine + " " + word;
+                }
+                else
+                {
+                    strings.add(currentLine);
+                    currentLine = word;
+                }
+            }
+    
+            if (!currentLine.isEmpty())
+            {
+                strings.add(currentLine);
+            }
+        }
+        else
+        {
+            strings.add(string);
+        }
+    
+        return strings;
+    }
+
 }
