@@ -49,7 +49,7 @@ public class ForgeModule
             @Override
             public String getMessage()
             {
-                return "Notifications may pop up here throughout gameplay. These notifications will may explain how certain features of the game work. You can disable these notifications in the settings.";
+                return "Notifications may pop up here throughout gameplay. These notifications will explain how certain features of the game work. You can disable these notifications in the settings.";
             }
         });
     }
