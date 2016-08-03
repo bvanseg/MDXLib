@@ -39,6 +39,8 @@ jar {
     
     manifest {
         attributes 'FMLAT': 'amdxlib_at.cfg'
+		attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
+		attributes 'FMLCorePluginContainsFMLMod' : 'true'
     }
 }
 
