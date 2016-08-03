@@ -38,7 +38,7 @@ jar {
 	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar"
     
     manifest {
-        attributes 'FMLAT': 'accessTransformer.cfg'
+        attributes 'FMLAT': 'amdxlib_at.cfg'
     }
 }
 
