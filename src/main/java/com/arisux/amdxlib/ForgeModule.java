@@ -6,11 +6,13 @@ import com.arisux.amdxlib.lib.game.Game;
 import com.arisux.amdxlib.lib.game.IdentityRemapModule;
 import com.arisux.amdxlib.lib.world.StructureGenerationHandler;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = AMDXLib.MODID, version = AMDXLib.VERSION)
 public class ForgeModule
@@ -26,9 +28,14 @@ public class ForgeModule
     public void pre(FMLPreInitializationEvent event)
     {
         Console.preInit();
-        Game.registerEventHandler(NotifierModule.instance);
+        
         Game.registerEventHandler(StructureGenerationHandler.instance);
         Game.registerEventHandler(IdentityRemapModule.instance);
+
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+        {
+            Game.registerEventHandler(NotifierModule.instance);
+        }
     }
 
     @EventHandler

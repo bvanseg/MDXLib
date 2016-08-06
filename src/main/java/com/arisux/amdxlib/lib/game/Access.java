@@ -193,33 +193,39 @@ public class Access
         return block.textureName;
     }
 
+    @SideOnly(Side.CLIENT)
     public ModelBase getMainModel(RendererLivingEntity renderLiving)
     {
         return renderLiving.mainModel;
     }
-
-    static final MethodHandle getEntityTexture;
-
-    static
+    
+    @SideOnly(Side.CLIENT)
+    public static class ClientAccess
     {
-        try
-        {
-            Method method = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
-            method.setAccessible(true);
-            getEntityTexture = MethodHandles.publicLookup().unreflect(method);
-        }
-        catch (Exception exception)
-        {
-            throw new RuntimeException();
-        }
+        static final MethodHandle getEntityTexture;
 
+        static
+        {
+            try
+            {
+                Method method = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
+                method.setAccessible(true);
+                getEntityTexture = MethodHandles.publicLookup().unreflect(method);
+            }
+            catch (Exception exception)
+            {
+                throw new RuntimeException();
+            }
+
+        }
     }
 
+    @SideOnly(Side.CLIENT)
     public ResourceLocation getEntityTexture(Render render, Entity entity)
     {
         try
         {
-            return ((ResourceLocation) getEntityTexture.invokeExact(render, (Entity) entity));
+            return ((ResourceLocation) ClientAccess.getEntityTexture.invokeExact(render, (Entity) entity));
         }
         catch (Throwable e)
         {
