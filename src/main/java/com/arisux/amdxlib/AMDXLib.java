@@ -21,6 +21,8 @@ import com.arisux.amdxlib.lib.world.storage.Schematic;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompressedStreamTools;
 
@@ -303,6 +305,11 @@ public class AMDXLib
         }
 
         return AMDXLib.loadSchematic(path);
+    }
+    
+    public static void registerRemappedEntity(Class<? extends Entity> entityClass, String invalidId)
+    {
+        EntityList.stringToClassMapping.put(invalidId, entityClass);
     }
 
     public static void registerRemappedMod(String oldID, String newID, String modClassLocation)
