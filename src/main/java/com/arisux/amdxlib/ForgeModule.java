@@ -1,5 +1,6 @@
 package com.arisux.amdxlib;
 
+import com.arisux.amdxlib.lib.client.GuiElementTrackingModule;
 import com.arisux.amdxlib.lib.client.Notification;
 import com.arisux.amdxlib.lib.client.NotifierModule;
 import com.arisux.amdxlib.lib.game.Game;
@@ -35,6 +36,7 @@ public class ForgeModule
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
             Game.registerEventHandler(NotifierModule.instance);
+            Game.registerEventHandler(GuiElementTrackingModule.instance);
         }
     }
 

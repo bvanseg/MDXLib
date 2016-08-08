@@ -7,7 +7,7 @@ import com.arisux.amdxlib.lib.game.Game;
 
 import net.minecraft.client.Minecraft;
 
-public class GuiCustomSlider extends GuiCustomButton implements IGuiElement
+public class GuiCustomSlider extends GuiCustomButton
 {
     public String label;
     public float sliderValue = 1.0F;

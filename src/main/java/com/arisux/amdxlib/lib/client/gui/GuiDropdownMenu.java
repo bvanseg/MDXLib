@@ -6,7 +6,7 @@ import javax.vecmath.Vector2d;
 
 import com.arisux.amdxlib.lib.game.Game;
 
-public class GuiDropdownMenu extends GuiCustomButton implements IGuiElement
+public class GuiDropdownMenu extends GuiCustomButton
 {
     ArrayList<GuiCustomButton> options = new ArrayList<GuiCustomButton>();
 

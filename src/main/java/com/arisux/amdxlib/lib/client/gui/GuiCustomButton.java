@@ -14,10 +14,9 @@ import com.arisux.amdxlib.lib.game.Game;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 
 @SideOnly(Side.CLIENT)
-public class GuiCustomButton extends GuiButton implements IGuiElement
+public class GuiCustomButton extends GuiElement
 {
     private IAction action;
     public int fontColor;
@@ -58,6 +57,7 @@ public class GuiCustomButton extends GuiButton implements IGuiElement
         this.overlayColorHover = 0x00000000;
         this.overlayColorPressed = 0x66000000;
         this.textAlignment = ElementAlignment.CENTER;
+        this.add();
     }
 
     public void drawButton()
@@ -123,7 +123,7 @@ public class GuiCustomButton extends GuiButton implements IGuiElement
     }
 
     @Override
-    public IGuiElement setAction(IAction action)
+    public GuiElement setAction(IAction action)
     {
         this.action = action;
         return this;
@@ -150,6 +150,8 @@ public class GuiCustomButton extends GuiButton implements IGuiElement
             if (this.action != null)
             {
                 this.action.perform(this);
+                
+                System.out.println("TESTED BUTTONN: " + this.displayString);
             }
         }
     }
