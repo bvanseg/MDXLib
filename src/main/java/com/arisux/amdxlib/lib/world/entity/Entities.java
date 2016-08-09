@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityLookHelper;
@@ -493,5 +494,20 @@ public class Entities
     public static ResourceLocation getEntityTexture(Render render, Entity entity)
     {
         return AMDXLib.access().getEntityTexture(render, entity);
+    }
+    
+    public static Class<? extends Entity> getRegisteredEntityClass(String entityId)
+    {
+        return (Class<? extends Entity>) EntityList.stringToClassMapping.get(entityId);
+    }
+    
+    public static String getEntityRegistrationId(Entity entity)
+    {
+        return getEntityRegistrationId(entity.getClass());
+    }
+    
+    public static String getEntityRegistrationId(Class <? extends Entity> c)
+    {
+        return (String) EntityList.classToStringMapping.get(c);
     }
 }
