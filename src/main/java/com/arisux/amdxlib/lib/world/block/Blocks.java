@@ -34,7 +34,7 @@ public class Blocks
         return data;
     }
 
-    public static ArrayList<CoordData> getCoordDataInRangeForBlocks(int posX, int posY, int posZ, int range, World world, Block... types)
+    public static ArrayList<CoordData> getCoordDataInRangeIncluding(int posX, int posY, int posZ, int range, World world, Block... types)
     {
         ArrayList<CoordData> data = new ArrayList<CoordData>();
 
@@ -58,7 +58,7 @@ public class Blocks
         return data;
     }
 
-    public static ArrayList<CoordData> getCoordDataInRangeForBlocksExcluding(int posX, int posY, int posZ, int range, World world, Block... types)
+    public static ArrayList<CoordData> getCoordDataInRangeExcluding(int posX, int posY, int posZ, int range, World world, Block... types)
     {
         ArrayList<CoordData> data = new ArrayList<CoordData>();
 
