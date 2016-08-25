@@ -150,8 +150,6 @@ public class GuiCustomButton extends GuiElement
             if (this.action != null)
             {
                 this.action.perform(this);
-                
-                System.out.println("TESTED BUTTONN: " + this.displayString);
             }
         }
     }

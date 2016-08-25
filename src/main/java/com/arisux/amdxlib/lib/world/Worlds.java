@@ -7,6 +7,7 @@ import com.arisux.amdxlib.lib.world.entity.Entities;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -287,19 +288,34 @@ public class Worlds
 
     public static Entity getEntityByUUID(World world, UUID uuid)
     {
-        for (Object o : world.getLoadedEntityList().toArray())
+        for (Object o : world.loadedEntityList.toArray())
         {
             if (o instanceof Entity)
             {
                 Entity entity = (Entity) o;
                 
-                if (entity.getPersistentID().equals(uuid))
+                if (entity.getUniqueID().equals(uuid))
                 {
                     return entity;
                 }
             }
         }
         
+        return null;
+    }
+
+    public static UUID uuidFromNBT(NBTTagCompound nbt, String key)
+    {
+        return uuidFromSignature(nbt.getString(key));
+    }
+
+    public static UUID uuidFromSignature(String signature)
+    {
+        if (signature != null && signature.matches("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"))
+        {
+            return UUID.fromString(signature);
+        }
+
         return null;
     }
 }

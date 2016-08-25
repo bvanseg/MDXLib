@@ -251,6 +251,8 @@ public class CoordData
 
     public boolean isAnySurfaceVisible(World world)
     {
+        Block air = net.minecraft.init.Blocks.air;
+        
         CoordData up = this.add(0, 1, 0);
         CoordData down = this.add(0, -1, 0);
         CoordData left = this.add(-1, 0, 0);
@@ -258,7 +260,7 @@ public class CoordData
         CoordData front = this.add(0, 0, -1);
         CoordData back = this.add(0, 0, 1);
 
-        return up.getBlock(world) == net.minecraft.init.Blocks.air || down.getBlock(world) == net.minecraft.init.Blocks.air || left.getBlock(world) == net.minecraft.init.Blocks.air || right.getBlock(world) == net.minecraft.init.Blocks.air || front.getBlock(world) == net.minecraft.init.Blocks.air || back.getBlock(world) == net.minecraft.init.Blocks.air;
+        return up.getBlock(world) == air || down.getBlock(world) == air || left.getBlock(world) == air || right.getBlock(world) == air || front.getBlock(world) == air || back.getBlock(world) == air;
     }
 
     public CoordData findSafePosAround(World world)
