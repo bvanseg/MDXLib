@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class CoordData
 {
-    public double posX, posY, posZ;
+    public double x, y, z;
     public int meta;
     public Block block;
     public UniqueIdentifier identifier;
@@ -55,44 +55,44 @@ public class CoordData
     public CoordData(double posX, double posY, double posZ, UniqueIdentifier identifier, int meta)
     {
         this.identifier = identifier;
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
+        this.x = posX;
+        this.y = posY;
+        this.z = posZ;
         this.meta = meta;
     }
 
     public CoordData(double posX, double posY, double posZ)
     {
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
+        this.x = posX;
+        this.y = posY;
+        this.z = posZ;
     }
 
     public CoordData(long posX, long posY, long posZ)
     {
-        this.posX = (double) posX;
-        this.posY = (double) posY;
-        this.posZ = (double) posZ;
+        this.x = (double) posX;
+        this.y = (double) posY;
+        this.z = (double) posZ;
     }
 
     public CoordData(float posX, float posY, float posZ)
     {
-        this.posX = (double) posX;
-        this.posY = (double) posY;
-        this.posZ = (double) posZ;
+        this.x = (double) posX;
+        this.y = (double) posY;
+        this.z = (double) posZ;
     }
 
     public CoordData(int posX, int posY, int posZ)
     {
-        this.posX = (double) posX;
-        this.posY = (double) posY;
-        this.posZ = (double) posZ;
+        this.x = (double) posX;
+        this.y = (double) posY;
+        this.z = (double) posZ;
     }
 
     @Override
     public boolean equals(Object o)
     {
-        if (o == null || this != o || !(o instanceof CoordData) || o instanceof CoordData && ((CoordData) o).posX != this.posX || o instanceof CoordData && ((CoordData) o).posY != this.posY || o instanceof CoordData && ((CoordData) o).posZ != this.posZ)
+        if (o == null || this != o || !(o instanceof CoordData) || o instanceof CoordData && ((CoordData) o).x != this.x || o instanceof CoordData && ((CoordData) o).y != this.y || o instanceof CoordData && ((CoordData) o).z != this.z)
         {
             return false;
         }
@@ -103,25 +103,25 @@ public class CoordData
     @Override
     public int hashCode()
     {
-        int result = (int) this.posX;
-        result = 31 * result + (int) this.posY;
-        result = 31 * result + (int) this.posZ;
+        int result = (int) this.x;
+        result = 31 * result + (int) this.y;
+        result = 31 * result + (int) this.z;
         return result;
     }
 
     public double x()
     {
-        return posX;
+        return x;
     }
 
     public double y()
     {
-        return posY;
+        return y;
     }
 
     public double z()
     {
-        return posZ;
+        return z;
     }
 
     public Block getBlock(World world)
@@ -131,32 +131,32 @@ public class CoordData
 
     public Block getBlock(World world, boolean force)
     {
-        return this.block == null && world != null || force ? world.getBlock((int) this.posX, (int) this.posY, (int) this.posZ) : this.block;
+        return this.block == null && world != null || force ? world.getBlock((int) this.x, (int) this.y, (int) this.z) : this.block;
     }
 
     public int getBlockMetadata(World world)
     {
-        return this.meta == 0 && world != null ? world.getBlockMetadata((int) this.posX, (int) this.posY, (int) this.posZ) : 0;
+        return this.meta == 0 && world != null ? world.getBlockMetadata((int) this.x, (int) this.y, (int) this.z) : 0;
     }
 
     public TileEntity getTileEntity(World world)
     {
-        return world.getTileEntity((int) this.posX, (int) this.posY, (int) this.posZ);
+        return world.getTileEntity((int) this.x, (int) this.y, (int) this.z);
     }
 
     public CoordData min(CoordData data)
     {
-        return new CoordData(Math.min(this.posX, data.posX), Math.min(this.posY, data.posY), Math.min(this.posZ, data.posZ));
+        return new CoordData(Math.min(this.x, data.x), Math.min(this.y, data.y), Math.min(this.z, data.z));
     }
 
     public CoordData max(CoordData data)
     {
-        return new CoordData(Math.max(this.posX, data.posX), Math.max(this.posY, data.posY), Math.max(this.posZ, data.posZ));
+        return new CoordData(Math.max(this.x, data.x), Math.max(this.y, data.y), Math.max(this.z, data.z));
     }
 
     public CoordData add(CoordData data)
     {
-        return new CoordData(this.posX + data.posX, this.posY + data.posY, this.posZ + data.posZ);
+        return new CoordData(this.x + data.x, this.y + data.y, this.z + data.z);
     }
 
     public CoordData add(double posX, double posY, double posZ)
@@ -166,7 +166,7 @@ public class CoordData
 
     public CoordData subtract(CoordData data)
     {
-        return new CoordData(this.max(data).posX - this.min(data).posX, this.max(data).posY - this.min(data).posY, this.max(data).posZ - this.min(data).posZ);
+        return new CoordData(this.max(data).x - this.min(data).x, this.max(data).y - this.min(data).y, this.max(data).z - this.min(data).z);
     }
 
     public CoordData subtract(double posX, double posY, double posZ)
@@ -176,19 +176,19 @@ public class CoordData
 
     public CoordData offsetX(double amount)
     {
-        this.posX = this.posX + amount;
+        this.x = this.x + amount;
         return this;
     }
 
     public CoordData offsetY(double amount)
     {
-        this.posY = this.posY + amount;
+        this.y = this.y + amount;
         return this;
     }
 
     public CoordData offsetZ(double amount)
     {
-        this.posZ = this.posZ + amount;
+        this.z = this.z + amount;
         return this;
     }
 
@@ -196,9 +196,9 @@ public class CoordData
     {
         this.identifier = data.identifier;
         this.block = data.block;
-        this.posX = data.posX;
-        this.posY = data.posY;
-        this.posZ = data.posZ;
+        this.x = data.x;
+        this.y = data.y;
+        this.z = data.z;
     }
 
     public UniqueIdentifier identity()
@@ -226,9 +226,9 @@ public class CoordData
         NBTTagCompound dataTag = nbt == null ? new NBTTagCompound() : nbt;
 
         dataTag.setString(labelId, String.format("%s:%s", this.identity().modId, this.identity().name));
-        dataTag.setDouble(labelX, this.posX);
-        dataTag.setDouble(labelY, this.posY);
-        dataTag.setDouble(labelZ, this.posZ);
+        dataTag.setDouble(labelX, this.x);
+        dataTag.setDouble(labelY, this.y);
+        dataTag.setDouble(labelZ, this.z);
 
         return dataTag;
     }
@@ -246,7 +246,7 @@ public class CoordData
     @Override
     public String toString()
     {
-        return String.format("CoordData/Coords[%s, %s, %s]/Block[%s:%s]/Object[%s]", this.posX, this.posY, this.posZ, this.block, this.meta, this.getClass());
+        return String.format("CoordData/Coords[%s, %s, %s]/Block[%s:%s]/Object[%s]", this.x, this.y, this.z, this.block, this.meta, this.getClass());
     }
 
     public boolean isAnySurfaceVisible(World world)

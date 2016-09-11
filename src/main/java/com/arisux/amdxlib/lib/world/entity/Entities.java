@@ -55,8 +55,8 @@ public class Entities
     {
         if (pos != null && world != null)
         {
-            CoordData newPos = new CoordData(pos.posX, pos.posY, pos.posZ);
-            CoordData newPosBelow = new CoordData(pos.posX, pos.posY - 1, pos.posZ);
+            CoordData newPos = new CoordData(pos.x, pos.y, pos.z);
+            CoordData newPosBelow = new CoordData(pos.x, pos.y - 1, pos.z);
 
             return newPosBelow.getBlock(world) != net.minecraft.init.Blocks.air && newPos.getBlock(world) == net.minecraft.init.Blocks.air;
         }
@@ -169,7 +169,7 @@ public class Entities
     @SuppressWarnings("unchecked")
     public static List<? extends Entity> getEntitiesInCoordsRange(World worldObj, Class<? extends Entity> entityClass, CoordData data, int range, int height)
     {
-        return worldObj.getEntitiesWithinAABB(entityClass, AxisAlignedBB.getBoundingBox(data.posX, data.posY, data.posZ, data.posX + 1, data.posY + 1, data.posZ + 1).expand(range * 2, height, range * 2));
+        return worldObj.getEntitiesWithinAABB(entityClass, AxisAlignedBB.getBoundingBox(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
     }
 
     /**
@@ -199,7 +199,7 @@ public class Entities
 
     public static MovingObjectPosition rayTrace(Entity entity, CoordData coord)
     {
-        return entity != null && coord != null && entity.worldObj != null ? entity.worldObj.rayTraceBlocks(Vec3.createVectorHelper(entity.posX, entity.posY + (entity.height / 2), entity.posZ), Vec3.createVectorHelper(coord.posX, coord.posY, coord.posZ)) : null;
+        return entity != null && coord != null && entity.worldObj != null ? entity.worldObj.rayTraceBlocks(Vec3.createVectorHelper(entity.posX, entity.posY + (entity.height / 2), entity.posZ), Vec3.createVectorHelper(coord.x, coord.y, coord.z)) : null;
     }
 
     public static MovingObjectPosition rayTrace(EntityLivingBase player, int reach)

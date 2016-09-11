@@ -34,7 +34,7 @@ public class Vertex
         this((float) x, (float) y, (float) z);
     }
 
-    public Vertex smooth()
+    public Vertex normalize()
     {
         float sq = (float) Math.sqrt(x * x + y * y + z * z);
         x = x / sq;

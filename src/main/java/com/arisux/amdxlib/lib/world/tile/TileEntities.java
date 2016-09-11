@@ -14,9 +14,9 @@ public class TileEntities
      */
     public static void setTileEntityPosition(TileEntity tileEntity, CoordData coord)
     {
-        tileEntity.xCoord = (int) coord.posX;
-        tileEntity.yCoord = (int) coord.posY;
-        tileEntity.zCoord = (int) coord.posZ;
+        tileEntity.xCoord = (int) coord.x;
+        tileEntity.yCoord = (int) coord.y;
+        tileEntity.zCoord = (int) coord.z;
     }
 
     /**

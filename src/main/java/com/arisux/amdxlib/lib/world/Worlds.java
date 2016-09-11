@@ -32,7 +32,7 @@ public class Worlds
      */
     public static Explosion createExplosion(Entity entity, World worldObj, CoordData data, float strength, boolean isFlaming, boolean isSmoking, boolean doesBlockDamage)
     {
-        Explosion explosion = new Explosion(worldObj, entity, data.posX, data.posY, data.posZ, strength);
+        Explosion explosion = new Explosion(worldObj, entity, data.x, data.y, data.z, strength);
         explosion.isFlaming = isFlaming;
         explosion.isSmoking = isSmoking;
 
@@ -62,9 +62,9 @@ public class Worlds
      */
     public static CoordData getNextSafePositionAbove(CoordData pos, World world)
     {
-        for (int y = (int) pos.posY; y < world.getHeight(); y++)
+        for (int y = (int) pos.y; y < world.getHeight(); y++)
         {
-            CoordData position = new CoordData(pos.posX, y + 1, pos.posZ);
+            CoordData position = new CoordData(pos.x, y + 1, pos.z);
 
             if (Entities.isPositionSafe(position, world))
             {
@@ -77,9 +77,9 @@ public class Worlds
 
     public static boolean canSeeSky(CoordData pos, World world)
     {
-        for (int y = (int) pos.posY; y < world.getHeight(); y++)
+        for (int y = (int) pos.y; y < world.getHeight(); y++)
         {
-            CoordData position = new CoordData(pos.posX, y + 1, pos.posZ);
+            CoordData position = new CoordData(pos.x, y + 1, pos.z);
 
             if (position.getBlock(world) != net.minecraft.init.Blocks.air)
             {
@@ -99,8 +99,8 @@ public class Worlds
      */
     public static int getLightAtCoord(World worldObj, CoordData data)
     {
-        int block = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Block, (int) data.posX, (int) data.posY, (int) data.posZ);
-        int sky = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Sky, (int) data.posX, (int) data.posY, (int) data.posZ) - worldObj.calculateSkylightSubtracted(0f);
+        int block = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Block, (int) data.x, (int) data.y, (int) data.z);
+        int sky = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Sky, (int) data.x, (int) data.y, (int) data.z) - worldObj.calculateSkylightSubtracted(0f);
 
         return Math.max(block, sky);
     }
@@ -113,9 +113,9 @@ public class Worlds
      */
     public static CoordData getNextSafePositionBelow(CoordData pos, World world)
     {
-        for (int y = (int) pos.posY; y > 0; y--)
+        for (int y = (int) pos.y; y > 0; y--)
         {
-            CoordData position = new CoordData(pos.posX, y - 1, pos.posZ);
+            CoordData position = new CoordData(pos.x, y - 1, pos.z);
 
             if (Entities.isPositionSafe(position, world))
             {
@@ -195,13 +195,13 @@ public class Worlds
     {
         for (BiomeGenBase biome : biomes)
         {
-            if (world.provider.getBiomeGenForCoords((int) chunkCoord.posX, (int) chunkCoord.posZ) == biome)
+            if (world.provider.getBiomeGenForCoords((int) chunkCoord.x, (int) chunkCoord.z) == biome)
             {
                 for (int i = 0; i < genPerChunk; ++i)
                 {
-                    int posX = (int) chunkCoord.posX + seed.nextInt(16);
+                    int posX = (int) chunkCoord.x + seed.nextInt(16);
                     int posY = levelStart + seed.nextInt(levelEnd);
-                    int posZ = (int) chunkCoord.posZ + seed.nextInt(16);
+                    int posZ = (int) chunkCoord.z + seed.nextInt(16);
                     (new WorldGenMinable(block, groupSize)).generate(world, seed, posX, posY, posZ);
                 }
             }
@@ -273,13 +273,13 @@ public class Worlds
     {
         for (BiomeGenBase biome : biomes)
         {
-            if (world.provider.getBiomeGenForCoords((int) chunkCoord.posX, (int) chunkCoord.posZ) == biome)
+            if (world.provider.getBiomeGenForCoords((int) chunkCoord.x, (int) chunkCoord.z) == biome)
             {
                 for (int i = 0; i < genPerChunk; ++i)
                 {
-                    int posX = (int) chunkCoord.posX + seed.nextInt(16);
+                    int posX = (int) chunkCoord.x + seed.nextInt(16);
                     int posY = levelStart + seed.nextInt(levelEnd);
-                    int posZ = (int) chunkCoord.posZ + seed.nextInt(16);
+                    int posZ = (int) chunkCoord.z + seed.nextInt(16);
                     worldGen.generate(world, seed, posX, posY, posZ);
                 }
             }

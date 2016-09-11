@@ -22,7 +22,7 @@ public class CoordSelection implements Iterable<CoordData>
             throw new IllegalArgumentException();
         }
 
-        return new CoordSelection(coord, new CoordData(coord.posX + size[0] - 1, coord.posY + size[1] - 1, coord.posZ + size[2] - 1));
+        return new CoordSelection(coord, new CoordData(coord.x + size[0] - 1, coord.y + size[1] - 1, coord.z + size[2] - 1));
     }
 
     public CoordData getPos1()
@@ -57,17 +57,17 @@ public class CoordSelection implements Iterable<CoordData>
 
     public double[] areaSize()
     {
-        return new double[] { max().subtract(min()).posX + 1, max().subtract(min()).posY + 1, max().subtract(min()).posZ + 1 };
+        return new double[] { max().subtract(min()).x + 1, max().subtract(min()).y + 1, max().subtract(min()).z + 1 };
     }
 
     public boolean contains(CoordData coord)
     {
-        return coord.posX >= min().posX && coord.posY >= min().posY && coord.posZ >= min().posZ && coord.posX <= max().posX && coord.posY <= max().posY && coord.posZ <= max().posZ;
+        return coord.x >= min().x && coord.y >= min().y && coord.z >= min().z && coord.x <= max().x && coord.y <= max().y && coord.z <= max().z;
     }
 
     public AxisAlignedBB asAxisAlignedBB()
     {
-        return AxisAlignedBB.getBoundingBox(min().posX, min().posY, min().posZ, max().posX, max().posY, max().posZ);
+        return AxisAlignedBB.getBoundingBox(min().x, min().y, min().z, max().x, max().y, max().z);
     }
 
     @Override

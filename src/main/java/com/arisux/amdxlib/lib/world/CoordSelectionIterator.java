@@ -15,15 +15,15 @@ public class CoordSelectionIterator implements Iterator<CoordData>
     {
         this.min = min;
         this.max = max;
-        this.curX = (int) min.posX;
-        this.curY = (int) min.posY;
-        this.curZ = (int) min.posZ;
+        this.curX = (int) min.x;
+        this.curY = (int) min.y;
+        this.curZ = (int) min.z;
     }
 
     @Override
     public boolean hasNext()
     {
-        return this.curX <= this.max.posX && this.curY <= this.max.posY && this.curZ <= this.max.posZ;
+        return this.curX <= this.max.x && this.curY <= this.max.y && this.curZ <= this.max.z;
     }
 
     @Override
@@ -33,14 +33,14 @@ public class CoordSelectionIterator implements Iterator<CoordData>
 
         this.curX++;
 
-        if (this.curX > this.max.posX)
+        if (this.curX > this.max.x)
         {
-            this.curX = (int) this.min.posX;
+            this.curX = (int) this.min.x;
             this.curY++;
 
-            if (this.curY > this.max.posY)
+            if (this.curY > this.max.y)
             {
-                this.curY = (int) this.min.posY;
+                this.curY = (int) this.min.y;
                 this.curZ++;
             }
         }
