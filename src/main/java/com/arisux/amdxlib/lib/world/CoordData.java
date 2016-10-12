@@ -1,5 +1,7 @@
 package com.arisux.amdxlib.lib.world;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import io.netty.buffer.ByteBuf;
@@ -11,9 +13,10 @@ import net.minecraft.world.World;
 
 public class CoordData
 {
-    public double x, y, z;
-    public int meta;
-    public Block block;
+    public double           x, y, z;
+    private double          lastDistanceCalculated;
+    public int              meta;
+    public Block            block;
     public UniqueIdentifier identifier;
 
     public CoordData(Entity entity)
@@ -92,12 +95,17 @@ public class CoordData
     @Override
     public boolean equals(Object o)
     {
-        if (o == null || this != o || !(o instanceof CoordData) || o instanceof CoordData && ((CoordData) o).x != this.x || o instanceof CoordData && ((CoordData) o).y != this.y || o instanceof CoordData && ((CoordData) o).z != this.z)
+        if (o != null && o instanceof CoordData)
         {
-            return false;
+            CoordData test = (CoordData) o;
+
+            if (this == test || test.x == this.x && test.y == this.y && test.z == this.z)
+            {
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -246,13 +254,16 @@ public class CoordData
     @Override
     public String toString()
     {
-        return String.format("CoordData/Coords[%s, %s, %s]/Block[%s:%s]/Object[%s]", this.x, this.y, this.z, this.block, this.meta, this.getClass());
+        return String.format("CoordData[%s, %s, %s]/Block[%s:%s]/LastDistance[%s]\n", this.x, this.y, this.z, this.block, this.meta, (int)this.lastDistanceCalculated);
     }
 
-    public boolean isAnySurfaceVisible(World world)
+    public boolean isAnySurfaceEmpty(World world)
     {
-        Block air = net.minecraft.init.Blocks.air;
-        
+        return isAnySurfaceNextTo(world, net.minecraft.init.Blocks.air);
+    }
+
+    public boolean isAnySurfaceNextTo(World world, Block block)
+    {
         CoordData up = this.add(0, 1, 0);
         CoordData down = this.add(0, -1, 0);
         CoordData left = this.add(-1, 0, 0);
@@ -260,7 +271,7 @@ public class CoordData
         CoordData front = this.add(0, 0, -1);
         CoordData back = this.add(0, 0, 1);
 
-        return up.getBlock(world) == air || down.getBlock(world) == air || left.getBlock(world) == air || right.getBlock(world) == air || front.getBlock(world) == air || back.getBlock(world) == air;
+        return up.getBlock(world) == block || down.getBlock(world) == block || left.getBlock(world) == block || right.getBlock(world) == block || front.getBlock(world) == block || back.getBlock(world) == block;
     }
 
     public CoordData findSafePosAround(World world)
@@ -334,5 +345,64 @@ public class CoordData
         buf.writeDouble(this.x());
         buf.writeDouble(this.y());
         buf.writeDouble(this.z());
+    }
+
+    public CoordData divide(int i)
+    {
+        this.x = this.x / i;
+        this.y = this.y / i;
+        this.z = this.z / i;
+
+        return this;
+    }
+
+    public CoordData half()
+    {
+        return this.divide(2);
+    }
+
+    public CoordData remainder(int i)
+    {
+        this.x = this.x % i;
+        this.y = this.y % i;
+        this.z = this.z % i;
+
+        return this;
+    }
+
+    /**
+     * Generates an arraylist of equally segmented coodinates between the two specified coordinates.
+     * (x, y, z) = (x1 + (sectionIndex / sectionsMax) * (x2 - x1), y1 + (sectionIndex / sectionsMax) * (y2 - y1), z1 + (sectionIndex / sectionsMax) * (z2 - z1))
+     * 
+     * @param p1 - Point 1, the starting point of the line segment.
+     * @param p2 - Point 2, the end point of the line segment.
+     * @param sections - The amount of times this line segment will be split.
+     * @return The coodinates of each point that the line segment was split at.
+     */
+    public static ArrayList<CoordData> getPointsBetween(CoordData p1, CoordData p2, int sections)
+    {
+        ArrayList<CoordData> points = new ArrayList<CoordData>();
+
+        for (int section = sections; section > 0; section--)
+        {
+            float k = ((float) section / sections);
+            double x = p1.x + (k * (p2.x - p1.x));
+            double y = p1.y + (k * (p2.y - p1.y));
+            double z = p1.z + (k * (p2.z - p1.z));
+
+            points.add(new CoordData(x, y, z));
+        }
+
+        return points;
+    }
+
+    public double distanceFrom(Entity entity)
+    {
+        return this.lastDistanceCalculated = entity.getDistance(this.x, this.y, this.z);
+    }
+    
+    public double getLastDistanceCalculated()
+    {
+        return lastDistanceCalculated;
     }
 }
