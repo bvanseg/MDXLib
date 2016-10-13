@@ -358,6 +358,18 @@ public class Entities
      */
     public static Entity constructEntity(World worldObj, Class<? extends Entity> c)
     {
+        if (worldObj == null)
+        {
+            AMDXLib.log().warn("World object null while attempting to construct entity.");
+            return null;
+        }
+        
+        if (c == null)
+        {
+            AMDXLib.log().warn("Entity class null while attempting to construct entity.");
+            return null;
+        }
+        
         try
         {
             return (c.getConstructor(World.class)).newInstance(new Object[] { worldObj });
