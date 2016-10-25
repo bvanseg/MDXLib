@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 public class ItemDrop
 {
     private ItemStack itemstack;
-    private int rate;
-    
+    private int       rate;
+
     /**
      * Created to better manage drop rates of itemstacks from entities. Drops can be managed in a single location versus per entity.
      * 
@@ -21,22 +21,25 @@ public class ItemDrop
         this.itemstack = itemstack;
         this.rate = rate;
     }
-    
+
     public ItemDrop tryDrop(Entity entity)
     {
-        if (new Random().nextInt(100 / this.rate) == 0)
+        if (!entity.worldObj.isRemote)
         {
-            entity.entityDropItem(itemstack, 0F);
+            if (new Random().nextInt(100 / this.rate) == 0)
+            {
+                entity.entityDropItem(itemstack, 0F);
+            }
         }
-        
+
         return this;
     }
-    
+
     public ItemStack getItemstack()
     {
         return itemstack;
     }
-    
+
     public int getRate()
     {
         return rate;
