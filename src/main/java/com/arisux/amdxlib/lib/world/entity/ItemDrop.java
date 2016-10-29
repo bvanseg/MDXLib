@@ -133,7 +133,7 @@ public class ItemDrop
                     {
                         for (ItemStack stack : itemstacks)
                         {
-                            entity.entityDropItem(stack, 0F);
+                            entity.entityDropItem(stack.copy(), 0F);
                         }
 
                         return true;
@@ -143,7 +143,7 @@ public class ItemDrop
                 case RATE_PERDROP_SINGLE: {
                     if (rand.nextInt(100 / (rate == 0 ? this.rate : rate)) == 0)
                     {
-                        entity.entityDropItem(itemstacks[rand.nextInt(itemstacks.length)], 0F);
+                        entity.entityDropItem(itemstacks[rand.nextInt(itemstacks.length)].copy(), 0F);
                         return true;
                     }
                 }
@@ -153,7 +153,7 @@ public class ItemDrop
                     {
                         if (rand.nextInt(100 / (rate == 0 ? this.rate : rate)) == 0)
                         {
-                            entity.entityDropItem(stack, 0F);
+                            entity.entityDropItem(stack.copy(), 0F);
                         }
                     }
                     return true;
@@ -164,7 +164,7 @@ public class ItemDrop
                     {
                         if (rand.nextInt(100 / (rate == 0 ? this.rate : rate)) == 0)
                         {
-                            entity.entityDropItem(stack, 0F);
+                            entity.entityDropItem(stack.copy(), 0F);
                             return true;
                         }
                     }
