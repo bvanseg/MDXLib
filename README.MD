@@ -36,11 +36,13 @@ to rule out any dependency related issues.
 1. `gradle setupDecompWorkspace`
 2. `gradle eclipse`
 
-## Updating your Clone ##
+## Updating your Repository ##
 
-The following steps will update your clone with the official repo.
+Run the following to sync your copy of the repository up with the latest changes:
 
 * `git pull`
+
+If you experience any new errors, it may be due to a dependency change. Please refresh your dependencies:
 * `gradle --refresh-dependencies`
 
 ## Building the Project ##
