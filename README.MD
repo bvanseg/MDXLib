@@ -43,7 +43,7 @@ The following steps will update your clone with the official repo.
 * `git pull`
 * `gradle --refresh-dependencies`
 
-## Initiate the Build Process ##
+## Building the Project ##
 
 Before you can initiate the build process, you must create a new text document with the name `gradle.properties` in the 
 root directory of the repository. Then add `curseForgeApiKey=00000-00000-00000-00000-00000` to the start of the configuration
