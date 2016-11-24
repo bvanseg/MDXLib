@@ -62,3 +62,4 @@ You can find the compiled project artifact in `./build/libs`.
 [IntelliJ IDEA]: https://www.jetbrains.com/idea/
 [Eclipse]: https://www.eclipse.org/
 [Gradle]: https://www.gradle.org/
+[Java Development Kit 7 or Newer]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
