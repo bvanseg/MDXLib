@@ -17,6 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'curseforge'
+apply plugin: 'maven'
 
 version = "1.0.0.${System.env.BUILD_NUMBER}"
 group= "com.arisux.mdxlib"
@@ -41,6 +42,16 @@ jar {
         attributes 'FMLAT': 'mdxlib_at.cfg'
 		attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
 		attributes 'FMLCorePluginContainsFMLMod' : 'true'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "ftp://build.arisux.com/maven/") {
+                authentication(userName: "${System.env.MAVEN_USERNAME}", password: "${System.env.MAVEN_PASSWORD}")
+            }
+        }
     }
 }
 
