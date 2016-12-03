@@ -75,12 +75,6 @@ processResources {
     }
 }
 
-uploadArchives {
-    logger.lifecycle('Uploading artifacts to the maven repository at build.arisux.com...')
-    logger.lifecycle('Maven Repository Username: ' + System.getenv()['MAVEN_USERNAME'])
-    logger.lifecycle('Maven Repository Password: ' + System.getenv()['MAVEN_PASSWORD'])
-}
-
 task("publishToMaven", dependsOn:"build") {
     description = "Uploads the artifacts generated during the build process to the maven repository at build.arisux.com"
 
@@ -88,7 +82,11 @@ task("publishToMaven", dependsOn:"build") {
         repositories.mavenDeployer {
             configuration = configurations.deployerJars
             repository(url: "ftp://build.arisux.com/maven/") {
-                authentication(userName: System.getenv()['MAVEN_USERNAME'], password: System.getenv()['MAVEN_PASSWORD'])
+                authentication(userName: System.getenv()['MAVEN_USERNAME'], password: System.getenv()['MAVEN_PASSWORD']) {
+                    logger.lifecycle('Uploading artifacts to the maven repository at build.arisux.com...')
+                    logger.lifecycle('Maven Repository Username: ' + System.getenv()['MAVEN_USERNAME'])
+                    logger.lifecycle('Maven Repository Password: ' + System.getenv()['MAVEN_PASSWORD'])
+                }
             }
         }
     }
