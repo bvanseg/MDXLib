@@ -77,9 +77,11 @@ processResources {
 
 task("publishToMaven", dependsOn:"build") {
     description = "Uploads the artifacts generated during the build process to the maven repository at build.arisux.com"
-    logger.lifecycle('Uploading artifacts to the maven repository at build.arisux.com...')
 
     uploadArchives {
+    logger.lifecycle('Uploading artifacts to the maven repository at build.arisux.com...')
+    logger.lifecycle(System.getenv()['MAVEN_USERNAME'])
+
         repositories.mavenDeployer {
             configuration = configurations.deployerJars
             repository(url: "ftp://build.arisux.com/maven/") {
