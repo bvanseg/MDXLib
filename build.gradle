@@ -83,7 +83,7 @@ task("publishToMaven", dependsOn:"build") {
         repositories.mavenDeployer {
             configuration = configurations.deployerJars
             repository(url: "ftp://build.arisux.com/maven/") {
-                authentication(userName: "${System.env.MAVEN_USERNAME}", password: "${System.env.MAVEN_PASSWORD}")
+                authentication(userName: System.getenv()['MAVEN_USERNAME'], password: System.getenv()['MAVEN_PASSWORD'])
             }
         }
     }
