@@ -82,7 +82,7 @@ task("publishToMaven", dependsOn:"build") {
         repositories.mavenDeployer {
             configuration = configurations.deployerJars
             repository(url: "ftp://aliensvspredator.org/maven/") {
-                authentication(userName: System.getenv()['MAVEN_USERNAME'], password: System.getenv()['MAVEN_PASSWORD'])
+                authentication(userName: project.mavenUsername, password: project.mavenPassword)
             }
         }
     }
