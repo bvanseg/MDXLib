@@ -28,7 +28,7 @@ apply plugin: 'curseforge'
 apply plugin: 'maven'
 
 version = "1.0.0.${System.env.BUILD_NUMBER}"
-group= "com.arisux.mdxlib"
+group= "com.arisux"
 archivesBaseName = "mdxlib"
 
 tasks.withType(JavaCompile) {
