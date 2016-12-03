@@ -15,6 +15,14 @@ buildscript {
     }
 }
 
+configurations {
+    deployerJars
+}
+
+dependencies {
+    deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
+}
+
 apply plugin: 'forge'
 apply plugin: 'curseforge'
 apply plugin: 'maven'
@@ -45,16 +53,6 @@ jar {
     }
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "ftp://build.arisux.com/maven/") {
-                authentication(userName: "${System.env.MAVEN_USERNAME}", password: "${System.env.MAVEN_PASSWORD}")
-            }
-        }
-    }
-}
-
 curse {
     displayName = "${project.archivesBaseName} ${project.version}"
     artifact = file("${project.buildDir}/libs/[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar")
@@ -63,8 +61,7 @@ curse {
     releaseType = 'beta'
 }
 
-processResources
-{
+processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
@@ -75,5 +72,19 @@ processResources
     
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+task("publishToMaven", dependsOn:"build") {
+    description = "Uploads the artifacts generated during the build process to the maven repository at build.arisux.com"
+    logger.lifecycle('Uploading artifacts to the maven repository at build.arisux.com...')
+
+    uploadArchives {
+        repositories.mavenDeployer {
+            configuration = configurations.deployerJars
+            repository(url: "ftp://build.arisux.com/maven/") {
+                authentication(userName: "${System.env.MAVEN_USERNAME}", password: "${System.env.MAVEN_PASSWORD}")
+            }
+        }
     }
 }
