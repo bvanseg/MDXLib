@@ -53,6 +53,20 @@ jar {
     }
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}-deobf.jar"
+
+    manifest {
+        attributes 'FMLAT': 'mdxlib_at.cfg'
+		attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
+		attributes 'FMLCorePluginContainsFMLMod' : 'true'
+    }
+}
+
+build.dependsOn deobfJar
+
 curse {
     displayName = "${project.archivesBaseName} ${project.version}"
     artifact = file("${project.buildDir}/libs/[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar")
