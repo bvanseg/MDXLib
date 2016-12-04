@@ -37,13 +37,13 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-println "Minecraft " + config.mc_version + ", Minecraft Forge " + config.forge_version
-
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "eclipse"
     mappings = "stable_12"
 }
+
+println "Minecraft Forge " + minecraft.version + " with mappings " + minecraft.mappings
 
 def sharedManifest = {
     attributes 'FMLAT': 'mdxlib_at.cfg'
