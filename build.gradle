@@ -67,6 +67,9 @@ task deobfJar(type: Jar) {
 
 build.dependsOn deobfJar
 
+artifacts {
+}
+
 curse {
     displayName = "${project.archivesBaseName} ${project.version}"
     artifact = file("${project.buildDir}/libs/[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar")
