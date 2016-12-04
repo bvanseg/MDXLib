@@ -43,31 +43,32 @@ minecraft {
     mappings = "stable_12"
 }
 
+def sharedManifest = {
+    attributes 'FMLAT': 'mdxlib_at.cfg'
+    attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
+	attributes 'FMLCorePluginContainsFMLMod' : 'true'
+}
+
 jar {
 	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar"
-    
-    manifest {
-        attributes 'FMLAT': 'mdxlib_at.cfg'
-		attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
-		attributes 'FMLCorePluginContainsFMLMod' : 'true'
-    }
+    manifest sharedManifest
+}
+
+task srcJar(type: Jar) {
+    from sourceSets.main.allSource
+	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}-sources.jar"
+    classifier = 'sources'
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'deobf'
 	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}-deobf.jar"
-
-    manifest {
-        attributes 'FMLAT': 'mdxlib_at.cfg'
-		attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
-		attributes 'FMLCorePluginContainsFMLMod' : 'true'
-    }
+    classifier = 'deobf'
+    manifest sharedManifest
 }
 
-build.dependsOn deobfJar
-
 artifacts {
+    archives srcJar, deobfJar
 }
 
 curse {
