@@ -47,7 +47,7 @@ println "Minecraft Forge " + minecraft.version + " with mappings " + minecraft.m
 
 def sharedManifest = {
     attributes 'FMLAT': 'mdxlib_at.cfg'
-    attributes 'FMLCorePlugin' : 'com.arisux.amdxlib.FMLModule'
+    attributes 'FMLCorePlugin' : 'com.arisux.mdxlib.FMLModule'
 	attributes 'FMLCorePluginContainsFMLMod' : 'true'
 }
 
