@@ -18,11 +18,11 @@ import cpw.mods.fml.relauncher.Side;
 @Mod(modid = MDX.MODID, version = MDX.VERSION)
 public class ForgeModule
 {
-    private static MDX amdxlib = new MDX();
+    private static MDX instance = new MDX();
 
-    public static MDX amdxlib()
+    public static MDX instance()
     {
-        return amdxlib;
+        return instance;
     }
 
     @EventHandler
