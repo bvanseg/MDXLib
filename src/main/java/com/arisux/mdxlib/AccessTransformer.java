@@ -4,7 +4,7 @@ public class AccessTransformer extends cpw.mods.fml.common.asm.transformers.Acce
 {
     public AccessTransformer() throws Exception
     {
-        super("amdxlib_at.cfg");
+        super("mdxlib_at.cfg");
         MDX.log().info("Loading access transformer: %s", this.getClass().getName());
     }
 }
