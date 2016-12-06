@@ -131,15 +131,14 @@ public class Worlds
      * CoordData's X and Z coords using the specified group size and seed.
      * 
      * @param world - The World instance to generate in.
-     * @param block - The Block instance to generate.
+     * @param generator - The WorldGenerator instance to generate.
      * @param seed - The seed to generate random group coords at.
      * @param genPerChunk - The amount of times to generate this block group per chunk.
-     * @param groupSize - The amount of blocks to generate per generation.
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      */
-    public static void generateBlockInChunk(World world, Block block, Random seed, int genPerChunk, int groupSize, CoordData chunkCoord)
+    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, CoordData chunkCoord)
     {
-        generateBlockInChunk(world, block, seed, genPerChunk, groupSize, 0, 128, chunkCoord, BiomeGenBase.getBiomeGenArray());
+        generateInChunk(world, generator, seed, genPerChunk, 0, 128, chunkCoord);
     }
 
     /**
@@ -147,141 +146,60 @@ public class Worlds
      * CoordData's X and Z coords using the specified group size and seed.
      * 
      * @param world - The World instance to generate in.
-     * @param block - The Block instance to generate.
+     * @param generator - The WorldGenerator instance to generate.
      * @param seed - The seed to generate random group coords at.
      * @param genPerChunk - The amount of times to generate this block group per chunk.
-     * @param groupSize - The amount of blocks to generate per generation.
-     * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
-     * @param biomes - The BiomeGenBase instances to generate in.
-     */
-    public static void generateBlockInChunk(World world, Block block, Random seed, int genPerChunk, int groupSize, CoordData chunkCoord, BiomeGenBase[] biomes)
-    {
-        generateBlockInChunk(world, block, seed, genPerChunk, groupSize, 0, 128, chunkCoord, biomes);
-    }
-
-    /**
-     * Generate a group of the specified Block in the World, a given amount of times, in a Chunk at the given 
-     * CoordData's X and Z coords using the specified group size and seed.
-     * 
-     * @param world - The World instance to generate in.
-     * @param block - The Block instance to generate.
-     * @param seed - The seed to generate random group coords at.
-     * @param genPerChunk - The amount of times to generate this block group per chunk.
-     * @param groupSize - The amount of blocks to generate per generation.
      * @param levelStart - The level that this block group can start generating on
      * @param levelEnd - The level that this block group can stop generating on
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      */
-    public static void generateBlockInChunk(World world, Block block, Random seed, int genPerChunk, int groupSize, int levelStart, int levelEnd, CoordData chunkCoord)
+    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, CoordData chunkCoord)
     {
-        generateBlockInChunk(world, block, seed, genPerChunk, groupSize, 0, 128, chunkCoord, BiomeGenBase.getBiomeGenArray());
-    }
-
-    /**
-     * Generate a group of the specified Block in the World, a given amount of times, in a Chunk at the given 
-     * CoordData's X and Z coords using the specified group size and seed.
-     * 
-     * @param world - The World instance to generate in.
-     * @param block - The Block instance to generate.
-     * @param seed - The seed to generate random group coords at.
-     * @param genPerChunk - The amount of times to generate this block group per chunk.
-     * @param groupSize - The amount of blocks to generate per generation.
-     * @param levelStart - The level that this block group can start generating on
-     * @param levelEnd - The level that this block group can stop generating on
-     * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
-     * @param biomes - The BiomeGenBase instances to generate in.
-     */
-    public static void generateBlockInChunk(World world, Block block, Random seed, int genPerChunk, int groupSize, int levelStart, int levelEnd, CoordData chunkCoord, BiomeGenBase[] biomes)
-    {
-        for (BiomeGenBase biome : biomes)
+        for (int i = 0; i < genPerChunk; ++i)
         {
-            if (world.provider.getBiomeGenForCoords((int) chunkCoord.x, (int) chunkCoord.z) == biome)
-            {
-                for (int i = 0; i < genPerChunk; ++i)
-                {
-                    int posX = (int) chunkCoord.x + seed.nextInt(16);
-                    int posY = levelStart + seed.nextInt(levelEnd);
-                    int posZ = (int) chunkCoord.z + seed.nextInt(16);
-                    (new WorldGenMinable(block, groupSize)).generate(world, seed, posX, posY, posZ);
-                }
-            }
+            int posX = (int) chunkCoord.x + seed.nextInt(16);
+            int posY = levelStart + seed.nextInt(levelEnd);
+            int posZ = (int) chunkCoord.z + seed.nextInt(16);
+            generator.generate(world, seed, posX, posY, posZ);
         }
     }
 
     /**
-     * Generate the specified WorldGenerator instance in the World, a given amount of times, in a Chunk at the given 
-     * CoordData's X and Z coords using the specified seed.
+     * Generate a group of the specified Block in the World, a given amount of times, in a Chunk at the given 
+     * CoordData's X and Z coords using the specified group size and seed.
      * 
      * @param world - The World instance to generate in.
-     * @param worldGen - The WorldGenerator instance to generate.
+     * @param generator - The WorldGenerator instance to generate.
      * @param seed - The seed to generate random group coords at.
-     * @param genPerChunk - The amount of times to generate this WorldGenerator per chunk.
-     * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
-     */
-    public static void generateWorldGenInChunk(World world, WorldGenerator worldGen, Random seed, int genPerChunk, CoordData chunkCoord)
-    {
-        generateWorldGenInChunk(world, worldGen, seed, genPerChunk, 0, 128, chunkCoord, BiomeGenBase.getBiomeGenArray());
-    }
-
-    /**
-     * Generate the specified WorldGenerator instance in the World, a given amount of times, in a Chunk at the given 
-     * CoordData's X and Z coords using the specified seed.
-     * 
-     * @param world - The World instance to generate in.
-     * @param worldGen - The WorldGenerator instance to generate.
-     * @param seed - The seed to generate random group coords at.
-     * @param genPerChunk - The amount of times to generate this WorldGenerator per chunk.
+     * @param genPerChunk - The amount of times to generate this block group per chunk.
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      * @param biomes - The BiomeGenBase instances to generate in.
      */
-    public static void generateWorldGenInChunk(World world, WorldGenerator worldGen, Random seed, int genPerChunk, CoordData chunkCoord, BiomeGenBase[] biomes)
+    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, CoordData chunkCoord, BiomeGenBase[] biomes)
     {
-        generateWorldGenInChunk(world, worldGen, seed, genPerChunk, 0, 128, chunkCoord, biomes);
+        generateInBiome(world, generator, seed, genPerChunk, 0, 128, chunkCoord, biomes);
     }
 
     /**
-     * Generate the specified WorldGenerator instance in the World, a given amount of times, in a Chunk at the given 
-     * CoordData's X and Z coords using the specified seed.
+     * Generate a group of the specified Block in the World, a given amount of times, in a Chunk at the given 
+     * CoordData's X and Z coords using the specified group size and seed.
      * 
      * @param world - The World instance to generate in.
-     * @param worldGen - The WorldGenerator instance to generate.
+     * @param generator - The WorldGenerator instance to generate.
      * @param seed - The seed to generate random group coords at.
-     * @param genPerChunk - The amount of times to generate this WorldGenerator per chunk.
-     * @param levelStart - The level that this WorldGenerator can start generating on
-     * @param levelEnd - The level that this WorldGenerator can stop generating on
-     * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
-     */
-    public static void generateWorldGenInChunk(World world, WorldGenerator worldGen, Random seed, int genPerChunk, int levelStart, int levelEnd, CoordData chunkCoord)
-    {
-        generateWorldGenInChunk(world, worldGen, seed, genPerChunk, 0, 128, chunkCoord, BiomeGenBase.getBiomeGenArray());
-    }
-
-    /**
-     * Generate the specified WorldGenerator instance in the World, a given amount of times, in a Chunk at the given 
-     * CoordData's X and Z coords using the specified seed.
-     * 
-     * @param world - The World instance to generate in.
-     * @param worldGen - The WorldGenerator instance to generate.
-     * @param seed - The seed to generate random group coords at.
-     * @param genPerChunk - The amount of times to generate this WorldGenerator per chunk.
-     * @param levelStart - The level that this WorldGenerator can start generating on
-     * @param levelEnd - The level that this WorldGenerator can stop generating on
+     * @param genPerChunk - The amount of times to generate this block group per chunk.
+     * @param levelStart - The level that this block group can start generating on
+     * @param levelEnd - The level that this block group can stop generating on
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      * @param biomes - The BiomeGenBase instances to generate in.
      */
-    public static void generateWorldGenInChunk(World world, WorldGenerator worldGen, Random seed, int genPerChunk, int levelStart, int levelEnd, CoordData chunkCoord, BiomeGenBase[] biomes)
+    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, CoordData chunkCoord, BiomeGenBase[] biomes)
     {
         for (BiomeGenBase biome : biomes)
         {
             if (world.provider.getBiomeGenForCoords((int) chunkCoord.x, (int) chunkCoord.z) == biome)
             {
-                for (int i = 0; i < genPerChunk; ++i)
-                {
-                    int posX = (int) chunkCoord.x + seed.nextInt(16);
-                    int posY = levelStart + seed.nextInt(levelEnd);
-                    int posZ = (int) chunkCoord.z + seed.nextInt(16);
-                    worldGen.generate(world, seed, posX, posY, posZ);
-                }
+                generateInChunk(world, generator, seed, genPerChunk, levelStart, levelEnd, chunkCoord);
             }
         }
     }
