@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Console
 {
-    public static Logger logger = LogManager.getLogger("AMDXLib");;
+    public static Logger logger = LogManager.getLogger("MDXLib");;
 
     public static void copyright()
     {
