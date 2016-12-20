@@ -11,6 +11,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -31,7 +32,6 @@ public class ForgeModule
         Console.preInit();
         
         Game.registerEventHandler(StructureGenerationHandler.instance);
-        Game.registerEventHandler(IdentityRemapModule.instance);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
@@ -61,5 +61,11 @@ public class ForgeModule
                 return "Notifications may pop up here throughout gameplay. These notifications will explain how certain features of the game work. You can disable these notifications in the settings.";
             }
         });
+    }
+    
+    @EventHandler
+    public void onLoadMissingMapping(FMLMissingMappingsEvent event)
+    {
+        IdentityRemapModule.instance.onLoadMissingMapping(event);
     }
 }

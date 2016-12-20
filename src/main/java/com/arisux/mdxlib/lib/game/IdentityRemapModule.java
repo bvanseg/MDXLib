@@ -3,7 +3,6 @@ package com.arisux.mdxlib.lib.game;
 import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.game.ModIdentityMap.IdentityMap;
 
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 
@@ -11,7 +10,6 @@ public class IdentityRemapModule
 {
     public static final IdentityRemapModule instance = new IdentityRemapModule();
     
-    @EventHandler
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
         MDX.log().warn("Invalid mappings found, searching for new mappings...");
