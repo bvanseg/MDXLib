@@ -231,7 +231,13 @@ public class Draw
      */
     public static void drawString(String text, int x, int y, int color, boolean shadow)
     {
+        String original = text;
         text = I18n.format(text);
+        
+        if (text.toLowerCase().contains("error:".toLowerCase()))
+        {
+            text = original;
+        }
     
         if (shadow)
         {

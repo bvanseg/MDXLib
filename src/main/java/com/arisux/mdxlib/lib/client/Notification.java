@@ -16,6 +16,40 @@ public abstract class Notification
     private int pad;
     private int lineSpacing;
     private float textScale;
+
+    public static class DynamicNotification extends Notification
+    {
+        private String message;
+        private int displayTimeout;
+
+        @Override
+        public boolean allowMultiple()
+        {
+            return false;
+        }
+
+        @Override
+        public String getMessage()
+        {
+            return this.message;
+        }
+
+        public void setMessage(String message)
+        {
+            this.message = message;
+        }
+        
+        @Override
+        public int displayTimeout()
+        {
+            return this.displayTimeout == 0 ? super.displayTimeout() : this.displayTimeout;
+        }
+        
+        public void setDisplayTimeout(int seconds)
+        {
+            this.displayTimeout = seconds * 20;
+        }
+    }
     
     public Notification()
     {
@@ -44,6 +78,7 @@ public abstract class Notification
     {
         MDX.getNotificationsInQueue().remove(this);
         NotifierModule.currentNotification = null;
+        this.ticksExisted = 0;
     }
 
     protected void preDraw()
@@ -81,5 +116,10 @@ public abstract class Notification
     public int getTicksExisted()
     {
         return ticksExisted;
+    }
+    
+    public boolean allowMultiple()
+    {
+        return true;
     }
 }

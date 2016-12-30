@@ -41,7 +41,7 @@ public class MDX
     private ArrayList<Schematic>                        schematicRegistry;
 
     /** A queue for notifications that will be displayed     on screen **/
-    private static ArrayList<Notification>                     notificationsInQueue;
+    private static ArrayList<Notification>              notificationsInQueue;
 
     /** Entire mods that will be remapped **/
     private static ArrayList<ModIdentityMap>            remappedMods;
@@ -73,12 +73,15 @@ public class MDX
     {
         return Console.logger;
     }
-    
+
     public static void sendNotification(Notification notification)
     {
-        notificationsInQueue.add(notification);
+        if (notification.allowMultiple() || !notification.allowMultiple() && !MDX.getNotificationsInQueue().contains(notification))
+        {
+            notificationsInQueue.add(notification);
+        }
     }
-    
+
     public static ArrayList<Notification> getNotificationsInQueue()
     {
         return notificationsInQueue;
@@ -306,7 +309,7 @@ public class MDX
 
         return MDX.loadSchematic(path);
     }
-    
+
     public static void registerRemappedEntity(Class<? extends Entity> entityClass, String invalidId)
     {
         EntityList.stringToClassMapping.put(invalidId, entityClass);
