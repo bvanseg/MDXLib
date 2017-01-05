@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.world.CoordData;
+import com.arisux.mdxlib.lib.world.CoordData.BlockDataStore;
 import com.arisux.mdxlib.lib.world.CoordSelection;
 import com.arisux.mdxlib.lib.world.Structure;
 import com.arisux.mdxlib.lib.world.tile.TileEntities;
@@ -117,8 +118,7 @@ public class Schematic
                 Block block = blocks[index];
                 byte meta = this.metadata[index];
 
-                data.block = block;
-                data.meta = meta;
+                data.store(new BlockDataStore(block, meta));
 
                 if (block != null && getPass(block, meta) == pass && block != net.minecraft.init.Blocks.air)
                 {
@@ -154,7 +154,7 @@ public class Schematic
 
                 if (block != null && getPass(block, meta) == pass)
                 {
-                    CoordData pos = new CoordData(data.x, data.y, data.z, block, meta).add(relative);
+                    CoordData pos = new CoordData(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
                     TileEntity tileEntity = tileEntities.get(relative.hashCode());
 
                     if (tileEntity != null)
@@ -196,7 +196,7 @@ public class Schematic
 
                 if (block != null && getPass(block, meta) == pass)
                 {
-                    CoordData pos = new CoordData(data.x, data.y, data.z, block, meta).add(relative);
+                    CoordData pos = new CoordData(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
                     world.setBlock((int) pos.x, (int) pos.y, (int) pos.z, block, meta, 3);
 
                     TileEntity tileEntity = tileEntities.get(relative.hashCode());

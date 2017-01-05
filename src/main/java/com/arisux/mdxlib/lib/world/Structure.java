@@ -71,9 +71,9 @@ public abstract class Structure
             {
                 CoordData coord = this.blockQueue.get(this.blockQueue.size() - 1 - i);
 
-                if (coord.block != Blocks.air)
+                if (coord.getBlock(world) != Blocks.air)
                 {
-                    this.world.setBlock((int) coord.x, (int) coord.y, (int) coord.z, coord.block, coord.meta, 2);
+                    this.world.setBlock((int) coord.x, (int) coord.y, (int) coord.z, coord.getBlock(world), coord.getBlockMetadata(world), 2);
                 }
 
                 this.blockQueue.remove(coord);

@@ -13,11 +13,37 @@ import net.minecraft.world.World;
 
 public class CoordData
 {
-    public double           x, y, z;
-    private double          lastDistanceCalculated;
-    public int              meta;
-    public Block            block;
-    public UniqueIdentifier identifier;
+    public double  x;
+    public double  y;
+    public double  z;
+    private IStorable stored;
+    
+    public static interface IStorable
+    {
+        ;
+    }
+    
+    public static class BlockDataStore implements IStorable
+    {
+        public String blockid;
+        public byte metadata;
+        
+        public BlockDataStore(Block block, byte metadata)
+        {
+            this(identity(block), metadata);
+        }
+        
+        public BlockDataStore(UniqueIdentifier uid, byte metadata)
+        {
+            this(uid.toString(), metadata);
+        }
+        
+        public BlockDataStore(String blockid, byte metadata)
+        {
+            this.blockid = blockid;
+            this.metadata = metadata;
+        }
+    }
 
     public CoordData(Entity entity)
     {
@@ -26,42 +52,7 @@ public class CoordData
 
     public CoordData(TileEntity tileEntity)
     {
-        this(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorld() != null ? tileEntity.getWorld().getBlock(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) : null, tileEntity.getWorld() != null ? tileEntity.getWorld().getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) : 0);
-    }
-
-    public CoordData(double posX, double posY, double posZ, Block block)
-    {
-        this(posX, posY, posZ, block, 0);
-    }
-
-    public CoordData(double posX, double posY, double posZ, Block block, double meta)
-    {
-        this(posX, posY, posZ, GameRegistry.findUniqueIdentifierFor(block));
-        this.block = block;
-    }
-
-    public CoordData(double posX, double posY, double posZ, String id)
-    {
-        this(posX, posY, posZ, id, 0);
-    }
-
-    public CoordData(double posX, double posY, double posZ, String id, double meta)
-    {
-        this(posX, posY, posZ, new UniqueIdentifier(id), 0);
-    }
-
-    public CoordData(double posX, double posY, double posZ, UniqueIdentifier identifier)
-    {
-        this(posX, posY, posZ, identifier, 0);
-    }
-
-    public CoordData(double posX, double posY, double posZ, UniqueIdentifier identifier, int meta)
-    {
-        this.identifier = identifier;
-        this.x = posX;
-        this.y = posY;
-        this.z = posZ;
-        this.meta = meta;
+        this(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
     }
 
     public CoordData(double posX, double posY, double posZ)
@@ -73,23 +64,23 @@ public class CoordData
 
     public CoordData(long posX, long posY, long posZ)
     {
-        this.x = (double) posX;
-        this.y = (double) posY;
-        this.z = (double) posZ;
+        this((double) posX, (double) posY, (double) posZ);
     }
 
     public CoordData(float posX, float posY, float posZ)
     {
-        this.x = (double) posX;
-        this.y = (double) posY;
-        this.z = (double) posZ;
+        this((double) posX, (double) posY, (double) posZ);
     }
 
     public CoordData(int posX, int posY, int posZ)
     {
-        this.x = (double) posX;
-        this.y = (double) posY;
-        this.z = (double) posZ;
+        this((double) posX, (double) posY, (double) posZ);
+    }
+    
+    public CoordData store(IStorable store)
+    {
+        this.stored = store;
+        return this;
     }
 
     @Override
@@ -134,22 +125,27 @@ public class CoordData
 
     public Block getBlock(World world)
     {
-        return getBlock(world, false);
-    }
-
-    public Block getBlock(World world, boolean force)
-    {
-        return this.block == null && world != null || force ? world.getBlock((int) this.x, (int) this.y, (int) this.z) : this.block;
+        return world.getBlock((int) this.x, (int) this.y, (int) this.z);
     }
 
     public int getBlockMetadata(World world)
     {
-        return this.meta == 0 && world != null ? world.getBlockMetadata((int) this.x, (int) this.y, (int) this.z) : 0;
+        return world != null ? world.getBlockMetadata((int) this.x, (int) this.y, (int) this.z) : 0;
     }
 
     public TileEntity getTileEntity(World world)
     {
         return world.getTileEntity((int) this.x, (int) this.y, (int) this.z);
+    }
+
+    public UniqueIdentifier identity(World world)
+    {
+        return identity(this.getBlock(world));
+    }
+
+    public static UniqueIdentifier identity(Block block)
+    {
+        return GameRegistry.findUniqueIdentifierFor(block);
     }
 
     public CoordData min(CoordData data)
@@ -200,25 +196,6 @@ public class CoordData
         return this;
     }
 
-    public void set(CoordData data)
-    {
-        this.identifier = data.identifier;
-        this.block = data.block;
-        this.x = data.x;
-        this.y = data.y;
-        this.z = data.z;
-    }
-
-    public UniqueIdentifier identity()
-    {
-        return this.identity(null);
-    }
-
-    public UniqueIdentifier identity(World world)
-    {
-        return this.identifier == null ? GameRegistry.findUniqueIdentifierFor(this.getBlock(world)) : this.identifier;
-    }
-
     public NBTTagCompound writeToNBT()
     {
         return this.writeToNBT(null);
@@ -232,8 +209,19 @@ public class CoordData
     public NBTTagCompound writeToNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
     {
         NBTTagCompound dataTag = nbt == null ? new NBTTagCompound() : nbt;
+        
+        if (this.stored != null)
+        {
+            if (this.stored instanceof IStorable)
+            {
+                if (this.stored instanceof BlockDataStore)
+                {
+                    BlockDataStore blockdata = (BlockDataStore) this.stored;
+                    dataTag.setString(labelId, blockdata.toString());
+                }
+            }
+        }
 
-        dataTag.setString(labelId, String.format("%s:%s", this.identity().modId, this.identity().name));
         dataTag.setDouble(labelX, this.x);
         dataTag.setDouble(labelY, this.y);
         dataTag.setDouble(labelZ, this.z);
@@ -248,13 +236,18 @@ public class CoordData
 
     public CoordData readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
     {
-        return new CoordData(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ), nbt.getString(labelId));
+        return readFromNBT(nbt, labelId, labelX, labelY, labelZ, "Meta");
+    }
+    
+    public CoordData readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ, String labelMeta)
+    {
+        return new CoordData(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ)).store(new BlockDataStore(nbt.getString(labelId), nbt.getByte(labelMeta)));
     }
 
     @Override
     public String toString()
     {
-        return String.format("CoordData[%s, %s, %s]/Block[%s:%s]/LastDistance[%s]\n", this.x, this.y, this.z, this.block, this.meta, (int)this.lastDistanceCalculated);
+        return String.format("CoordData[%s, %s, %s]/Object[%s]", this.x, this.y, this.z, this.stored);
     }
 
     public boolean isAnySurfaceEmpty(World world)
@@ -398,11 +391,6 @@ public class CoordData
 
     public double distanceFrom(Entity entity)
     {
-        return this.lastDistanceCalculated = entity.getDistance(this.x, this.y, this.z);
-    }
-    
-    public double getLastDistanceCalculated()
-    {
-        return lastDistanceCalculated;
+        return entity.getDistance(this.x, this.y, this.z);
     }
 }

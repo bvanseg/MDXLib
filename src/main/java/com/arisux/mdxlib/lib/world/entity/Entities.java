@@ -202,69 +202,6 @@ public class Entities
         return entity != null && coord != null && entity.worldObj != null ? entity.worldObj.rayTraceBlocks(Vec3.createVectorHelper(entity.posX, entity.posY + (entity.height / 2), entity.posZ), Vec3.createVectorHelper(coord.x, coord.y, coord.z)) : null;
     }
 
-    public static MovingObjectPosition rayTrace(EntityLivingBase player, int reach)
-    {
-        Vec3 pos = player.getPosition(1F);
-        Vec3 entityLook = player.getLook(1F);
-
-        Entity pointedEntity = null;
-        Vec3 hitVec = null;
-        Vec3 posReach = null;
-
-        if (entityLook != null)
-        {
-            posReach = pos.addVector(entityLook.xCoord * reach, entityLook.yCoord * reach, entityLook.zCoord * reach);
-
-            List<Entity> entities = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.addCoord(entityLook.xCoord * reach, entityLook.yCoord * reach, entityLook.zCoord * reach).expand(1.0F, 1.0F, 1.0F));
-
-            for (Entity listEntity : entities)
-            {
-                if (listEntity.canBeCollidedWith())
-                {
-                    float borderSize = listEntity.getCollisionBorderSize();
-                    AxisAlignedBB axisalignedbb = listEntity.boundingBox.expand(borderSize, borderSize, borderSize);
-                    MovingObjectPosition movingObjPos = axisalignedbb.calculateIntercept(pos, posReach);
-
-                    if (axisalignedbb.isVecInside(pos))
-                    {
-                        pointedEntity = listEntity;
-                        hitVec = movingObjPos == null ? pos : movingObjPos.hitVec;
-                    }
-                    else if (movingObjPos != null)
-                    {
-                        if (listEntity == player.ridingEntity && !listEntity.canRiderInteract())
-                        {
-                            pointedEntity = listEntity;
-                            hitVec = movingObjPos.hitVec;
-                        }
-                        else
-                        {
-                            pointedEntity = listEntity;
-                            hitVec = movingObjPos.hitVec;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (pointedEntity != null && hitVec != null)
-        {
-            return new MovingObjectPosition(pointedEntity, hitVec);
-        }
-
-        if (posReach != null)
-        {
-            MovingObjectPosition blockHitVec = player.worldObj.rayTraceBlocks(pos, posReach, true, true, true);
-
-            if (blockHitVec != null)
-            {
-                return blockHitVec;
-            }
-        }
-
-        return null;
-    }
-
     public static MovingObjectPosition rayTrace(Entity entity, int reach)
     {
         Vec3 pos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
