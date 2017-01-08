@@ -46,6 +46,20 @@ public class Draw
     
         public void draw(int x, int y);
     }
+
+    public static void line(int x1, int y1, int x2, int y2, float depth, float width, int color)
+    {
+        GL11.glLineWidth(width);
+        OpenGL.color4i(color);
+        OpenGL.translate(0F, 0F, depth);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex2d(x1, y1);
+        GL11.glVertex2d(x2, y2);
+        GL11.glEnd();
+        GL11.glLineWidth(1.0F);
+        OpenGL.translate(0F, 0F, -depth);
+    }
     
     /**
      * Draws a rectangle at the specified coordinates, with the 

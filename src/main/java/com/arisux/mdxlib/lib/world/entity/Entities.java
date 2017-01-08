@@ -1,5 +1,6 @@
 package com.arisux.mdxlib.lib.world.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +19,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.init.Blocks;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -71,7 +73,7 @@ public class Entities
      * @param world - The world we're checking for a safe position in.
      * @return The safe position.
      */
-    public static CoordData getSafePosition(CoordData pos, World world)
+    public static CoordData getSafePositionAboveBelow(CoordData pos, World world)
     {
         CoordData newSafePosition = Worlds.getNextSafePositionAbove(pos, world);
 
@@ -79,12 +81,6 @@ public class Entities
         {
             newSafePosition = Worlds.getNextSafePositionBelow(pos, world);
         }
-
-        // if (!(isPositionSafe(newSafePosition, world)))
-        // {
-        // Random rand = new Random();
-        // newSafePosition = getSafePosition(new CoordData(rand.nextInt(30000), rand.nextInt(256), rand.nextInt(30000)), world);
-        // }
 
         return newSafePosition;
     }
@@ -458,5 +454,59 @@ public class Entities
     public static String getEntityRegistrationId(Class <? extends Entity> c)
     {
         return (String) EntityList.classToStringMapping.get(c);
+    }
+    
+    public static CoordData getSafeLocationAround(Entity toCheck, CoordData around)
+    {
+        ArrayList<CoordData> potentialLocations = com.arisux.mdxlib.lib.world.block.Blocks.getCoordDataInRangeIncluding((int)around.x, (int)around.y, (int)around.z, 2, toCheck.worldObj, Blocks.air);
+        
+        for (CoordData potentialLocation : potentialLocations)
+        {
+            Block blockAt = potentialLocation.getBlock(toCheck.worldObj);
+            Block blockBelow = potentialLocation.add(0, -1, 0).getBlock(toCheck.worldObj);
+            
+            if (blockAt != null && blockBelow != null)
+            {
+                if (blockAt == Blocks.air)
+                {
+                    if (isGround(blockBelow))
+                    {
+                        double entityWidth = toCheck.boundingBox.maxX - toCheck.boundingBox.minX;
+                        double entityHeight = toCheck.boundingBox.maxY - toCheck.boundingBox.minY;
+                        double entityDepth = toCheck.boundingBox.maxZ - toCheck.boundingBox.minZ;
+                        
+                        entityWidth = entityWidth < 1 ? 1 : entityWidth;
+                        entityDepth = entityDepth < 1 ? 1 : entityDepth;
+                        entityHeight = entityHeight < 1 ? 1 : entityHeight;
+                        
+                        Block blockAbove = potentialLocation.add(0, entityHeight, 0).getBlock(toCheck.worldObj);
+                        
+                        if (isSafe(blockAbove))
+                        {
+                            Block blockToLeft = potentialLocation.add(-entityWidth, 0, 0).getBlock(toCheck.worldObj);
+                            Block blockToRight = potentialLocation.add(entityWidth, 0, 0).getBlock(toCheck.worldObj);
+                            Block blockInFront = potentialLocation.add(0, 0, entityDepth).getBlock(toCheck.worldObj);
+                            Block blockInBack = potentialLocation.add(0, 0, -entityDepth).getBlock(toCheck.worldObj);
+                           
+                            if (isSafe(blockToLeft) && isSafe(blockToRight) && isSafe(blockInFront) && isSafe(blockInBack))
+                            {
+                                return potentialLocation;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    public static boolean isGround(Block block)
+    {
+        return block.getMaterial().isSolid() && block != Blocks.air;
+    }
+    
+    public static boolean isSafe(Block block)
+    {
+        return block == Blocks.air;
     }
 }
