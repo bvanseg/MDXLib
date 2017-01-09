@@ -1,5 +1,6 @@
 package com.arisux.mdxlib.lib.client;
 
+import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.client.render.Texture;
 
 import cpw.mods.fml.relauncher.Side;
@@ -15,6 +16,22 @@ public class TexturedModel<MODEL extends Model>
     {
         this.model = model;
         this.texture = texture;
+    }
+    
+    public TexturedModel(TexturedModel<MODEL> copy)
+    {
+        this.model = copy.model;
+        this.texture = copy.texture;
+        
+        try
+        {
+            this.model = (MODEL) (copy.getModel().getClass().getConstructor()).newInstance(new Object[] {});
+        }
+        catch (Exception e)
+        {
+            MDX.log().warn("Failed to create new model instance: " + (copy.getModel().getClass() != null ? copy.getModel().getClass().getName() : copy.getModel().getClass()));
+            e.printStackTrace();
+        }
     }
 
     public MODEL getModel()
