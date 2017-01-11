@@ -99,12 +99,12 @@ processResources {
 }
 
 task("publishToMaven", dependsOn:"build") {
-    description = "Uploads the artifacts generated during the build process to the arisux maven repository"
+    description = "Uploads the artifacts generated during the build process to the aliensvspredator maven repository"
 
     uploadArchives {
         repositories.mavenDeployer {
             configuration = configurations.deployerJars
-            repository(url: "ftp://build.arisux.com/maven/") {
+            repository(url: "ftp://maven.aliensvspredator.org/") {
                 authentication(userName: project.mavenUsername, password: project.mavenPassword)
             
 	            pom.project {
