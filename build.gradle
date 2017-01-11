@@ -106,13 +106,14 @@ task("publishToMaven", dependsOn:"build") {
             configuration = configurations.deployerJars
             repository(url: "ftp://maven.aliensvspredator.org/") {
                 authentication(userName: project.mavenUsername, password: project.mavenPassword)
-            
-	            pom.project {
-	        		properties {
-	            		forgeVersion = minecraft.getApiVersion()
-	            	}
-	            }
             }
+            
+	        pom.project {
+	        	properties {
+	            	forgeVersion = minecraft.getApiVersion()
+	            	mcVersion = minecraft.version
+	            }
+	        }
         }
     }
 }
