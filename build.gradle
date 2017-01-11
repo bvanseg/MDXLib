@@ -106,6 +106,12 @@ task("publishToMaven", dependsOn:"build") {
             configuration = configurations.deployerJars
             repository(url: "ftp://build.arisux.com/maven/") {
                 authentication(userName: project.mavenUsername, password: project.mavenPassword)
+            
+	            pom.project {
+	        		properties {
+	            		forgeVersion = minecraft.getApiVersion()
+	            	}
+	            }
             }
         }
     }
