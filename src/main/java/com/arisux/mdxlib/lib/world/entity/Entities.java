@@ -1,6 +1,7 @@
 package com.arisux.mdxlib.lib.world.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -27,7 +28,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import scala.actors.threadpool.Arrays;
 
 public class Entities
 {
