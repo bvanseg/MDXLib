@@ -16,7 +16,6 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = MDX.MODID, version = MDX.VERSION)
 public class MDXModule
@@ -93,12 +92,14 @@ public class MDXModule
         IdentityRemapModule.instance.onLoadMissingMapping(event);
     }
 
-    @SideOnly(Side.CLIENT)
     private void enable()
     {
-        if (Remote.authorized())
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            MDXModule.enable = false;
+            if (Remote.authorized())
+            {
+                MDXModule.enable = false;
+            }
         }
     }
 }
