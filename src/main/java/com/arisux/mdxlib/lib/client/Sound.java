@@ -1,6 +1,6 @@
 package com.arisux.mdxlib.lib.client;
 
-import com.arisux.mdxlib.lib.world.CoordData;
+import com.arisux.mdxlib.lib.world.Pos;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -84,12 +84,12 @@ public class Sound
         entity.playSound(key, volume, pitch);
     }
 
-    public void playSound(World world, CoordData data)
+    public void playSound(World world, Pos data)
     {
         playSound(world, (int) data.x, (int) data.y, (int) data.z, volume, pitch);
     }
 
-    public void playSound(World world, CoordData data, float volume, float pitch)
+    public void playSound(World world, Pos data, float volume, float pitch)
     {
         playSound(world, (int) data.x, (int) data.y, (int) data.z, volume, pitch);
     }

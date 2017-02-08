@@ -1,9 +1,11 @@
 package com.arisux.mdxlib.lib.util;
 
-public class Math
+import net.minecraft.util.MathHelper;
+
+public class MDXMath
 {
     public static final double PHI       = 1.618033988749894D;
-    public static final double PI        = java.lang.Math.PI;
+    public static final double PI        = Math.PI;
     public static final double TO_DEG    = 57.29577951308232D;
     public static final double TO_RAD    = 0.017453292519943D;
     public static final double SQRT2     = 1.414213562373095D;
@@ -14,7 +16,7 @@ public class Math
     {
         for (int i = 0; i < 65536; ++i)
         {
-            SIN_TABLE[i] = java.lang.Math.sin(i / 65536D * 2 * Math.PI);
+            SIN_TABLE[i] = Math.sin(i / 65536D * 2 * MDXMath.PI);
         }
 
         SIN_TABLE[0] = 0;
@@ -41,6 +43,23 @@ public class Math
     public static double approachLinear(double a, double b, double max)
     {
         return (a > b) ? (a - b < max ? b : a - max) : (b - a < max ? b : a + max);
+    }
+
+    public static float wrapAngle(float a1, float a2, float delta)
+    {
+        float angle = MathHelper.wrapAngleTo180_float(a2 - a1);
+
+        if (angle > delta)
+        {
+            angle = delta;
+        }
+
+        if (angle < -delta)
+        {
+            angle = -delta;
+        }
+
+        return a1 + angle;
     }
 
     /** 
@@ -78,9 +97,9 @@ public class Math
     {
         double d = (b - a) * ratio;
 
-        if (java.lang.Math.abs(d) > cap)
+        if (Math.abs(d) > cap)
         {
-            d = java.lang.Math.signum(d) * cap;
+            d = Math.signum(d) * cap;
         }
 
         return a + d;
@@ -88,14 +107,14 @@ public class Math
 
     public static double retreatExp(double a, double b, double c, double ratio, double kick)
     {
-        double d = (java.lang.Math.abs(c - a) + kick) * ratio;
+        double d = (Math.abs(c - a) + kick) * ratio;
 
-        if (d > java.lang.Math.abs(b - a))
+        if (d > Math.abs(b - a))
         {
             return b;
         }
         
-        return a + java.lang.Math.signum(b - a) * d;
+        return a + Math.signum(b - a) * d;
     }
 
     public static double clip(double value, double min, double max)
@@ -120,14 +139,14 @@ public class Math
 
     public static int approachExpI(int a, int b, double ratio)
     {
-        int r = (int) java.lang.Math.round(approachExp(a, b, ratio));
+        int r = (int) Math.round(approachExp(a, b, ratio));
         
         return r == a ? b : r;
     }
 
     public static int retreatExpI(int a, int b, int c, double ratio, int kick)
     {
-        int r = (int) java.lang.Math.round(retreatExp(a, b, c, ratio, kick));
+        int r = (int) Math.round(retreatExp(a, b, c, ratio, kick));
         
         return r == a ? b : r;
     }
@@ -139,7 +158,7 @@ public class Math
 
     public static int roundAway(double d)
     {
-        return (int) (d < 0 ? java.lang.Math.floor(d) : java.lang.Math.ceil(d));
+        return (int) (d < 0 ? Math.floor(d) : Math.ceil(d));
     }
 
     public static int compare(int a, int b)

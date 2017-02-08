@@ -8,11 +8,11 @@ import com.arisux.mdxlib.lib.game.Game;
 
 public class GuiDropdownMenu extends GuiCustomButton
 {
-    ArrayList<GuiCustomButton> options = new ArrayList<GuiCustomButton>();
+    private ArrayList<GuiCustomButton> options = new ArrayList<GuiCustomButton>();
 
-    public GuiDropdownMenu(ArrayList<GuiCustomButton> buttonList, int id, int xPosition, int yPosition, int width, int height, String displayString, IAction action)
+    public GuiDropdownMenu(int id, int xPosition, int yPosition, int width, int height, String displayString)
     {
-        super(buttonList, id, xPosition, yPosition, width, height, displayString, action);
+        super(id, xPosition, yPosition, width, height, displayString);
     }
 
     @Override

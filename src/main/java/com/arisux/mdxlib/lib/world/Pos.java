@@ -9,9 +9,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class CoordData
+public class Pos
 {
     public double  x;
     public double  y;
@@ -43,41 +44,46 @@ public class CoordData
             this.blockid = blockid;
             this.metadata = metadata;
         }
+
+        public static UniqueIdentifier identity(Block block)
+        {
+            return GameRegistry.findUniqueIdentifierFor(block);
+        }
     }
 
-    public CoordData(Entity entity)
+    public Pos(Entity entity)
     {
         this(Math.round(entity.posX), Math.round(entity.posY), Math.round(entity.posZ));
     }
 
-    public CoordData(TileEntity tileEntity)
+    public Pos(TileEntity tileEntity)
     {
         this(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
     }
 
-    public CoordData(double posX, double posY, double posZ)
+    public Pos(double posX, double posY, double posZ)
     {
         this.x = posX;
         this.y = posY;
         this.z = posZ;
     }
 
-    public CoordData(long posX, long posY, long posZ)
+    public Pos(long posX, long posY, long posZ)
     {
         this((double) posX, (double) posY, (double) posZ);
     }
 
-    public CoordData(float posX, float posY, float posZ)
+    public Pos(float posX, float posY, float posZ)
     {
         this((double) posX, (double) posY, (double) posZ);
     }
 
-    public CoordData(int posX, int posY, int posZ)
+    public Pos(int posX, int posY, int posZ)
     {
         this((double) posX, (double) posY, (double) posZ);
     }
     
-    public CoordData store(IStorable store)
+    public Pos store(IStorable store)
     {
         this.stored = store;
         return this;
@@ -86,9 +92,9 @@ public class CoordData
     @Override
     public boolean equals(Object o)
     {
-        if (o != null && o instanceof CoordData)
+        if (o != null && o instanceof Pos)
         {
-            CoordData test = (CoordData) o;
+            Pos test = (Pos) o;
 
             if (this == test || test.x == this.x && test.y == this.y && test.z == this.z)
             {
@@ -138,59 +144,49 @@ public class CoordData
         return world.getTileEntity((int) this.x, (int) this.y, (int) this.z);
     }
 
-    public UniqueIdentifier identity(World world)
+    public Pos min(Pos data)
     {
-        return identity(this.getBlock(world));
+        return new Pos(Math.min(this.x, data.x), Math.min(this.y, data.y), Math.min(this.z, data.z));
     }
 
-    public static UniqueIdentifier identity(Block block)
+    public Pos max(Pos data)
     {
-        return GameRegistry.findUniqueIdentifierFor(block);
+        return new Pos(Math.max(this.x, data.x), Math.max(this.y, data.y), Math.max(this.z, data.z));
     }
 
-    public CoordData min(CoordData data)
+    public Pos add(Pos data)
     {
-        return new CoordData(Math.min(this.x, data.x), Math.min(this.y, data.y), Math.min(this.z, data.z));
+        return new Pos(this.x + data.x, this.y + data.y, this.z + data.z);
     }
 
-    public CoordData max(CoordData data)
+    public Pos add(double posX, double posY, double posZ)
     {
-        return new CoordData(Math.max(this.x, data.x), Math.max(this.y, data.y), Math.max(this.z, data.z));
+        return this.add(new Pos(posX, posY, posZ));
     }
 
-    public CoordData add(CoordData data)
+    public Pos subtract(Pos data)
     {
-        return new CoordData(this.x + data.x, this.y + data.y, this.z + data.z);
+        return new Pos(this.max(data).x - this.min(data).x, this.max(data).y - this.min(data).y, this.max(data).z - this.min(data).z);
     }
 
-    public CoordData add(double posX, double posY, double posZ)
+    public Pos subtract(double posX, double posY, double posZ)
     {
-        return this.add(new CoordData(posX, posY, posZ));
+        return this.add(new Pos(posX, posY, posZ));
     }
 
-    public CoordData subtract(CoordData data)
-    {
-        return new CoordData(this.max(data).x - this.min(data).x, this.max(data).y - this.min(data).y, this.max(data).z - this.min(data).z);
-    }
-
-    public CoordData subtract(double posX, double posY, double posZ)
-    {
-        return this.add(new CoordData(posX, posY, posZ));
-    }
-
-    public CoordData offsetX(double amount)
+    public Pos offsetX(double amount)
     {
         this.x = this.x + amount;
         return this;
     }
 
-    public CoordData offsetY(double amount)
+    public Pos offsetY(double amount)
     {
         this.y = this.y + amount;
         return this;
     }
 
-    public CoordData offsetZ(double amount)
+    public Pos offsetZ(double amount)
     {
         this.z = this.z + amount;
         return this;
@@ -229,19 +225,19 @@ public class CoordData
         return dataTag;
     }
 
-    public CoordData readFromNBT(NBTTagCompound nbt)
+    public Pos readFromNBT(NBTTagCompound nbt)
     {
         return this.readFromNBT(nbt, "Id", "PosX", "PosY", "PosZ");
     }
 
-    public CoordData readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
+    public Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
     {
         return readFromNBT(nbt, labelId, labelX, labelY, labelZ, "Meta");
     }
     
-    public CoordData readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ, String labelMeta)
+    public Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ, String labelMeta)
     {
-        return new CoordData(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ)).store(new BlockDataStore(nbt.getString(labelId), nbt.getByte(labelMeta)));
+        return new Pos(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ)).store(new BlockDataStore(nbt.getString(labelId), nbt.getByte(labelMeta)));
     }
 
     @Override
@@ -257,90 +253,74 @@ public class CoordData
 
     public boolean isAnySurfaceNextTo(World world, Block block)
     {
-        CoordData up = this.add(0, 1, 0);
-        CoordData down = this.add(0, -1, 0);
-        CoordData left = this.add(-1, 0, 0);
-        CoordData right = this.add(1, 0, 0);
-        CoordData front = this.add(0, 0, -1);
-        CoordData back = this.add(0, 0, 1);
+        Pos up = this.add(0, 1, 0);
+        Pos down = this.add(0, -1, 0);
+        Pos left = this.add(-1, 0, 0);
+        Pos right = this.add(1, 0, 0);
+        Pos front = this.add(0, 0, -1);
+        Pos back = this.add(0, 0, 1);
 
         return up.getBlock(world) == block || down.getBlock(world) == block || left.getBlock(world) == block || right.getBlock(world) == block || front.getBlock(world) == block || back.getBlock(world) == block;
     }
 
-    public CoordData findSafePosAround(World world)
+    public Pos findSafePosAround(World world)
     {
-        CoordData pos = this;
-        CoordData up = pos.add(0, 1, 0);
-        CoordData down = pos.add(0, -1, 0);
-        CoordData left = pos.add(-1, 0, 0);
-        CoordData right = pos.add(1, 0, 0);
-        CoordData front = pos.add(0, 0, -1);
-        CoordData frontLeft = pos.add(-1, 0, -1);
-        CoordData frontRight = pos.add(1, 0, -1);
-        CoordData back = pos.add(0, 0, 1);
-        CoordData backLeft = pos.add(-1, 0, 1);
-        CoordData backRight = pos.add(1, 0, 1);
+        Pos pos = this;
+        Pos up = pos.add(0, 1, 0);
+        Pos down = pos.add(0, -1, 0);
+        Pos left = pos.add(-1, 0, 0);
+        Pos right = pos.add(1, 0, 0);
+        Pos front = pos.add(0, 0, -1);
+        Pos frontLeft = pos.add(-1, 0, -1);
+        Pos frontRight = pos.add(1, 0, -1);
+        Pos back = pos.add(0, 0, 1);
+        Pos backLeft = pos.add(-1, 0, 1);
+        Pos backRight = pos.add(1, 0, 1);
 
         if (pos.getBlock(world) != net.minecraft.init.Blocks.air)
         {
             if (left.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = left;
-            }
             else if (right.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = right;
-            }
             else if (front.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = front;
-            }
             else if (frontLeft.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = frontLeft;
-            }
             else if (frontRight.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = frontRight;
-            }
             else if (back.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = left;
-            }
             else if (backLeft.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = backLeft;
-            }
             else if (backRight.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = backRight;
-            }
             else if (up.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = up;
-            }
             else if (down.getBlock(world) == net.minecraft.init.Blocks.air)
-            {
                 pos = down;
-            }
         }
 
         return pos.add(0.5, 0.0, 0.5);
     }
 
-    public static CoordData fromBytes(ByteBuf buf)
-    {
-        return new CoordData(buf.readDouble(), buf.readDouble(), buf.readDouble());
-    }
-
-    public void toBytes(ByteBuf buf)
+    public Pos writeToBuffer(ByteBuf buf)
     {
         buf.writeDouble(this.x());
         buf.writeDouble(this.y());
         buf.writeDouble(this.z());
+        return this;
+    }
+    
+    public Pos readFromBuffer(ByteBuf buf)
+    {
+        this.x = buf.readDouble();
+        this.y = buf.readDouble();
+        this.z = buf.readDouble();
+        return this;
     }
 
-    public CoordData divide(int i)
+    public Pos divide(int i)
     {
         this.x = this.x / i;
         this.y = this.y / i;
@@ -349,12 +329,12 @@ public class CoordData
         return this;
     }
 
-    public CoordData half()
+    public Pos half()
     {
         return this.divide(2);
     }
 
-    public CoordData remainder(int i)
+    public Pos remainder(int i)
     {
         this.x = this.x % i;
         this.y = this.y % i;
@@ -362,7 +342,31 @@ public class CoordData
 
         return this;
     }
+    
+    public double distanceFrom(Pos coord)
+    {
+        return distance(coord.x, coord.y, coord.z, this.x, this.y, this.z);
+    }
 
+    public double distanceSqFrom(Pos coord)
+    {
+        return distanceSq(coord.x, coord.y, coord.z, this.x, this.y, this.z);
+    }
+
+    public double distanceFrom(Entity entity)
+    {
+        return distance(entity.posX, entity.posY, entity.posZ, this.x, this.y, this.z);
+    }
+
+    public double distanceSqFrom(Entity entity)
+    {
+        return distanceSq(entity.posX, entity.posY, entity.posZ, this.x, this.y, this.z);
+    }
+    
+    /**
+     * STATIC ACCESS METHODS
+     */
+    
     /**
      * Generates an arraylist of equally segmented coodinates between the two specified coordinates.
      * (x, y, z) = (x1 + (sectionIndex / sectionsMax) * (x2 - x1), y1 + (sectionIndex / sectionsMax) * (y2 - y1), z1 + (sectionIndex / sectionsMax) * (z2 - z1))
@@ -372,25 +376,43 @@ public class CoordData
      * @param sections - The amount of times this line segment will be split.
      * @return The coodinates of each point that the line segment was split at.
      */
-    public static ArrayList<CoordData> getPointsBetween(CoordData p1, CoordData p2, int sections)
+    public static ArrayList<Pos> getPointsBetween(Pos p1, Pos p2, int sections)
     {
-        ArrayList<CoordData> points = new ArrayList<CoordData>();
+        ArrayList<Pos> points = new ArrayList<Pos>();
 
         for (int section = sections; section > 0; section--)
         {
-            float k = ((float) section / sections);
-            double x = p1.x + (k * (p2.x - p1.x));
-            double y = p1.y + (k * (p2.y - p1.y));
-            double z = p1.z + (k * (p2.z - p1.z));
+            float s = ((float) section / sections);
+            double x = p1.x + (s * (p2.x - p1.x));
+            double y = p1.y + (s * (p2.y - p1.y));
+            double z = p1.z + (s * (p2.z - p1.z));
 
-            points.add(new CoordData(x, y, z));
+            points.add(new Pos(x, y, z));
         }
 
         return points;
     }
-
-    public double distanceFrom(Entity entity)
+    
+    public static double distance(Pos p1, Pos p2)
     {
-        return entity.getDistance(this.x, this.y, this.z);
+        return distance(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+    }
+    
+    public static double distanceSq(Pos p1, Pos p2)
+    {
+        return distanceSq(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+    }
+
+    public static double distance(double x1, double y1, double z1, double x2, double y2, double z2)
+    {
+        return (double) MathHelper.sqrt_double(distanceSq(x1, y1, z1, x2, y2, z2));
+    }
+    
+    public static double distanceSq(double x1, double y1, double z1, double x2, double y2, double z2)
+    {
+        double x = x1 - x2;
+        double y = y1 - y2;
+        double z = z1 - z2;
+        return x * x + y * y + z * z;
     }
 }

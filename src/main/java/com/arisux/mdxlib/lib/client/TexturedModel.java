@@ -1,5 +1,6 @@
 package com.arisux.mdxlib.lib.client;
 
+import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.client.render.Texture;
 
 import cpw.mods.fml.relauncher.Side;
@@ -54,5 +55,21 @@ public class TexturedModel<MODEL extends Model>
             this.bindTexture();
             this.drawStandaloneModel(o);
         }
+    }
+    
+    public TexturedModel<MODEL> clone()
+    {
+        try
+        {
+            Model newModel = this.model.getClass().getConstructor().newInstance(new Object[] {});
+            return new TexturedModel<MODEL>((MODEL) newModel, this.texture);
+        }
+        catch (Exception e)
+        {
+            MDX.log().warn("Failed to clone model: " + e);
+            e.printStackTrace();
+        }
+        
+        return null;
     }
 }

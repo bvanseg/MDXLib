@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import com.arisux.mdxlib.lib.client.gui.GuiCustomScreen;
 import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.game.GameResources;
-import com.arisux.mdxlib.lib.util.Math;
+import com.arisux.mdxlib.lib.util.MDXMath;
 import com.arisux.mdxlib.lib.util.Remote;
 import com.arisux.mdxlib.lib.world.block.Blocks;
 
@@ -434,7 +434,7 @@ public class Draw
         {
             x -= 24 + w;
         }
-        y = (int) Math.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
+        y = (int) MDXMath.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
     
         Draw.guiHook.incZLevel(300);
         Draw.drawTooltipBox(x - 4, y - 4, w + 7, h + 7);

@@ -2,16 +2,16 @@ package com.arisux.mdxlib.lib.world;
 
 import java.util.Iterator;
 
-public class CoordSelectionIterator implements Iterator<CoordData>
+public class CoordSelectionIterator implements Iterator<Pos>
 {
-    private CoordData min;
-    private CoordData max;
+    private Pos min;
+    private Pos max;
 
     private int curX;
     private int curY;
     private int curZ;
 
-    public CoordSelectionIterator(CoordData min, CoordData max)
+    public CoordSelectionIterator(Pos min, Pos max)
     {
         this.min = min;
         this.max = max;
@@ -27,9 +27,9 @@ public class CoordSelectionIterator implements Iterator<CoordData>
     }
 
     @Override
-    public CoordData next()
+    public Pos next()
     {
-        CoordData coord = this.hasNext() ? new CoordData(this.curX, this.curY, this.curZ) : null;
+        Pos coord = this.hasNext() ? new Pos(this.curX, this.curY, this.curZ) : null;
 
         this.curX++;
 

@@ -1,7 +1,5 @@
 package com.arisux.mdxlib.lib.client.gui;
 
-import java.util.ArrayList;
-
 import javax.vecmath.Vector2d;
 
 import org.lwjgl.input.Mouse;
@@ -18,24 +16,16 @@ import net.minecraft.client.Minecraft;
 @SideOnly(Side.CLIENT)
 public class GuiCustomButton extends GuiElement
 {
-    private IAction action;
     public int fontColor;
     public int baseColor;
     public int overlayColorNormal;
     public int overlayColorHover;
     public int overlayColorPressed;
-    private long lastDrawTime;
     public String tooltip;
     public float scale;
     public ElementAlignment textAlignment;
 
-    public GuiCustomButton(ArrayList<GuiCustomButton> buttonList, int id, int xPosition, int yPosition, int width, int height, String displayString, IAction action)
-    {
-        this(id, xPosition, yPosition, width, height, displayString, action);
-        buttonList.add(this);
-    }
-
-    public GuiCustomButton(int id, int xPosition, int yPosition, int width, int height, String displayString, IAction action)
+    public GuiCustomButton(int id, int xPosition, int yPosition, int width, int height, String displayString)
     {
         super(id, xPosition, yPosition, width, height, displayString);
         this.scale = 1F;
@@ -50,14 +40,13 @@ public class GuiCustomButton extends GuiElement
         this.width = width;
         this.height = height;
         this.displayString = displayString;
-        this.action = action;
         this.fontColor = 0xFFFFFFFF;
         this.baseColor = 0xEE000000;
         this.overlayColorNormal = 0x44000000;
         this.overlayColorHover = 0x00000000;
         this.overlayColorPressed = 0x66000000;
         this.textAlignment = ElementAlignment.CENTER;
-        this.add();
+        this.trackElement();
     }
 
     public void drawButton()
@@ -73,17 +62,17 @@ public class GuiCustomButton extends GuiElement
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
-        this.lastDrawTime = System.currentTimeMillis();
-
+        super.drawButton(mc, mouseX, mouseY);
+        
         if (this.visible)
         {
+            Vector2d mousePosition = Screen.scaledMousePosition();
+            this.hovered = mouseX >= this.xPosition * scale && mouseY >= this.yPosition * scale && mouseX < (this.xPosition + this.width) * scale && mouseY < (this.yPosition + this.height) * scale;
+            int state = this.getHoverState(this.hovered);
+            int overlayColor = state == 2 ? (Mouse.isButtonDown(0) ? overlayColorPressed : overlayColorHover) : overlayColorNormal;
+
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
             OpenGL.enableBlend();
-            this.hovered = mouseX >= this.xPosition * scale && mouseY >= this.yPosition * scale && mouseX < (this.xPosition + this.width) * scale && mouseY < (this.yPosition + this.height) * scale;
-            int k = this.getHoverState(this.hovered);
-
-            int overlayColor = k == 2 ? (Mouse.isButtonDown(0) ? overlayColorPressed : overlayColorHover) : overlayColorNormal;
-
             Draw.drawRect(this.xPosition, this.yPosition, this.width, this.height, baseColor);
             Draw.drawRect(this.xPosition, this.yPosition, this.width, this.height, overlayColor);
 
@@ -102,36 +91,12 @@ public class GuiCustomButton extends GuiElement
                 Draw.drawStringAlignRight(this.displayString, this.xPosition + this.width - 4, this.yPosition + (this.height - 8) / 2, fontColor);
             }
 
-            if (this.isActive() && !tooltip.equalsIgnoreCase(""))
+            if (this.isMouseInElement(mousePosition) && tooltip != null && !tooltip.equalsIgnoreCase(""))
             {
-                Draw.drawToolTip((int) Screen.scaledMousePosition().x + 10, (int) Screen.scaledMousePosition().y, this.tooltip);
+                Draw.drawToolTip((int) mousePosition.x + 10, (int) mousePosition.y, this.tooltip);
             }
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
         }
-    }
-
-    @Override
-    public boolean isActive()
-    {
-        return this.hovered;
-    }
-
-    @Override
-    public IAction getAction()
-    {
-        return action;
-    }
-
-    @Override
-    public GuiElement setAction(IAction action)
-    {
-        this.action = action;
-        return this;
-    }
-
-    public long getLastDrawTime()
-    {
-        return lastDrawTime;
     }
 
     @Override
@@ -145,11 +110,11 @@ public class GuiCustomButton extends GuiElement
     {
         super.mouseReleased((int) mousePosition.x, (int) mousePosition.y);
 
-        if (isActive())
+        if (this.isMouseInElement(mousePosition))
         {
-            if (this.action != null)
+            if (this.getAction() != null)
             {
-                this.action.perform(this);
+                this.getAction().perform(this);
             }
         }
     }

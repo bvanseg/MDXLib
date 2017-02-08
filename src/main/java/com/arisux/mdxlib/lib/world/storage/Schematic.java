@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.arisux.mdxlib.MDX;
-import com.arisux.mdxlib.lib.world.CoordData;
-import com.arisux.mdxlib.lib.world.CoordData.BlockDataStore;
+import com.arisux.mdxlib.lib.world.Pos;
+import com.arisux.mdxlib.lib.world.Pos.BlockDataStore;
 import com.arisux.mdxlib.lib.world.CoordSelection;
 import com.arisux.mdxlib.lib.world.Structure;
 import com.arisux.mdxlib.lib.world.tile.TileEntities;
@@ -25,7 +25,7 @@ public class Schematic
     private short width;
     private short height;
     private short length;
-    private CoordData origin;
+    private Pos origin;
     private Block[] blocks;
     private byte[] metadata;
     private ArrayList<NBTTagCompound> tileEntityTags = new ArrayList<NBTTagCompound>();
@@ -43,7 +43,7 @@ public class Schematic
         }
 
         this.file = file;
-        this.origin = new CoordData(tagCompound.getShort("WEOriginX"), tagCompound.getShort("WEOriginY"), tagCompound.getShort("WEOriginZ"));
+        this.origin = new Pos(tagCompound.getShort("WEOriginX"), tagCompound.getShort("WEOriginY"), tagCompound.getShort("WEOriginZ"));
         this.width = tagCompound.getShort("Width");
         this.height = tagCompound.getShort("Height");
         this.length = tagCompound.getShort("Length");
@@ -107,14 +107,14 @@ public class Schematic
 
     public void addBlocksToQueue(Structure structure)
     {
-        CoordSelection blockArea = CoordSelection.areaFromSize(new CoordData(0, 0, 0), new int[] { width, height, length });
+        CoordSelection blockArea = CoordSelection.areaFromSize(new Pos(0, 0, 0), new int[] { width, height, length });
 
         for (int pass = 0; pass < 2; pass++)
         {
-            for (CoordData relative : blockArea)
+            for (Pos relative : blockArea)
             {
                 int index = (int) relative.x + ((int) relative.y * length + (int) relative.z) * width;
-                CoordData data = structure.getData().add(relative);
+                Pos data = structure.getData().add(relative);
                 Block block = blocks[index];
                 byte meta = this.metadata[index];
 
@@ -128,7 +128,7 @@ public class Schematic
         }
     }
 
-    public void generateTileEntities(World world, CoordData data)
+    public void generateTileEntities(World world, Pos data)
     {
         HashMap<Integer, TileEntity> tileEntities = new HashMap<Integer, TileEntity>();
 
@@ -138,15 +138,15 @@ public class Schematic
 
             if (tileEntity != null)
             {
-                tileEntities.put(new CoordData(tileEntity).hashCode(), tileEntity);
+                tileEntities.put(new Pos(tileEntity).hashCode(), tileEntity);
             }
         }
 
-        CoordSelection blockArea = CoordSelection.areaFromSize(new CoordData(0, 0, 0), new int[] { width, height, length });
+        CoordSelection blockArea = CoordSelection.areaFromSize(new Pos(0, 0, 0), new int[] { width, height, length });
 
         for (int pass = 0; pass < 2; pass++)
         {
-            for (CoordData relative : blockArea)
+            for (Pos relative : blockArea)
             {
                 int index = (int) relative.x + ((int) relative.y * length + (int) relative.z) * width;
                 Block block = blocks[index];
@@ -154,7 +154,7 @@ public class Schematic
 
                 if (block != null && getPass(block, meta) == pass)
                 {
-                    CoordData pos = new CoordData(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
+                    Pos pos = new Pos(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
                     TileEntity tileEntity = tileEntities.get(relative.hashCode());
 
                     if (tileEntity != null)
@@ -170,7 +170,7 @@ public class Schematic
     }
 
     @Deprecated
-    public void generate(World world, CoordData data)
+    public void generate(World world, Pos data)
     {
         HashMap<Integer, TileEntity> tileEntities = new HashMap<Integer, TileEntity>();
 
@@ -180,15 +180,15 @@ public class Schematic
 
             if (tileEntity != null)
             {
-                tileEntities.put(new CoordData(tileEntity).hashCode(), tileEntity);
+                tileEntities.put(new Pos(tileEntity).hashCode(), tileEntity);
             }
         }
 
-        CoordSelection blockArea = CoordSelection.areaFromSize(new CoordData(0, 0, 0), new int[] { width, height, length });
+        CoordSelection blockArea = CoordSelection.areaFromSize(new Pos(0, 0, 0), new int[] { width, height, length });
 
         for (int pass = 0; pass < 2; pass++)
         {
-            for (CoordData relative : blockArea)
+            for (Pos relative : blockArea)
             {
                 int index = (int) relative.x + ((int) relative.y * length + (int) relative.z) * width;
                 Block block = blocks[index];
@@ -196,7 +196,7 @@ public class Schematic
 
                 if (block != null && getPass(block, meta) == pass)
                 {
-                    CoordData pos = new CoordData(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
+                    Pos pos = new Pos(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
                     world.setBlock((int) pos.x, (int) pos.y, (int) pos.z, block, meta, 3);
 
                     TileEntity tileEntity = tileEntities.get(relative.hashCode());
@@ -248,7 +248,7 @@ public class Schematic
         return this.metadata;
     }
 
-    public CoordData origin()
+    public Pos origin()
     {
         return this.origin;
     }

@@ -18,7 +18,7 @@ public class GuiCustomSlider extends GuiCustomButton
 
     public GuiCustomSlider(int id, int x, int y, String label, float startingValue, float maxValue)
     {
-        super(id, x, y, 150, 20, label, null);
+        super(id, x, y, 150, 20, label);
         this.sliderValue = startingValue;
         this.sliderMaxValue = maxValue;
         this.label = label;

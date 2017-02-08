@@ -61,7 +61,7 @@ public class MDX
 
     public static MDX instance()
     {
-        return ForgeModule.instance();
+        return MDXModule.instance();
     }
 
     public static Access access()

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.arisux.mdxlib.MDX;
-import com.arisux.mdxlib.lib.world.CoordData;
+import com.arisux.mdxlib.lib.world.Pos;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 
 public class Blocks
 {
-    public static ArrayList<CoordData> getCoordDataInRange(int posX, int posY, int posZ, int range)
+    public static ArrayList<Pos> getCoordDataInRange(int posX, int posY, int posZ, int range)
     {
-        ArrayList<CoordData> data = new ArrayList<CoordData>();
+        ArrayList<Pos> data = new ArrayList<Pos>();
 
         for (int x = posX - range; x < posX + range * 2; x++)
         {
@@ -26,7 +26,7 @@ public class Blocks
             {
                 for (int z = posZ - range; z < posZ + range * 2; z++)
                 {
-                    data.add(new CoordData(x, y, z));
+                    data.add(new Pos(x, y, z));
                 }
             }
         }
@@ -34,9 +34,9 @@ public class Blocks
         return data;
     }
 
-    public static ArrayList<CoordData> getCoordDataInRangeIncluding(int posX, int posY, int posZ, int range, World world, Block... types)
+    public static ArrayList<Pos> getCoordDataInRangeIncluding(int posX, int posY, int posZ, int range, World world, Block... types)
     {
-        ArrayList<CoordData> data = new ArrayList<CoordData>();
+        ArrayList<Pos> data = new ArrayList<Pos>();
 
         for (int x = posX - range; x < posX + range * 2; x++)
         {
@@ -44,7 +44,7 @@ public class Blocks
             {
                 for (int z = posZ - range; z < posZ + range * 2; z++)
                 {
-                    CoordData coordData = new CoordData(x, y, z);
+                    Pos coordData = new Pos(x, y, z);
                     Block block = coordData.getBlock(world);
 
                     if (Arrays.asList(types).contains(block))
@@ -58,9 +58,9 @@ public class Blocks
         return data;
     }
 
-    public static ArrayList<CoordData> getCoordDataInRangeExcluding(int posX, int posY, int posZ, int range, World world, Block... types)
+    public static ArrayList<Pos> getCoordDataInRangeExcluding(int posX, int posY, int posZ, int range, World world, Block... types)
     {
-        ArrayList<CoordData> data = new ArrayList<CoordData>();
+        ArrayList<Pos> data = new ArrayList<Pos>();
 
         for (int x = posX - range; x < posX + range * 2; x++)
         {
@@ -68,7 +68,7 @@ public class Blocks
             {
                 for (int z = posZ - range; z < posZ + range * 2; z++)
                 {
-                    CoordData coordData = new CoordData(x, y, z);
+                    Pos coordData = new Pos(x, y, z);
                     Block block = coordData.getBlock(world);
 
                     if (!Arrays.asList(types).contains(block))

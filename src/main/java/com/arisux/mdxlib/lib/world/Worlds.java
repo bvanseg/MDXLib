@@ -30,7 +30,7 @@ public class Worlds
      * @param doesBlockDamage - Set to true if the explosion does physical Block damage.
      * @return Return the instance of the explosion that was just created.
      */
-    public static Explosion createExplosion(Entity entity, World worldObj, CoordData data, float strength, boolean isFlaming, boolean isSmoking, boolean doesBlockDamage)
+    public static Explosion createExplosion(Entity entity, World worldObj, Pos data, float strength, boolean isFlaming, boolean isSmoking, boolean doesBlockDamage)
     {
         Explosion explosion = new Explosion(worldObj, entity, data.x, data.y, data.z, strength);
         explosion.isFlaming = isFlaming;
@@ -60,11 +60,11 @@ public class Worlds
      * @param entity - The position we're checking for safe positions above.
      * @return The safe position.
      */
-    public static CoordData getNextSafePositionAbove(CoordData pos, World world)
+    public static Pos getNextSafePositionAbove(Pos pos, World world)
     {
         for (int y = (int) pos.y; y < world.getHeight(); y++)
         {
-            CoordData position = new CoordData(pos.x, y + 1, pos.z);
+            Pos position = new Pos(pos.x, y + 1, pos.z);
 
             if (Entities.isPositionSafe(position, world))
             {
@@ -75,11 +75,11 @@ public class Worlds
         return pos;
     }
 
-    public static boolean canSeeSky(CoordData pos, World world)
+    public static boolean canSeeSky(Pos pos, World world)
     {
         for (int y = (int) pos.y; y < world.getHeight(); y++)
         {
-            CoordData position = new CoordData(pos.x, y + 1, pos.z);
+            Pos position = new Pos(pos.x, y + 1, pos.z);
 
             if (position.getBlock(world) != net.minecraft.init.Blocks.air)
             {
@@ -97,7 +97,7 @@ public class Worlds
      * @param data - CoordData containing coordinates of the location to check brightness at.
      * @return Returns light intensity of a block as an Integer.
      */
-    public static int getLightAtCoord(World worldObj, CoordData data)
+    public static int getLightAtCoord(World worldObj, Pos data)
     {
         int block = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Block, (int) data.x, (int) data.y, (int) data.z);
         int sky = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Sky, (int) data.x, (int) data.y, (int) data.z) - worldObj.calculateSkylightSubtracted(0f);
@@ -111,11 +111,11 @@ public class Worlds
      * @param pos - The position  we're checking for safe positions below.
      * @return The safe position.
      */
-    public static CoordData getNextSafePositionBelow(CoordData pos, World world)
+    public static Pos getNextSafePositionBelow(Pos pos, World world)
     {
         for (int y = (int) pos.y; y > 0; y--)
         {
-            CoordData position = new CoordData(pos.x, y - 1, pos.z);
+            Pos position = new Pos(pos.x, y - 1, pos.z);
 
             if (Entities.isPositionSafe(position, world))
             {
@@ -136,7 +136,7 @@ public class Worlds
      * @param genPerChunk - The amount of times to generate this block group per chunk.
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      */
-    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, CoordData chunkCoord)
+    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, Pos chunkCoord)
     {
         generateInChunk(world, generator, seed, genPerChunk, 0, 128, chunkCoord);
     }
@@ -153,7 +153,7 @@ public class Worlds
      * @param levelEnd - The level that this block group can stop generating on
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      */
-    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, CoordData chunkCoord)
+    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, Pos chunkCoord)
     {
         for (int i = 0; i < genPerChunk; ++i)
         {
@@ -175,7 +175,7 @@ public class Worlds
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      * @param biomes - The BiomeGenBase instances to generate in.
      */
-    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, CoordData chunkCoord, BiomeGenBase[] biomes)
+    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, Pos chunkCoord, BiomeGenBase[] biomes)
     {
         generateInBiome(world, generator, seed, genPerChunk, 0, 128, chunkCoord, biomes);
     }
@@ -193,7 +193,7 @@ public class Worlds
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      * @param biomes - The BiomeGenBase instances to generate in.
      */
-    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, CoordData chunkCoord, BiomeGenBase[] biomes)
+    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, Pos chunkCoord, BiomeGenBase[] biomes)
     {
         for (BiomeGenBase biome : biomes)
         {

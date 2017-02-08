@@ -2,7 +2,7 @@ package com.arisux.mdxlib.lib.client;
 
 import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.game.Game;
-import com.arisux.mdxlib.lib.util.Math;
+import com.arisux.mdxlib.lib.util.MDXMath;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -142,8 +142,8 @@ public class Model extends ModelBase
         {
             EntityLivingBase entityLiving = (EntityLivingBase) o;
             float renderPartialTicks = Game.partialTicks();
-            float yawOffset = Math.interpolateRotation(entityLiving.prevRenderYawOffset, entityLiving.renderYawOffset, renderPartialTicks);
-            float yawHead = Math.interpolateRotation(entityLiving.prevRotationYawHead, entityLiving.rotationYawHead, renderPartialTicks);
+            float yawOffset = MDXMath.interpolateRotation(entityLiving.prevRenderYawOffset, entityLiving.renderYawOffset, renderPartialTicks);
+            float yawHead = MDXMath.interpolateRotation(entityLiving.prevRotationYawHead, entityLiving.rotationYawHead, renderPartialTicks);
             float swingProgress = (entityLiving.limbSwing - entityLiving.limbSwingAmount * (1.0F - renderPartialTicks));
             float swingProgressPrevious = (entityLiving.prevLimbSwingAmount + (entityLiving.limbSwingAmount - entityLiving.prevLimbSwingAmount) * renderPartialTicks);
             float idleProgress = (entityLiving.ticksExisted + renderPartialTicks);

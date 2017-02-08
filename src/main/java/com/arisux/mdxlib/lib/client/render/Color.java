@@ -14,6 +14,11 @@ public class Color
         this.a = a;
     }
 
+    public Color(Color c)
+    {
+        this(c.r, c.g, c.b, c.a);
+    }
+
     /**
      * Converts 4 RGBA values into a single hexadecimal color value.
      * 

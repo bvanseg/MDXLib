@@ -1,5 +1,7 @@
 package com.arisux.mdxlib.lib.game;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
@@ -15,6 +17,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
@@ -198,11 +203,67 @@ public class Access
     {
         return renderLiving.mainModel;
     }
-    
+
+    private static final MethodHandle CompressedStreamTools_writeTag;
+    private static final MethodHandle CompressedStreamTools_readTag;
+
+    static
+    {
+        try
+        {
+            Method method = null;
+            
+            method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "writeTag" : "func_150663_a", NBTBase.class, DataOutput.class);
+            method.setAccessible(true);
+            CompressedStreamTools_writeTag = MethodHandles.publicLookup().unreflect(method);
+
+            method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "func_152455_a" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
+            method.setAccessible(true);
+            CompressedStreamTools_readTag = MethodHandles.publicLookup().unreflect(method);
+        }
+        catch (Exception exception)
+        {
+            throw new RuntimeException();
+        }
+
+    }
+
+    /**
+     * Provides access to CompressedStreamTools.writeTag(NBTBase, DataOutput)
+     */
+    public static void writeTag(NBTBase base, DataOutput dataoutput)
+    {
+        try
+        {
+            Access.CompressedStreamTools_writeTag.invokeExact(base, dataoutput);
+        }
+        catch (Throwable e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Provides access to CompressedStreamTools.readTag(DataInput, int, NBTSizeTracker)
+     */
+    public static NBTBase readTag(DataInput datainput, int depth, NBTSizeTracker sizeTracker)
+    {
+        try
+        {
+            return (NBTBase) Access.CompressedStreamTools_readTag.invokeExact(datainput, depth, sizeTracker);
+        }
+        catch (Throwable e)
+        {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
     @SideOnly(Side.CLIENT)
     public static class ClientAccess
     {
-        static final MethodHandle getEntityTexture;
+        private static final MethodHandle getEntityTexture;
 
         static
         {
@@ -231,7 +292,7 @@ public class Access
         {
             e.printStackTrace();
         }
-        
+
         return null;
     }
 }

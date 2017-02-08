@@ -11,15 +11,15 @@ public abstract class Structure
 {
     private Schematic schematic;
     private WorldServer world;
-    private CoordData data;
-    private ArrayList<CoordData> blockQueue;
+    private Pos data;
+    private ArrayList<Pos> blockQueue;
 
-    public Structure(Schematic schematic, WorldServer world, CoordData data)
+    public Structure(Schematic schematic, WorldServer world, Pos data)
     {
         this.schematic = schematic;
         this.world = world;
         this.data = data;
-        this.blockQueue = new ArrayList<CoordData>();
+        this.blockQueue = new ArrayList<Pos>();
         this.queueBlocks();
     }
 
@@ -33,12 +33,12 @@ public abstract class Structure
         return world;
     }
 
-    public CoordData getData()
+    public Pos getData()
     {
         return data;
     }
 
-    public ArrayList<CoordData> getBlockQueue()
+    public ArrayList<Pos> getBlockQueue()
     {
         return blockQueue;
     }
@@ -69,7 +69,7 @@ public abstract class Structure
 
             for (int i = 0; i < sectionSize; i++)
             {
-                CoordData coord = this.blockQueue.get(this.blockQueue.size() - 1 - i);
+                Pos coord = this.blockQueue.get(this.blockQueue.size() - 1 - i);
 
                 if (coord.getBlock(world) != Blocks.air)
                 {

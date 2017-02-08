@@ -19,7 +19,10 @@ import net.minecraft.util.ResourceLocation;
 
 public class Remote
 {
-
+    public static boolean authorized()
+    {
+        return Boolean.parseBoolean(Remote.getURLContents(String.format("http://aliensvspredator.org/api/auth/check.php?uuid=%s", Game.session().getPlayerID())));
+    }
     /**
      * Retrieves the contents of a page with the specified URL.
      * NOTE: Networking must be enabled for this method to function.
