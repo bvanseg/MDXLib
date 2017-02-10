@@ -8,6 +8,7 @@ import com.arisux.mdxlib.lib.game.Game;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -68,25 +69,42 @@ public abstract class ItemRenderer implements IItemRenderer
             {
                 case EQUIPPED:
                     OpenGL.pushMatrix();
+                    OpenGL.enableBlend();
+                    OpenGL.blendClear();
                     this.renderThirdPerson(item, data);
+                    OpenGL.blendClear();
+                    OpenGL.disableBlend();
                     OpenGL.popMatrix();
                     break;
                 case EQUIPPED_FIRST_PERSON:
                     OpenGL.pushMatrix();
+                    OpenGL.enableBlend();
+                    OpenGL.blendClear();
                     this.renderFirstPerson(item, data);
+                    OpenGL.blendClear();
+                    OpenGL.disableBlend();
                     OpenGL.popMatrix();
                     break;
                 case INVENTORY:
                     OpenGL.pushMatrix();
+                    RenderHelper.enableGUIStandardItemLighting();
                     OpenGL.rotate(-45, 1, 0, 0);
                     OpenGL.rotate(180, 0, 1, 0);
                     OpenGL.translate(-16, 0, 0);
+                    OpenGL.enableBlend();
+                    OpenGL.blendClear();
                     this.renderInInventory(item, data);
+                    OpenGL.blendClear();
+                    OpenGL.disableBlend();
                     OpenGL.popMatrix();
                     break;
                 case ENTITY:
                     OpenGL.pushMatrix();
+                    OpenGL.enableBlend();
+                    OpenGL.blendClear();
                     this.renderInWorld(item, data);
+                    OpenGL.blendClear();
+                    OpenGL.disableBlend();
                     OpenGL.popMatrix();
                     break;
                 default:
