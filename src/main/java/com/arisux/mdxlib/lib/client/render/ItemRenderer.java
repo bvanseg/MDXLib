@@ -71,7 +71,9 @@ public abstract class ItemRenderer implements IItemRenderer
                     OpenGL.pushMatrix();
                     OpenGL.enableBlend();
                     OpenGL.blendClear();
+                    OpenGL.enableCullFace();
                     this.renderThirdPerson(item, data);
+                    OpenGL.enableCullFace();
                     OpenGL.blendClear();
                     OpenGL.disableBlend();
                     OpenGL.popMatrix();
@@ -80,7 +82,9 @@ public abstract class ItemRenderer implements IItemRenderer
                     OpenGL.pushMatrix();
                     OpenGL.enableBlend();
                     OpenGL.blendClear();
+                    OpenGL.enableCullFace();
                     this.renderFirstPerson(item, data);
+                    OpenGL.enableCullFace();
                     OpenGL.blendClear();
                     OpenGL.disableBlend();
                     OpenGL.popMatrix();
@@ -93,7 +97,9 @@ public abstract class ItemRenderer implements IItemRenderer
                     OpenGL.translate(-16, 0, 0);
                     OpenGL.enableBlend();
                     OpenGL.blendClear();
+                    OpenGL.enableCullFace();
                     this.renderInInventory(item, data);
+                    OpenGL.enableCullFace();
                     OpenGL.blendClear();
                     OpenGL.disableBlend();
                     OpenGL.popMatrix();
@@ -102,7 +108,9 @@ public abstract class ItemRenderer implements IItemRenderer
                     OpenGL.pushMatrix();
                     OpenGL.enableBlend();
                     OpenGL.blendClear();
+                    OpenGL.enableCullFace();
                     this.renderInWorld(item, data);
+                    OpenGL.enableCullFace();
                     OpenGL.blendClear();
                     OpenGL.disableBlend();
                     OpenGL.popMatrix();
