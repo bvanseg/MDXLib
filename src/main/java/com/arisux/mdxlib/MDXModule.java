@@ -39,6 +39,7 @@ public class MDXModule
         }
 
         Console.preInit();
+        Settings.instance.pre(event);
         Game.registerEventHandler(StructureGenerationHandler.instance);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
@@ -71,14 +72,18 @@ public class MDXModule
         Console.postInit();
         Console.postInitComplete();
 
-        MDX.sendNotification(new Notification()
+        if (Settings.instance.isStartupNotificationEnabled())
         {
-            @Override
-            public String getMessage()
+            MDX.sendNotification(new Notification()
             {
-                return "Notifications may pop up here throughout gameplay. These notifications will explain how certain features of the game work. You can disable these notifications in the settings.";
-            }
-        });
+                @Override
+                public String getMessage()
+                {
+                    return "Notifications may pop up here throughout gameplay. These notifications will explain how certain features of the game work. You can disable these notifications in the settings.";
+                }
+            });
+            Settings.instance.disableStartupNotification();
+        }
     }
 
     @EventHandler
