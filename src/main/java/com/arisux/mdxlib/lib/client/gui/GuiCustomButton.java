@@ -21,8 +21,8 @@ public class GuiCustomButton extends GuiElement
     public int overlayColorNormal;
     public int overlayColorHover;
     public int overlayColorPressed;
-    public String tooltip;
     public float scale;
+    public boolean fontShadow;
     public ElementAlignment textAlignment;
 
     public GuiCustomButton(int id, int xPosition, int yPosition, int width, int height, String displayString)
@@ -34,7 +34,6 @@ public class GuiCustomButton extends GuiElement
         this.enabled = true;
         this.visible = true;
         this.id = id;
-        this.tooltip = "";
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.width = width;
@@ -47,6 +46,7 @@ public class GuiCustomButton extends GuiElement
         this.overlayColorPressed = 0x66000000;
         this.textAlignment = ElementAlignment.CENTER;
         this.trackElement();
+        this.fontShadow = true;
     }
 
     public void drawButton()
@@ -66,7 +66,6 @@ public class GuiCustomButton extends GuiElement
         
         if (this.visible)
         {
-            Vector2d mousePosition = Screen.scaledMousePosition();
             this.hovered = mouseX >= this.xPosition * scale && mouseY >= this.yPosition * scale && mouseX < (this.xPosition + this.width) * scale && mouseY < (this.yPosition + this.height) * scale;
             int state = this.getHoverState(this.hovered);
             int overlayColor = state == 2 ? (Mouse.isButtonDown(0) ? overlayColorPressed : overlayColorHover) : overlayColorNormal;
@@ -80,25 +79,21 @@ public class GuiCustomButton extends GuiElement
 
             if (this.textAlignment == ElementAlignment.CENTER)
             {
-                Draw.drawStringAlignCenter(this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, fontColor);
+                Draw.drawStringAlignCenter(this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, fontColor, fontShadow);
             }
             else if (this.textAlignment == ElementAlignment.LEFT)
             {
-                Draw.drawString(this.displayString, this.xPosition + 4, this.yPosition + (this.height - 8) / 2, fontColor);
+                Draw.drawString(this.displayString, this.xPosition + 4, this.yPosition + (this.height - 8) / 2, fontColor, fontShadow);
             }
             else if (this.textAlignment == ElementAlignment.RIGHT)
             {
-                Draw.drawStringAlignRight(this.displayString, this.xPosition + this.width - 4, this.yPosition + (this.height - 8) / 2, fontColor);
+                Draw.drawStringAlignRight(this.displayString, this.xPosition + this.width - 4, this.yPosition + (this.height - 8) / 2, fontColor, fontShadow);
             }
 
-            if (this.isMouseInElement(mousePosition) && tooltip != null && !tooltip.equalsIgnoreCase(""))
-            {
-                Draw.drawToolTip((int) mousePosition.x + 10, (int) mousePosition.y, this.tooltip);
-            }
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
-
+    
     @Override
     public void mousePressed(Vector2d mousePosition)
     {

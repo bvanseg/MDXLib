@@ -5,32 +5,52 @@ import javax.vecmath.Vector2d;
 import com.arisux.mdxlib.lib.client.GUIElementTracker;
 import com.arisux.mdxlib.lib.game.Game;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 
 public class GuiCustomTextbox extends GuiTextField implements IGuiElement
 {
     protected GuiCustomScreen parentScreen;
-    protected IAction action;
-    protected boolean trackInput;
-    protected boolean isRendered;
-    protected long lastRendered;
+    protected IAction         action;
+    protected boolean         trackInput;
+    protected boolean         isRendered;
+    protected long            lastRendered;
+    public String             tooltip;
 
     public GuiCustomTextbox(GuiCustomScreen parentScreen, int x, int y, int width, int height)
     {
         this(x, y, width, height);
         this.parentScreen = parentScreen;
         this.parentScreen.customTextfieldList.add(this);
-        this.trackInput = true;
     }
 
     public GuiCustomTextbox(int x, int y, int width, int height)
     {
         super(Game.fontRenderer(), x, y, width, height);
+        this.trackInput = true;
         this.xPosition = x;
         this.yPosition = y;
         this.width = width;
         this.height = height;
         this.trackElement();
+    }
+
+    @Override
+    public void setText(String text)
+    {
+        super.setText(text);
+
+        int pos = this.xPosition + this.width;
+
+        if (this.getEnableBackgroundDrawing())
+        {
+            pos -= 4;
+        }
+
+        int lineScrollOffset = 0;
+
+        String s = Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(text.substring(lineScrollOffset), this.width);
+        this.setCursorPosition(Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(s, pos).length());
     }
 
     @Override
@@ -52,29 +72,29 @@ public class GuiCustomTextbox extends GuiTextField implements IGuiElement
         super.drawTextBox();
         this.lastRendered = System.currentTimeMillis();
     }
-    
+
     @Override
     public boolean isEnabled()
     {
         return true;
     }
-    
+
     @Override
     public long lastRenderTime()
     {
         return this.lastRendered;
     }
-    
+
     @Override
     public boolean isRendered()
     {
         long currentTime = System.currentTimeMillis();
-        
+
         if (currentTime > 100 && this.lastRenderTime() > 100)
         {
             return currentTime - this.lastRenderTime() < 500;
         }
-        
+
         return false;
     }
 
@@ -95,10 +115,10 @@ public class GuiCustomTextbox extends GuiTextField implements IGuiElement
     {
         int mouseX = (int) mousePosition.x;
         int mouseY = (int) mousePosition.y;
-        
+
         return this.isEnabled() && this.getVisible() && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
     }
-    
+
     @Override
     public boolean canTrackInput()
     {
@@ -140,5 +160,17 @@ public class GuiCustomTextbox extends GuiTextField implements IGuiElement
     {
         this.action = action;
         return this;
+    }
+
+    @Override
+    public String getTooltip()
+    {
+        return this.tooltip;
+    }
+
+    @Override
+    public void setTooltip(String tooltip)
+    {
+        this.tooltip = tooltip;
     }
 }

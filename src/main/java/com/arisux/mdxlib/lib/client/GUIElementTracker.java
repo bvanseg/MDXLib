@@ -6,6 +6,7 @@ import javax.vecmath.Vector2d;
 
 import org.lwjgl.input.Mouse;
 
+import com.arisux.mdxlib.lib.client.gui.GuiCustomTextbox;
 import com.arisux.mdxlib.lib.client.gui.IGuiElement;
 import com.arisux.mdxlib.lib.client.render.Screen;
 
@@ -39,6 +40,20 @@ public class GUIElementTracker
                     {
                         if (!canRelease)
                         {
+                            if (element instanceof GuiCustomTextbox)
+                            {
+                                for (int ti = 0; ti < guiElements.size(); ti++)
+                                {
+                                    IGuiElement te = guiElements.get(ti);
+                                    
+                                    if (te instanceof GuiCustomTextbox && te != element)
+                                    {
+                                        GuiCustomTextbox textbox = (GuiCustomTextbox) te;
+                                        textbox.setFocused(false);
+                                    }
+                                }
+                            }
+                            
                             element.mousePressed(mousePosition);
                             this.canRelease = true;
                         }
