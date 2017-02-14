@@ -6,6 +6,7 @@ import com.arisux.mdxlib.lib.client.NotifierModule;
 import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.game.IdentityRemapModule;
 import com.arisux.mdxlib.lib.util.Remote;
+import com.arisux.mdxlib.lib.util.SystemInfo;
 import com.arisux.mdxlib.lib.world.StructureGenerationHandler;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -20,8 +21,9 @@ import cpw.mods.fml.relauncher.Side;
 @Mod(modid = MDX.MODID, version = MDX.VERSION)
 public class MDXModule
 {
-    private static MDX    instance = new MDX();
-    public static boolean enable   = true;
+    private static MDX        instance   = new MDX();
+    public static boolean     enable     = true;
+    private final SystemInfo systemInfo = new SystemInfo();
 
     public static MDX instance()
     {
@@ -38,6 +40,7 @@ public class MDXModule
             return;
         }
 
+        systemInfo.runtimeTasks();
         Console.preInit();
         Settings.instance.pre(event);
         Game.registerEventHandler(StructureGenerationHandler.instance);

@@ -1,9 +1,12 @@
 package com.arisux.mdxlib.lib.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -11,8 +14,88 @@ import com.arisux.mdxlib.lib.client.render.OpenGL;
 
 public class SystemInfo
 {
-    public static int bytesUnit = 1024;
+    public static int                           bytesUnit = 1024;
     public static Enumeration<NetworkInterface> networkAdapters;
+    private static String                       processorName;
+    private static long                         memoryCapacity;
+    private static OperatingSystem              osType;
+
+    public void runtimeTasks()
+    {
+        osType = OperatingSystem.getCurrentPlatform();
+
+        try
+        {
+            Runtime runtime = Runtime.getRuntime();
+            Process process = null;
+
+            switch (osType)
+            {
+                case WINDOWS:
+                    process = runtime.exec("wmic cpu get name");
+                    break;
+                case LINUX:
+                    process = runtime.exec("cat /proc/cpuinfo | grep ‘model name’");
+                    break;
+                case OSX:
+                    process = runtime.exec("sysctl -n machdep.cpu.brand_string");
+                    break;
+                default:
+                    process = runtime.exec("wmic cpu get name");
+                    break;
+            }
+
+            if (process != null)
+            {
+                process.waitFor();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line = "";
+
+                while ((line = buffer.readLine()) != null)
+                {
+                    if (!line.isEmpty())
+                    {
+                        processorName = line;
+                    }
+                }
+
+                buffer.close();
+            }
+
+            switch (osType)
+            {
+                default:
+                    process = runtime.exec("wmic memorychip get capacity");
+                    break;
+            }
+
+            if (process != null)
+            {
+                process.waitFor();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line = "";
+
+                while ((line = buffer.readLine()) != null)
+                {
+                    if (!line.isEmpty())
+                    {
+                        line = StringUtils.deleteWhitespace(line);
+                        
+                        if (StringUtils.isNumeric(line))
+                        {
+                            memoryCapacity = memoryCapacity + Long.parseLong(line);
+                        }
+                    }
+                }
+
+                buffer.close();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public static Enumeration<NetworkInterface> networkAdapters()
     {
@@ -27,6 +110,11 @@ public class SystemInfo
 
         return null;
     }
+    
+    public static long getMemoryCapacity()
+    {
+        return memoryCapacity;
+    }
 
     public static String gpu()
     {
@@ -40,7 +128,7 @@ public class SystemInfo
 
     public static String cpu()
     {
-        return System.getenv("processor.identifier");
+        return processorName;
     }
 
     public static int cpuCores()
@@ -51,6 +139,11 @@ public class SystemInfo
     public static String javaVersion()
     {
         return SystemUtils.JAVA_VERSION;
+    }
+
+    public static OperatingSystem getOsType()
+    {
+        return osType;
     }
 
     public static String osName()
