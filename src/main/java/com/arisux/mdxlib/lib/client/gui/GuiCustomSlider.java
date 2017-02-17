@@ -14,7 +14,7 @@ public class GuiCustomSlider extends GuiCustomButton
     public float sliderMaxValue = 1.0F;
     public boolean dragging = false;
     public int sliderVariable;
-    public int sliderButtonColor = 0xFF00AAFF;
+    public int sliderButtonColor;
 
     public GuiCustomSlider(int id, int x, int y, String label, float startingValue, float maxValue)
     {
@@ -22,6 +22,9 @@ public class GuiCustomSlider extends GuiCustomButton
         this.sliderValue = startingValue;
         this.sliderMaxValue = maxValue;
         this.label = label;
+        this.sliderButtonColor = 0xCC00DDFF;
+        this.overlayColorNormal = 0x00000000;
+        this.baseColor = 0x44000000;
     }
 
     @Override
@@ -61,11 +64,10 @@ public class GuiCustomSlider extends GuiCustomButton
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
         super.drawButton(mc, mouseX, mouseY);
-
+        
         if (this.visible)
         {
-            Draw.drawRectWithOutline(this.xPosition - 1, this.yPosition - 1, this.width + 2, this.height + 2, 1, 0x00000000, 0xAAFFFFFF);
-            Draw.drawRect(this.xPosition + (int) (this.sliderValue * (this.width - 8)), this.yPosition, 8, this.height, sliderButtonColor);
+            Draw.drawRect(this.xPosition + (int) (this.sliderValue * (this.width - 8)), this.yPosition, 8, this.height, this.sliderButtonColor);
         }
     }
 
