@@ -72,8 +72,8 @@ public class GuiCustomTextbox implements IGuiElement
         this.canLoseFocus = true;
         this.textColor = 0xE0E0E0;
         this.textColorDisabled = 0x707070;
-        this.backgroundColor = 0xFF000000;
-        this.borderColor = 0xFFA0A0A0;
+        this.backgroundColor = 0x44000000;
+        this.borderColor = 0x00000000;
         this.visible = true;
         this.isEnabled = true;
         this.text = "";
@@ -580,11 +580,9 @@ public class GuiCustomTextbox implements IGuiElement
     {
         if (this.getVisible())
         {
-            this.backgroundColor = 0x44000000;
-            
             if (this.getEnableBackgroundDrawing())
             {
-                Draw.drawCenteredRectWithOutline(this.xPosition + 1, this.yPosition + 1, this.width - 2, this.height - 2, 1, this.backgroundColor, this.borderColor);
+                Draw.drawRectWithOutline(this.xPosition, this.yPosition, this.width, this.height, 1, this.backgroundColor, this.borderColor);
             }
 
             int color = this.isEnabled ? this.textColor : this.textColorDisabled;
