@@ -119,4 +119,28 @@ public abstract class GuiElement extends GuiButton implements IGuiElement
     {
         this.tooltip = tooltip;
     }
+    
+    @Override
+    public int x()
+    {
+        return this.xPosition;
+    }
+    
+    @Override
+    public int y()
+    {
+        return this.yPosition;
+    }
+    
+    @Override
+    public int width()
+    {
+        return this.width;
+    }
+    
+    @Override
+    public int height()
+    {
+        return this.height;
+    }
 }

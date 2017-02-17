@@ -55,7 +55,7 @@ public class SystemInfo
                 {
                     if (!line.isEmpty())
                     {
-                        processorName = line;
+                        processorName = line.trim();
                     }
                 }
 

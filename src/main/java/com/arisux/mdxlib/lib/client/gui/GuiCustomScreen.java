@@ -21,14 +21,14 @@ public class GuiCustomScreen extends GuiScreen
     }
 
     @Override
-    public void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6)
+    public void drawGradientRect(int x1, int y1, int x2, int y2, int topColor, int bottomColor)
     {
-        super.drawGradientRect(par1, par2, par3, par4, par5, par6);
+        super.drawGradientRect(x1, y1, x2, y2, topColor, bottomColor);
     }
 
-    public void setZLevel(float f)
+    public void setZLevel(float level)
     {
-        this.zLevel = f;
+        this.zLevel = level;
     }
 
     public float getZLevel()
@@ -36,8 +36,8 @@ public class GuiCustomScreen extends GuiScreen
         return this.zLevel;
     }
 
-    public void incZLevel(float f)
+    public void incZLevel(float level)
     {
-        this.zLevel += f;
+        this.zLevel += level;
     }
 }

@@ -125,4 +125,28 @@ public class GuiCustomButton extends GuiElement
         this.textAlignment = alignment;
         return this;
     }
+
+    @Override
+    public void setX(int x)
+    {
+        this.xPosition = x;
+    }
+
+    @Override
+    public void setY(int y)
+    {
+        this.yPosition = y;
+    }
+
+    @Override
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+
+    @Override
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
 }

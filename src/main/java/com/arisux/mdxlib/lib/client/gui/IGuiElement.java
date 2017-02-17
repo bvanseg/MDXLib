@@ -12,6 +12,22 @@ public interface IGuiElement
     
     public boolean isRendered();
     
+    public int x();
+    
+    public void setX(int x);
+    
+    public int y();
+    
+    public void setY(int y);
+    
+    public int width();
+    
+    public void setWidth(int width);
+    
+    public int height();
+    
+    public void setHeight(int height);
+    
     public long lastRenderTime();
     
     public void updateElement();
