@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.arisux.mdxlib.MDX;
+import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.world.Pos;
 import com.arisux.mdxlib.lib.world.Worlds;
 
@@ -31,6 +32,8 @@ import net.minecraft.world.World;
 
 public class Entities
 {
+    private static Entity pointedEntity;
+    
     /**
      * Get the first Entity instance of the specified class type found, 
      * within specified range, at the specified world coordinates.
@@ -187,6 +190,91 @@ public class Entities
     public static boolean canCoordBeSeenBy(World world, Pos p1, Pos p2)
     {
         return rayTraceBlocks(world, p1, p2) == null;
+    }
+
+    /**
+     * Finds what block or object the mouse is over at the specified partial tick time. Args: partialTickTime
+     */
+    public static MovingObjectPosition rayTraceSpecial(double reach, float partialTicks)
+    {
+        if (Game.minecraft().renderViewEntity != null)
+        {
+            if (Game.minecraft().theWorld != null)
+            {
+                Game.minecraft().pointedEntity = null;
+                Game.minecraft().objectMouseOver = Game.minecraft().renderViewEntity.rayTrace(reach, partialTicks);
+                double distance = reach;
+                Vec3 renderPosition = Game.minecraft().renderViewEntity.getPosition(partialTicks);
+
+                if (Game.minecraft().objectMouseOver != null)
+                {
+                    distance = Game.minecraft().objectMouseOver.hitVec.distanceTo(renderPosition);
+                }
+
+                Vec3 lookVec = Game.minecraft().renderViewEntity.getLook(partialTicks);
+                Vec3 lookPos = renderPosition.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
+                pointedEntity = null;
+                Vec3 hitVec = null;
+                float f1 = 1.0F;
+                List list = Game.minecraft().theWorld.getEntitiesWithinAABBExcludingEntity(Game.minecraft().renderViewEntity, Game.minecraft().renderViewEntity.boundingBox.addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand((double)f1, (double)f1, (double)f1));
+                double entityDist = distance;
+
+                for (int idx = 0; idx < list.size(); ++idx)
+                {
+                    Entity entity = (Entity)list.get(idx);
+
+                    if (entity.canBeCollidedWith())
+                    {
+                        float f2 = entity.getCollisionBorderSize();
+                        AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double)f2, (double)f2, (double)f2);
+                        MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(renderPosition, lookPos);
+
+                        if (axisalignedbb.isVecInside(renderPosition))
+                        {
+                            if (0.0D < entityDist || entityDist == 0.0D)
+                            {
+                                pointedEntity = entity;
+                                hitVec = movingobjectposition == null ? renderPosition : movingobjectposition.hitVec;
+                                entityDist = 0.0D;
+                            }
+                        }
+                        else if (movingobjectposition != null)
+                        {
+                            double distToHit = renderPosition.distanceTo(movingobjectposition.hitVec);
+
+                            if (distToHit < entityDist || entityDist == 0.0D)
+                            {
+                                if (entity == Game.minecraft().renderViewEntity.ridingEntity && !entity.canRiderInteract())
+                                {
+                                    if (entityDist == 0.0D)
+                                    {
+                                        pointedEntity = entity;
+                                        hitVec = movingobjectposition.hitVec;
+                                    }
+                                }
+                                else
+                                {
+                                    pointedEntity = entity;
+                                    hitVec = movingobjectposition.hitVec;
+                                    entityDist = distToHit;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (pointedEntity != null && (entityDist < distance))
+                {
+                    return new MovingObjectPosition(pointedEntity, hitVec);
+                }
+                else
+                {
+                    return new MovingObjectPosition((int)Math.round(lookPos.xCoord), (int)Math.round(lookPos.yCoord), (int)Math.round(lookPos.zCoord), 0, lookVec);
+                }
+            }
+        }
+        
+        return null;
     }
 
     /**
