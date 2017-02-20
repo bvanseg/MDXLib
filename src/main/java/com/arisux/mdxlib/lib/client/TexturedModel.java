@@ -62,7 +62,9 @@ public class TexturedModel<MODEL extends Model>
         try
         {
             Model newModel = this.model.getClass().getConstructor().newInstance(new Object[] {});
-            return new TexturedModel<MODEL>((MODEL) newModel, this.texture);
+            TexturedModel<MODEL> texturedModel = new TexturedModel<MODEL>((MODEL) newModel, this.texture);
+            MDX.log().info(String.format("[%s->%s] [%s->%s]", this.model, newModel, this, texturedModel));
+            return texturedModel;
         }
         catch (Exception e)
         {

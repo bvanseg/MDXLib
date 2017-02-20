@@ -11,64 +11,11 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.tileentity.TileEntity;
 
 @SideOnly(Side.CLIENT)
-public class Model extends ModelBase
+public abstract class Model extends ModelBase
 {
-    
-    public static final float DEFAULT_BOX_TRANSLATION = 0.0625F;
-
-    public Model()
-    {
-        super();
-    }
-
-    public static interface IRenderObject
-    {
-        public Object getObject();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static class RenderObject implements IRenderObject
-    {
-        public Object object;
-        public float swingProgress;
-        public float swingProgressPrev;
-        public float idleProgress;
-        public float headYaw;
-        public float headPitch;
-
-        public RenderObject(Object[] renderObjects)
-        {
-            this.object = renderObjects[0];
-
-            if (renderObjects.length > 1)
-            {
-                this.swingProgress = (Float) renderObjects[1];
-                this.swingProgressPrev = (Float) renderObjects[2];
-                this.idleProgress = (Float) renderObjects[3];
-                this.headYaw = (Float) renderObjects[4];
-                this.headPitch = (Float) renderObjects[5];
-            }
-        }
-
-        @Override
-        public Object getObject()
-        {
-            return this.object;
-        }
-
-        public TileEntity getTileEntity()
-        {
-            return (TileEntity) this.object;
-        }
-
-        public Entity getEntity()
-        {
-            return (Entity) this.object;
-        }
-    }
+    public static final float DEFAULT_SCALE = 1F / 16F;
 
     /**
      * Set the width and height of this ModelBaseExtension's texture.
@@ -94,9 +41,9 @@ public class Model extends ModelBase
 
     public static void draw(ModelRenderer modelRenderer)
     {
-        modelRenderer.render(Model.DEFAULT_BOX_TRANSLATION);
+        modelRenderer.render(DEFAULT_SCALE);
     }
-    
+
     public static void draw(ModelRenderer[] group)
     {
         for (ModelRenderer child : group)
@@ -105,116 +52,64 @@ public class Model extends ModelBase
         }
     }
 
-    /**
-     * Render this model statically. An empty render object will be passed to rest of the model.
-     */
     public void render()
     {
         this.render(null);
     }
 
     /**
-     * Render this model dynamically by passing it a render object.
-     * @param o - The render object. Passing a TileEntity or Entity will result in the automatic creation of a render object.
-     * Passing a render object will result in the object being directly passed to the rest of the model. This option is much more dynamic.
-     */
-    public void render(Object o)
-    {
-        if (o == null)
-        {
-            this.render(new RenderObject(new Object[] { null, 0F, 0F, 0F, 0F, 0F }), Model.DEFAULT_BOX_TRANSLATION);
-            return;
-        }
-        
-        if (o instanceof IRenderObject)
-        {
-            this.render((IRenderObject) o, Model.DEFAULT_BOX_TRANSLATION);
-            return;
-        }
-
-        if (o instanceof TileEntity)
-        {
-            this.render(new RenderObject(new Object[] { o }), Model.DEFAULT_BOX_TRANSLATION);
-            return;
-        }
-        
-        if (o instanceof EntityLivingBase)
-        {
-            EntityLivingBase entityLiving = (EntityLivingBase) o;
-            float renderPartialTicks = Game.partialTicks();
-            float yawOffset = MDXMath.interpolateRotation(entityLiving.prevRenderYawOffset, entityLiving.renderYawOffset, renderPartialTicks);
-            float yawHead = MDXMath.interpolateRotation(entityLiving.prevRotationYawHead, entityLiving.rotationYawHead, renderPartialTicks);
-            float swingProgress = (entityLiving.limbSwing - entityLiving.limbSwingAmount * (1.0F - renderPartialTicks));
-            float swingProgressPrevious = (entityLiving.prevLimbSwingAmount + (entityLiving.limbSwingAmount - entityLiving.prevLimbSwingAmount) * renderPartialTicks);
-            float idleProgress = (entityLiving.ticksExisted + renderPartialTicks);
-            float headRotateAngleY = (yawHead - yawOffset);
-            float headRotationPitch = (entityLiving.prevRotationPitch + (entityLiving.rotationPitch - entityLiving.prevRotationPitch) * renderPartialTicks);
-            
-            this.render(new RenderObject(new Object[] { o, swingProgress, swingProgressPrevious, idleProgress, headRotateAngleY, headRotationPitch }), Model.DEFAULT_BOX_TRANSLATION);
-            return;
-        }
-
-        if (o instanceof Entity)
-        {
-            this.render(new RenderObject(new Object[] { o, 0F, 0F, 0F, 0F, 0F }), Model.DEFAULT_BOX_TRANSLATION);
-            return;
-        }
-    }
-
-    /** 
-     * The base render method. Renders all of the boxes stored in the boxList. This is where the rendering is actually done.
-     * 
-     * @param renderObject - The render object used to pass rendering arguments to the rest of the model during 
-     * rendering. Allows for dynamically rendered models.
-     * @param boxTranslation - The box translation offset. Default value is 0.0625F
-     **/
-    protected void render(IRenderObject renderObject, float boxTranslation)
-    {
-        for (Object o : this.boxList)
-        {
-            ModelRenderer box = (ModelRenderer) o;
-            box.render(boxTranslation);
-        }
-    }
-
-    /**
      * The entity render method from ModelBase with correct parameter mappings. Calls the base render method.
      * 
      * @param entity - The Entity instance being rendered.
-     * @param swingProgress - The arm swing progress of the Entity being rendered.
-     * @param swingProgressPrev - The previous tick's arm swing progress of the Entity being rendered.
-     * @param idleProgress - The idle arm swing progress of the Entity being rendered.
+     * @param swing - The arm swing progress of the Entity being rendered.
+     * @param swingPrev - The previous tick's arm swing progress of the Entity being rendered.
+     * @param idle - The idle arm swing progress of the Entity being rendered.
      * @param headYaw - The head rotation yaw of the Entity being rendered.
      * @param headPitch - The head rotation pitch of the Entity being rendered.
-     * @param boxTranslation - The box translation offset. Default value is 0.0625F
+     * @param scale - The scale this model will render at.
      */
-    @Deprecated
-    @Override
-    public void render(Entity entity, float swingProgress, float swingProgressPrev, float idleProgress, float headYaw, float headPitch, float boxTranslation)
+    public void render(Object obj)
     {
-        this.render(new RenderObject(new Object[] { entity, swingProgress, swingProgressPrev, idleProgress, headYaw, headPitch }));
+        ;
     }
 
     /**
-     * The standard setRotationAngles method from ModelBase with correct parameter mappings. Calls the superclass method.
-     * 
-     * @param swingProgress - The arm swing progress of the Entity being rendered.
-     * @param swingProgressPrev - The previous tick's arm swing progress of the Entity being rendered.
-     * @param idleProgress - The idle arm swing progress of the Entity being rendered.
-     * @param headYaw - The head rotation yaw of the Entity being rendered.
-     * @param headPitch - The head rotation pitch of the Entity being rendered.
-     * @param boxTranslation - The box translation offset. Default value is 0.0625F
-     * @param entity - The Entity instance being rendered.
-     */
+    * The entity render method from ModelBase with correct parameter mappings. Calls the base render method.
+    *
+    * @param entity - The Entity instance being rendered.
+    * @param swing - The arm swing progress of the Entity being rendered.
+    * @param swingPrev - The previous tick's arm swing progress of the Entity being rendered.
+    * @param idle - The idle arm swing progress of the Entity being rendered.
+    * @param headYaw - The head rotation yaw of the Entity being rendered.
+    * @param headPitch - The head rotation pitch of the Entity being rendered.
+    * @param scale - The scale this model will render at.
+    */
     @Override
-    public void setRotationAngles(float swingProgress, float swingProgressPrev, float idleProgress, float headYaw, float headPitch, float boxTranslation, Entity entity)
+    public void render(Entity entity, float swing, float swingPrev, float idle, float headYaw, float headPitch, float scale)
     {
-        super.setRotationAngles(swingProgress, swingProgressPrev, idleProgress, headYaw, headPitch, boxTranslation, entity);
+        this.render(entity);
+    }
+
+    /**
+    * The standard setRotationAngles method from ModelBase with correct parameter mappings. Calls the superclass method.
+    *
+    * @param swing - The arm swing progress of the Entity being rendered.
+    * @param swingPrev - The previous tick's arm swing progress of the Entity being rendered.
+    * @param idle - The idle arm swing progress of the Entity being rendered.
+    * @param headYaw - The head rotation yaw of the Entity being rendered.
+    * @param headPitch - The head rotation pitch of the Entity being rendered.
+    * @param scale - The scale this model will render at.
+    * @param entity - The Entity instance being rendered.
+    */
+    @Override
+    public void setRotationAngles(float swing, float swingPrev, float idle, float headYaw, float headPitch, float scale, Entity entity)
+    {
+        ;
     }
 
     /**
     * The standard setLivingAnimations method from ModelBase with correct parameter mappings. Calls the superclass method.
-    * 
+    *
     * @param entityLiving - The EntityLiving instance currently being rendered.
     * @param swingProgress - The arm swing progress of the Entity being rendered.
     * @param swingProgressPrev - The previous tick's arm swing progress of the Entity being rendered.
@@ -223,20 +118,20 @@ public class Model extends ModelBase
     @Override
     public void setLivingAnimations(EntityLivingBase entityLiving, float swingProgress, float swingProgressPrev, float renderPartialTicks)
     {
-        super.setLivingAnimations(entityLiving, swingProgress, swingProgressPrev, renderPartialTicks);
+        ;
     }
-    
+
     /**
      * Creates an array or group of ModelRenderers.
      * 
      * @param children - The ModelRenderer instances we're adding to this group.
      * @return The array or group created.
      */
-    public static ModelRenderer[] group(ModelRenderer ... children)
+    public static ModelRenderer[] group(ModelRenderer... children)
     {
         return children;
     }
-    
+
     /**
      * Constructs a standard ModelBase instance from the specified class.
      * 
@@ -279,13 +174,85 @@ public class Model extends ModelBase
         return null;
     }
 
-    public float getIdleProgress(Entity entity, float renderPartialTicks)
-    {
-        return ((float) entity.ticksExisted + renderPartialTicks);
-    }
-
     public static ModelBase getMainModel(RendererLivingEntity renderer)
     {
         return MDX.access().getMainModel(renderer);
+    }
+
+    public static float getIdleProgress(EntityLivingBase base)
+    {
+        return base.ticksExisted + Game.partialTicks();
+    }
+
+    public static float getSwingProgress(EntityLivingBase base)
+    {
+        return base.limbSwing - base.limbSwingAmount * (1.0F - Game.partialTicks());
+    }
+
+    public static float getSwingProgressPrev(EntityLivingBase base)
+    {
+        return base.prevLimbSwingAmount + (base.limbSwingAmount - base.prevLimbSwingAmount) * Game.partialTicks();
+    }
+
+    public static float getHeadYaw(EntityLivingBase base)
+    {
+        float yawOffset = MDXMath.interpolateRotation(base.prevRenderYawOffset, base.renderYawOffset, Game.partialTicks());
+        float yawHead = MDXMath.interpolateRotation(base.prevRotationYawHead, base.rotationYawHead, Game.partialTicks());
+        return yawHead - yawOffset;
+    }
+
+    public static float getHeadPitch(EntityLivingBase base)
+    {
+        return (base.prevRotationPitch + (base.rotationPitch - base.prevRotationPitch) * Game.partialTicks());
+    }
+
+    public static float idleProgress(Object o)
+    {
+        if (o != null && o instanceof EntityLivingBase)
+        {
+            return getIdleProgress((EntityLivingBase) o);
+        }
+
+        return 0F;
+    }
+
+    public static float swingProgress(Object o)
+    {
+        if (o != null && o instanceof EntityLivingBase)
+        {
+            return getSwingProgress((EntityLivingBase) o);
+        }
+
+        return 0F;
+    }
+
+    public static float swingProgressPrev(Object o)
+    {
+        if (o != null && o instanceof EntityLivingBase)
+        {
+            return getSwingProgressPrev((EntityLivingBase) o);
+        }
+
+        return 0F;
+    }
+
+    public static float headYaw(Object o)
+    {
+        if (o != null && o instanceof EntityLivingBase)
+        {
+            return getHeadYaw((EntityLivingBase) o);
+        }
+
+        return 0F;
+    }
+
+    public static float headPitch(Object o)
+    {
+        if (o != null && o instanceof EntityLivingBase)
+        {
+            return getHeadPitch((EntityLivingBase) o);
+        }
+
+        return 0F;
     }
 }
