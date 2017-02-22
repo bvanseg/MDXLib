@@ -208,6 +208,7 @@ public class Entities
     /**
      * Finds what block or object the mouse is over at the specified partial tick time. Args: partialTickTime
      */
+    @SideOnly(Side.CLIENT)
     public static MovingObjectPosition rayTraceSpecial(double reach, float partialTicks)
     {
         if (Game.minecraft().renderViewEntity != null)
