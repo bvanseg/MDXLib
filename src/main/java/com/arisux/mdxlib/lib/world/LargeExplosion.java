@@ -1,9 +1,11 @@
 package com.arisux.mdxlib.lib.world;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
@@ -13,102 +15,149 @@ import net.minecraft.world.World;
 
 public class LargeExplosion
 {
-    private int posX, posY, posZ;
-    private int radiusX, radiusY, radiusZ;
-    private World worldObj;
-    private Random random;
+    private int                           x;
+    private int                           y;
+    private int                           z;
+    private int                           rX;
+    private int                           rY;
+    private int                           rZ;
+    private int                           erb;
+    private int                           erm;
+    private float                         damage;
+    private World                         worldObj;
+    private Random                        random;
+    private ArrayList<Block>              excludedBlocks;
+    private ArrayList<Material>           excludedMaterials;
+    private static final ArrayList<Block> excludeDefault = new ArrayList<Block>();
 
-    public LargeExplosion(World worldObj, double radiusX, double radiusY, double radiusZ, int posX, int posY, int posZ, long randLong)
+    static
     {
-        this.worldObj = worldObj;
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
-        this.radiusX = (int) Math.ceil(radiusX);
-        this.radiusY = (int) Math.ceil(radiusY);
-        this.radiusZ = (int) Math.ceil(radiusZ);
-        this.random = new Random(randLong);
+        excludeDefault.add(Blocks.bedrock);
     }
 
-    @SuppressWarnings("unchecked")
-    public void start()
+    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, long seed)
     {
-        worldObj.playSoundEffect(posX, posY, posZ, "random.old_explode", 4.0F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+        this(worldObj, rX, rY, rZ, x, y, z, 1000F, seed, excludeDefault);
+    }
 
-        List<Entity> var40 = worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox((double) posX - radiusX, (double) posY - radiusY, (double) posZ - radiusY, (double) posX + radiusY, (double) posY + radiusY, (double) posZ + radiusY));
+    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed)
+    {
+        this(worldObj, rX, rY, rZ, x, y, z, damage, seed, excludeDefault);
+    }
 
-        for (int var39 = 0; var39 < var40.size(); ++var39)
+    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> exclude)
+    {
+        this(worldObj, rX, rY, rZ, x, y, z, damage, seed, excludeDefault, null, 0, 0);
+    }
+
+    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> excludedBlocks, ArrayList<Material> excludedMaterials, int erb, int erm)
+    {
+        this.worldObj = worldObj;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.rX = (int) Math.ceil(rX);
+        this.rY = (int) Math.ceil(rY);
+        this.rZ = (int) Math.ceil(rZ);
+        this.damage = damage;
+        this.random = new Random(seed);
+        this.excludedBlocks = excludedBlocks;
+        this.excludedMaterials = excludedMaterials;
+        this.erb = erb;
+        this.erm = erm;
+    }
+
+    public void process()
+    {
+        rX += 0.5D;
+        rY += 0.5D;
+        rZ += 0.5D;
+
+        int size = ((rX + rY + rZ) / 3) / 2;
+
+        for (int idx = 0; idx <= size; ++idx)
         {
-            var40.get(var39).attackEntityFrom(DamageSource.generic, 100);
-        }
+            float scale = 1F - (1F / size);
+            rX = Math.round(rX * scale);
+            rY = Math.round(rY * scale);
+            rZ = Math.round(rZ * scale);
+            double x1 = 0.0D;
 
-        radiusX += 0.5D;
-        radiusY += 0.5D;
-        radiusZ += 0.5D;
-
-        double var22 = 0.0D;
-
-        for (int curX = 0; curX <= radiusX; ++curX)
-        {
-            double var25 = var22;
-            var22 = (curX + 1) * (1D / radiusX);
-
-            for (int curY = 0; curY <= radiusY; ++curY)
+            for (int posX = 0; posX <= rX; ++posX)
             {
-                double var30 = 0.0D;
-                double var27 = (curY + 1) * (1D / radiusY);
-                double var32 = 0.0D;
+                double x2 = x1;
+                x1 = (posX + 1) * (1D / rX);
 
-                for (int curZ = 0; curZ <= radiusZ; ++curZ)
+                for (int posY = 0; posY <= rY; ++posY)
                 {
-                    double var35 = var32;
-                    var32 = (curZ + 1) * (1D / radiusZ);
-                    double var37 = this.lengthSq(var25, var30, var35);
+                    double y1 = 0.0D;
+                    double y2 = (posY + 1) * (1D / rY);
+                    double z2 = 0.0D;
 
-                    if (var37 > 1.0D && curZ == 0 && curY == 0)
+                    for (int posZ = 0; posZ <= rZ; ++posZ)
                     {
-                        break;
-                    }
+                        double z1 = z2;
+                        z2 = (posZ + 1) * (1D / rZ);
 
-                    if (this.lengthSq(var22, var30, var35) <= 1.0D && this.lengthSq(var25, var27, var35) <= 1.0D && this.lengthSq(var25, var30, var32) <= 1.0D || !this.random.nextBoolean())
-                    {
-                        addBlock(curX, curY, curZ);
-                        addBlock(-curX, curY, curZ);
-                        addBlock(curX, -curY, curZ);
-                        addBlock(curX, curY, -curZ);
-                        addBlock(-curX, -curY, curZ);
-                        addBlock(curX, -curY, -curZ);
-                        addBlock(-curX, curY, -curZ);
-                        addBlock(-curX, -curY, -curZ);
+                        if (this.sq(x2, y1, z1) > 1.0D && posZ == 0 && posY == 0)
+                        {
+                            break;
+                        }
+
+                        if ((this.sq(x1, y1, z1) <= 1.0D && this.sq(x2, y2, z1) <= 1.0D && this.sq(x2, y1, z2) <= 1.0D))
+                        {
+                            pos(posX, posY, posZ);
+                            pos(-posX, posY, posZ);
+                            pos(posX, -posY, posZ);
+                            pos(posX, posY, -posZ);
+                            pos(-posX, -posY, posZ);
+                            pos(posX, -posY, -posZ);
+                            pos(-posX, posY, -posZ);
+                            pos(-posX, -posY, -posZ);
+                        }
                     }
                 }
             }
         }
     }
 
-    private final double lengthSq(double posX, double posY, double posZ)
+    public void start()
+    {
+        this.process();
+        worldObj.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+
+        @SuppressWarnings("unchecked")
+        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox((double) x - rX, (double) y - rY, (double) z - rY, (double) x + rY, (double) y + rY, (double) z + rY));
+
+        for (int idx = 0; idx < entities.size(); ++idx)
+        {
+            entities.get(idx).attackEntityFrom(DamageSource.generic.setExplosion(), this.damage);
+        }
+    }
+
+    private final double sq(double posX, double posY, double posZ)
     {
         return (posX * posX) + (posY * posY) + (posZ * posZ);
     }
 
-    private final void addBlock(double posX, double posY, double posZ)
+    private final void pos(double posX, double posY, double posZ)
     {
-        Block block = this.worldObj.getBlock((int) posX + this.posX, (int) posY + this.posY, (int) posZ + this.posZ);
+        int dX = (int) posX + this.x;
+        int dY = (int) posY + this.y;
+        int dZ = (int) posZ + this.z;
+        Block block = this.worldObj.getBlock(dX, dY, dZ);
 
-        if (block != Blocks.air && block != Blocks.bedrock)
+        if (excludedBlocks != null && (excludedBlocks.contains(block) && (erb > 0 && this.random.nextInt(this.erb) == 0 || erb == 0)) || block == Blocks.air)
         {
-            int newX = (int) posX + this.posX, newY = (int) posY + this.posY, newZ = (int) posZ + this.posZ;
-
-            try
-            {
-                block.onBlockDestroyedByExplosion(this.worldObj, (int) posX, (int) posY, (int) posZ, new Explosion(this.worldObj, null, posX, posY, posZ, 1F));
-            }
-            catch (Exception e)
-            {
-                ;
-            }
-
-            this.worldObj.setBlockToAir(newX, newY, newZ);
+            return;
         }
+
+        if (excludedMaterials != null && excludedMaterials.contains(block.getMaterial()) && (erm > 0 && this.random.nextInt(this.erm) == 0 || erm == 0))
+        {
+            return;
+        }
+
+        block.onBlockDestroyedByExplosion(this.worldObj, dX, dY, dZ, new Explosion(this.worldObj, null, dX, dY, dZ, 1F));
+       this.worldObj.setBlockToAir(dX, dY, dZ);
     }
 }

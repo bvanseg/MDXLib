@@ -9,7 +9,7 @@ public class Console
 
     public static void copyright()
     {
-        logger.info("Copyright(C) 2016-2017 Arisux Technology Group");
+        logger.info("Copyright(C) 2016-2017 ASX");
     }
 
     public static void preInit()

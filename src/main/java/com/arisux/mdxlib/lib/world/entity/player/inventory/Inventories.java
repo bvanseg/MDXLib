@@ -190,10 +190,8 @@ public class Inventories
     {
         int amount = 0;
 
-        for (Object obj : player.inventory.mainInventory)
+        for (ItemStack stack : player.inventory.mainInventory)
         {
-            ItemStack stack = (ItemStack) obj;
-
             if (stack != null && stack.getItem() == item)
             {
                 amount += stack.stackSize;

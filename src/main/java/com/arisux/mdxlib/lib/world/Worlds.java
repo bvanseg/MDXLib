@@ -46,14 +46,6 @@ public class Worlds
         return explosion;
     }
 
-    public static LargeExplosion createCustomExplosion(Entity entity, World worldObj, int posX, int posY, int posZ, float radius)
-    {
-        LargeExplosion explosion = new LargeExplosion(worldObj, radius, radius, radius, posX, posY, posZ, (new Random()).nextLong());
-        explosion.start();
-
-        return explosion;
-    }
-
     /**
      * Gets the next safe position above the specified position
      * 
