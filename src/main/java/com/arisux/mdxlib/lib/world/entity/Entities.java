@@ -281,7 +281,7 @@ public class Entities
                 }
                 else if (blockTrace != null)
                 {
-                    return new MovingObjectPosition((int) Math.round(blockTrace.blockX), (int) Math.round(blockTrace.blockY), (int) Math.round(blockTrace.blockZ), 0, lookVec);
+                    return blockTrace;
                 }
             }
         }
