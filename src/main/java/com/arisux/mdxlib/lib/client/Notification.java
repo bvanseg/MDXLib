@@ -93,7 +93,6 @@ public abstract class Notification
         ArrayList<String> lines = Draw.wrapString(this.getMessage(), (int) ((width - (pad * 2)) / textScale));
         String tickString = String.format("%s", this.displayTimeout() / 20 - this.ticksExisted / 20);
         int tickStringWidth = Draw.getStringRenderWidth(tickString);
-        System.out.println("test");
         
         Draw.drawRect(x, y, width, height, 0xAA000000);
 
