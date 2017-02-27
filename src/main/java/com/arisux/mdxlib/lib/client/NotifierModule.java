@@ -35,6 +35,7 @@ public class NotifierModule
     {
         if (currentNotification != null)
         {
+            System.out.println("how");
             currentNotification.preDraw();
         }
     }

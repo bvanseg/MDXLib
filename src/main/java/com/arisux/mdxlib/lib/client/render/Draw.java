@@ -44,25 +44,29 @@ public class Draw
         return Tessellator.getInstance().getBuffer();
     }
     
-    public static void bufferStart()
+    public static void startQuads()
     {
         buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
     }
     
-    public static void bufferEnd()
+    public static void startQuadsColored()
     {
-        buffer().endVertex();
+        buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
     }
     
-    public static void vertex(int x, int y, int z)
+    public static void tessellate()
     {
-        buffer().pos(x, y, z);
+        Tessellator.getInstance().draw();
     }
     
-    public static void vertex(int x, int y, int z, float u, float v)
+    public static VertexBuffer vertex(int x, int y, int z)
     {
-        buffer().pos(x, y, z);
-        buffer().tex(u, v);
+        return buffer().pos(x, y, z);
+    }
+    
+    public static VertexBuffer vertex(int x, int y, int z, float u, float v)
+    {
+        return buffer().pos(x, y, z).tex(u, v);
     }
     
     public static interface ITooltipLineHandler
@@ -133,14 +137,12 @@ public class Draw
     {
         OpenGL.disableTexture2d();
         OpenGL.shadeSmooth();
-        bufferStart();
-        buffer().color((color1 >> 16 & 255) / 255.0F, (color1 >> 8 & 255) / 255.0F, (color1 & 255) / 255.0F, (color1 >> 24 & 255) / 255.0F);
-        vertex(w, y, zLevel);
-        vertex(x, y, zLevel);
-        buffer().color((color2 >> 16 & 255) / 255.0F, (color2 >> 8 & 255) / 255.0F, (color2 & 255) / 255.0F, (color2 >> 24 & 255) / 255.0F);
-        vertex(x, h, zLevel);
-        vertex(w, h, zLevel);
-        bufferEnd();
+        startQuadsColored();
+        vertex(w, y, zLevel).color((color1 >> 16 & 255) / 255.0F, (color1 >> 8 & 255) / 255.0F, (color1 & 255) / 255.0F, (color1 >> 24 & 255) / 255.0F).endVertex();
+        vertex(x, y, zLevel).color((color1 >> 16 & 255) / 255.0F, (color1 >> 8 & 255) / 255.0F, (color1 & 255) / 255.0F, (color1 >> 24 & 255) / 255.0F).endVertex();
+        vertex(x, h, zLevel).color((color2 >> 16 & 255) / 255.0F, (color2 >> 8 & 255) / 255.0F, (color2 & 255) / 255.0F, (color2 >> 24 & 255) / 255.0F).endVertex();
+        vertex(w, h, zLevel).color((color2 >> 16 & 255) / 255.0F, (color2 >> 8 & 255) / 255.0F, (color2 & 255) / 255.0F, (color2 >> 24 & 255) / 255.0F).endVertex();
+        tessellate();
         OpenGL.shadeFlat();
         OpenGL.enableTexture2d();
     }
@@ -206,12 +208,12 @@ public class Draw
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
-        bufferStart();
-        vertex(x + 0, y + h, z, (u + 0) * f, (v + h) * f1);
-        vertex(x + w, y + h, z, (u + w) * f, (v + h) * f1);
-        vertex(x + w, y + 0, z, (u + w) * f, (v + 0) * f1);
-        vertex(x + 0, y + 0, z, (u + 0) * f, (v + 0) * f1);
-        bufferEnd();
+        startQuads();
+        vertex(x + 0, y + h, z, (u + 0) * f, (v + h) * f1).endVertex();
+        vertex(x + w, y + h, z, (u + w) * f, (v + h) * f1).endVertex();
+        vertex(x + w, y + 0, z, (u + w) * f, (v + 0) * f1).endVertex();
+        vertex(x + 0, y + 0, z, (u + 0) * f, (v + 0) * f1).endVertex();
+        tessellate();
     }
 
     /**
@@ -248,13 +250,12 @@ public class Draw
      */
     public static void drawQuad(int x, int y, int w, int h, int z, float minU, float maxU, float minV, float maxV)
     {
-        VertexBuffer buffer = Tessellator.getInstance().getBuffer();
-        bufferStart();
-        vertex(x + 0, y + h, z, minU, maxV);
-        vertex(x + w, y + h, z, maxU, maxV);
-        vertex(x + w, y + 0, z, maxU, minV);
-        vertex(x + 0, y + 0, z, minU, minV);
-        bufferEnd();
+        startQuads();
+        vertex(x + 0, y + h, z, minU, maxV).endVertex();
+        vertex(x + w, y + h, z, maxU, maxV).endVertex();
+        vertex(x + w, y + 0, z, maxU, minV).endVertex();
+        vertex(x + 0, y + 0, z, minU, minV).endVertex();
+        tessellate();
     }
 
     /**

@@ -14,9 +14,6 @@ import com.arisux.mdxlib.lib.game.Game;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -679,17 +676,16 @@ public class GuiCustomTextbox implements IGuiElement
             x = this.xPosition + this.width;
         }
 
-        VertexBuffer buf = Tessellator.getInstance().getBuffer();
         OpenGL.color(0.0F, 0.0F, 255.0F, 255.0F);
         OpenGL.disableTexture2d();
         GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
         GL11.glLogicOp(GL11.GL_OR_REVERSE);
-        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-        buf.pos((double) x, (double) h, 0.0D);
-        buf.pos((double) w, (double) h, 0.0D);
-        buf.pos((double) w, (double) y, 0.0D);
-        buf.pos((double) x, (double) y, 0.0D);
-        buf.endVertex();
+        Draw.startQuads();
+        Draw.vertex(x, h, 0).endVertex();
+        Draw.vertex(w, h, 0).endVertex();
+        Draw.vertex(w, y, 0).endVertex();
+        Draw.vertex(x, y, 0).endVertex();
+        Draw.tessellate();
         GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
         OpenGL.enableTexture2d();
     }
