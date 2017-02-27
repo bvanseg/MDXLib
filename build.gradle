@@ -1,19 +1,31 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "http://files.minecraftforge.net/maven" 
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = "https://oss.sonatype.org/content/groups/public"
+        }
+        maven {
+            url = "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'org.ajoberstar:gradle-git:0.10.1'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.8"
     }
 }
+
+plugins {
+  id "com.matthewprenger.cursegradle" version "1.0.8"
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'maven'
 
 configurations {
     deployerJars
@@ -23,12 +35,8 @@ dependencies {
     deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
 }
 
-apply plugin: 'forge'
-apply plugin: 'curseforge'
-apply plugin: 'maven'
-
-version = "1.0.0.${System.env.BUILD_NUMBER}"
-group= "com.arisux"
+version = "${project.version_major}.${project.version_minor}.${project.version_micro}.${System.env.BUILD_NUMBER}"
+group = "com.arisux"
 archivesBaseName = "mdxlib"
 
 tasks.withType(JavaCompile) {
@@ -38,15 +46,15 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-    version = "1.7.10-10.13.4.1614-1.7.10"
-    runDir = "eclipse"
-    mappings = "stable_12"
+    version = "${project.version_minecraft}-${project.version_forge}"
+    runDir = "run"
+    mappings = project.version_mappings
     
     replace "@VERSION@", "${project.version}" 
     replaceIn 'MDX.java'
 }
 
-println "Minecraft Forge " + minecraft.version + " with mappings " + minecraft.mappings
+println "Minecraft Forge ${project.version_forge} with mappings " + minecraft.mappings
 
 def sharedManifest = {
     attributes 'FMLAT': 'mdxlib_at.cfg'
@@ -55,19 +63,19 @@ def sharedManifest = {
 }
 
 jar {
-	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar"
+	archiveName = "[${project.version_minecraft}][${project.version}] ${project.archivesBaseName}.jar"
     manifest sharedManifest
 }
 
 task srcJar(type: Jar) {
     from sourceSets.main.output
-	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}-sources.jar"
+	archiveName = "[${project.version_minecraft}][${project.version}] ${project.archivesBaseName}-sources.jar"
     classifier = 'sources'
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-	archiveName = "[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}-deobf.jar"
+	archiveName = "[${project.version_minecraft}][${project.version}] ${project.archivesBaseName}-deobf.jar"
     classifier = 'deobf'
     manifest sharedManifest
 }
@@ -76,12 +84,22 @@ artifacts {
     archives srcJar, deobfJar
 }
 
-curse {
-    displayName = "${project.archivesBaseName} ${project.version}"
-    artifact = file("${project.buildDir}/libs/[${minecraft.getApiVersion()}][${project.version}] ${project.archivesBaseName}.jar")
-    projectId = '248278'
-    apiKey = project.curseForgeApiKey
-    releaseType = 'beta'
+curseforge {
+        apiKey = project.curseforge_api_key
+
+        project {
+            id = project.curseforge_id
+            changelog = ''
+            releaseType = project.hasProperty('curseforge_release_type') ? project.curseforge_release_type : 'release'
+
+            mainArtifact jar
+            addArtifact sourceJar
+            addArtifact deobfJar
+
+            relations {
+                requiredLibrary 'mdxlib'
+        }
+    }
 }
 
 processResources {
@@ -110,7 +128,7 @@ task("publishToMaven", dependsOn:"build") {
             
 	        pom.project {
 	        	properties {
-	            	forgeVersion = minecraft.getApiVersion()
+	            	forgeVersion = project.version_minecraft
 	            	mcVersion = minecraft.version
 	            }
 	        }
