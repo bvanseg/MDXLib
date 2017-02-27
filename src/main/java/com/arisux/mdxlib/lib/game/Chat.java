@@ -2,7 +2,7 @@ package com.arisux.mdxlib.lib.game;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 
 public class Chat
 {
@@ -30,10 +30,10 @@ public class Chat
     {
         return message.replaceAll("&", string(Chars.SECTION_SIGN));
     }
-
-    public static ChatComponentText component(String message)
+    
+    public static TextComponentString component(String message)
     {
-        return new ChatComponentText(format(message));
+        return new TextComponentString(format(message));
     }
 
     public static void sendTo(EntityPlayer player, String message)
@@ -41,12 +41,12 @@ public class Chat
         player.addChatMessage(component(message));
     }
 
-    public static void sendTo(EntityPlayer player, ChatComponentText component)
+    public static void sendTo(EntityPlayer player, TextComponentString component)
     {
         player.addChatMessage(component);
     }
 
-    public static void sendTo(ICommandSender sender, ChatComponentText component)
+    public static void sendTo(ICommandSender sender, TextComponentString component)
     {
         sender.addChatMessage(component);
     }

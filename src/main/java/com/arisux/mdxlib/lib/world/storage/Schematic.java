@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.arisux.mdxlib.MDX;
+import com.arisux.mdxlib.lib.world.CoordSelection;
 import com.arisux.mdxlib.lib.world.Pos;
 import com.arisux.mdxlib.lib.world.Pos.BlockDataStore;
-import com.arisux.mdxlib.lib.world.CoordSelection;
 import com.arisux.mdxlib.lib.world.Structure;
 import com.arisux.mdxlib.lib.world.tile.TileEntities;
 
@@ -17,6 +17,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -120,7 +121,7 @@ public class Schematic
 
                 data.store(new BlockDataStore(block, meta));
 
-                if (block != null && getPass(block, meta) == pass && block != net.minecraft.init.Blocks.air)
+                if (block != null && getPass(block, meta) == pass && block != net.minecraft.init.Blocks.AIR)
                 {
                     structure.getBlockQueue().add(data);
                 }
@@ -134,7 +135,7 @@ public class Schematic
 
         for (NBTTagCompound tag : tileEntityTags)
         {
-            TileEntity tileEntity = TileEntity.createAndLoadEntity(tag);
+            TileEntity tileEntity = TileEntity.create(world, tag);
 
             if (tileEntity != null)
             {
@@ -154,14 +155,14 @@ public class Schematic
 
                 if (block != null && getPass(block, meta) == pass)
                 {
-                    Pos pos = new Pos(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
+                    BlockPos blockpos = new BlockPos(data.x, data.y, data.z).add(relative.x, relative.y, relative.z);
                     TileEntity tileEntity = tileEntities.get(relative.hashCode());
 
                     if (tileEntity != null)
                     {
-                        world.setBlockMetadataWithNotify((int) pos.x, (int) pos.y, (int) pos.z, meta, 2);
-                        TileEntities.setTileEntityPosition(tileEntity, pos);
-                        world.setTileEntity((int) pos.x, (int) pos.y, (int) pos.z, tileEntity);
+                        world.setBlockState(blockpos, block.getStateFromMeta(meta), 2);
+                        tileEntity.setPos(blockpos);
+                        world.setTileEntity(blockpos, tileEntity);
                         tileEntity.updateContainingBlockInfo();
                     }
                 }
@@ -176,7 +177,7 @@ public class Schematic
 
         for (NBTTagCompound tag : tileEntityTags)
         {
-            TileEntity tileEntity = TileEntity.createAndLoadEntity(tag);
+            TileEntity tileEntity = TileEntity.create(world, tag);
 
             if (tileEntity != null)
             {
@@ -196,16 +197,16 @@ public class Schematic
 
                 if (block != null && getPass(block, meta) == pass)
                 {
-                    Pos pos = new Pos(data.x, data.y, data.z).add(relative).store(new BlockDataStore(block, meta));
-                    world.setBlock((int) pos.x, (int) pos.y, (int) pos.z, block, meta, 3);
+                    BlockPos blockpos = new BlockPos(data.x, data.y, data.z).add(relative.x, relative.y, relative.z);
+                    world.setBlockState(blockpos, block.getStateFromMeta(meta), 3);
 
                     TileEntity tileEntity = tileEntities.get(relative.hashCode());
 
                     if (tileEntity != null)
                     {
-                        world.setBlockMetadataWithNotify((int) pos.x, (int) pos.y, (int) pos.z, meta, 2);
-                        TileEntities.setTileEntityPosition(tileEntity, pos);
-                        world.setTileEntity((int) pos.x, (int) pos.y, (int) pos.z, tileEntity);
+                        world.setBlockState(blockpos, block.getStateFromMeta(meta), 2);
+                        tileEntity.setPos(blockpos);
+                        world.setTileEntity(blockpos, tileEntity);
                         tileEntity.updateContainingBlockInfo();
                     }
                 }
@@ -215,7 +216,7 @@ public class Schematic
 
     private int getPass(Block block, int metadata)
     {
-        return (block.isNormalCube() || block.getMaterial() == Material.air) ? 0 : 1;
+        return (block.getStateFromMeta(metadata).isNormalCube() || block.getStateFromMeta(metadata).getMaterial() == Material.AIR) ? 0 : 1;
     }
 
     public File getFile()

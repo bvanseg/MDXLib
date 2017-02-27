@@ -10,10 +10,9 @@ import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.world.Pos;
 import com.arisux.mdxlib.lib.world.Worlds;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -23,12 +22,17 @@ import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Entities
 {
@@ -64,7 +68,7 @@ public class Entities
             Pos newPos = new Pos(pos.x, pos.y, pos.z);
             Pos newPosBelow = new Pos(pos.x, pos.y - 1, pos.z);
 
-            return newPosBelow.getBlock(world) != net.minecraft.init.Blocks.air && newPos.getBlock(world) == net.minecraft.init.Blocks.air;
+            return newPosBelow.getBlock(world) != net.minecraft.init.Blocks.AIR && newPos.getBlock(world) == net.minecraft.init.Blocks.AIR;
         }
 
         return false;
@@ -169,12 +173,12 @@ public class Entities
     @SuppressWarnings("unchecked")
     public static List<? extends Entity> getEntitiesInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range, int height)
     {
-        return worldObj.getEntitiesWithinAABB(entityClass, AxisAlignedBB.getBoundingBox(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
+        return worldObj.getEntitiesWithinAABB(entityClass, new AxisAlignedBB(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
     }
     
-    public static MovingObjectPosition.MovingObjectType getMovingObjectType(int ordinal)
+    public static RayTraceResult.Type getMovingObjectType(int ordinal)
     {
-        for (MovingObjectPosition.MovingObjectType type : MovingObjectPosition.MovingObjectType.values())
+        for (RayTraceResult.Type type : RayTraceResult.Type.values())
         {
             if (type.ordinal() == ordinal)
             {
@@ -209,18 +213,18 @@ public class Entities
      * Finds what block or object the mouse is over at the specified partial tick time. Args: partialTickTime
      */
     @SideOnly(Side.CLIENT)
-    public static MovingObjectPosition rayTraceSpecial(double reach, float partialTicks)
+    public static RayTraceResult rayTraceSpecial(double reach, float partialTicks)
     {
-        if (Game.minecraft().renderViewEntity != null)
+        if (Game.minecraft().getRenderViewEntity() != null)
         {
             if (Game.minecraft().theWorld != null)
             {
                 pointedEntity = null;
                 double distance = reach;
-                Vec3 renderPosition = Game.minecraft().renderViewEntity.getPosition(partialTicks);
-                Vec3 lookVec = Game.minecraft().renderViewEntity.getLook(partialTicks);
-                Vec3 lookPos = renderPosition.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
-                MovingObjectPosition blockTrace = rayTraceBlocks(Game.minecraft().theWorld, Game.minecraft().renderViewEntity.getPosition(partialTicks), lookPos, false, true, true);
+                Vec3d renderPosition = Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks);
+                Vec3d lookVec = Game.minecraft().getRenderViewEntity().getLook(partialTicks);
+                Vec3d lookPos = renderPosition.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
+                RayTraceResult blockTrace = rayTraceBlocks(Game.minecraft().theWorld, Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks), lookPos, false, true, true);
 
                 if (blockTrace != null)
                 {
@@ -228,8 +232,8 @@ public class Entities
                 }
 
                 pointedEntity = null;
-                Vec3 hitVec = null;
-                List list = Game.minecraft().theWorld.getEntitiesWithinAABBExcludingEntity(Game.minecraft().renderViewEntity, Game.minecraft().renderViewEntity.boundingBox.addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand((double) 1F, (double) 1F, (double) 1F));
+                Vec3d hitVec = null;
+                List list = Game.minecraft().theWorld.getEntitiesWithinAABBExcludingEntity(Game.minecraft().getRenderViewEntity(), Game.minecraft().getRenderViewEntity().getEntityBoundingBox().addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand((double) 1F, (double) 1F, (double) 1F));
                 double entityDist = distance;
 
                 for (int idx = 0; idx < list.size(); ++idx)
@@ -238,8 +242,8 @@ public class Entities
 
                     if (entity.canBeCollidedWith())
                     {
-                        AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double) entity.getCollisionBorderSize(), (double) entity.getCollisionBorderSize(), (double) entity.getCollisionBorderSize());
-                        MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(renderPosition, lookPos);
+                        AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand((double) entity.getCollisionBorderSize(), (double) entity.getCollisionBorderSize(), (double) entity.getCollisionBorderSize());
+                        RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(renderPosition, lookPos);
 
                         if (axisalignedbb.isVecInside(renderPosition))
                         {
@@ -256,7 +260,7 @@ public class Entities
 
                             if (distToHit < entityDist || entityDist == 0.0D)
                             {
-                                if (entity == Game.minecraft().renderViewEntity.ridingEntity && !entity.canRiderInteract())
+                                if (entity == Game.minecraft().getRenderViewEntity().getRidingEntity() && !entity.canRiderInteract())
                                 {
                                     if (entityDist == 0.0D)
                                     {
@@ -277,11 +281,11 @@ public class Entities
 
                 if (pointedEntity != null && (entityDist < distance))
                 {
-                    return new MovingObjectPosition(pointedEntity, hitVec);
+                    return new RayTraceResult(pointedEntity, hitVec);
                 }
                 else if (blockTrace != null)
                 {
-                    return new MovingObjectPosition((int) Math.round(blockTrace.blockX), (int) Math.round(blockTrace.blockY), (int) Math.round(blockTrace.blockZ), 0, lookVec);
+                    return blockTrace;
                 }
             }
         }
@@ -294,52 +298,51 @@ public class Entities
      * @param e2 - The entity that is looking for the first entity.
      * @return Returns the MovingObjectPosition hit by the rayTrace.
      */
-    public static MovingObjectPosition rayTraceBlocks(Entity e1, Entity e2)
+    public static RayTraceResult rayTraceBlocks(Entity e1, Entity e2)
     {
         return e1 != null && e2 != null ? rayTraceBlocks(e1.worldObj, e1.posX, e1.posY + (e1.height / 2), e1.posZ, e2.posX, e2.posY + e2.getEyeHeight(), e2.posZ) : null;
     }
 
-    public static MovingObjectPosition rayTraceBlocks(Entity e, Pos p)
+    public static RayTraceResult rayTraceBlocks(Entity e, Pos p)
     {
         return e != null && p != null ? rayTraceBlocks(e.worldObj, e.posX, e.posY + (e.height / 2), e.posZ, p.x, p.y, p.z) : null;
     }
 
-    public static MovingObjectPosition rayTraceBlocks(World worldObj, Pos p1, Pos p2)
+    public static RayTraceResult rayTraceBlocks(World worldObj, Pos p1, Pos p2)
     {
         return p1 != null && p2 != null ? rayTraceBlocks(worldObj, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z) : null;
     }
 
-    public static MovingObjectPosition rayTraceBlocks(World worldObj, double x1, double y1, double z1, double x2, double y2, double z2)
+    public static RayTraceResult rayTraceBlocks(World worldObj, double x1, double y1, double z1, double x2, double y2, double z2)
     {
-        return worldObj != null ? rayTraceBlocks(worldObj, Vec3.createVectorHelper(x1, y1, z1), Vec3.createVectorHelper(x2, y2, z2), false, false, false) : null;
+        return worldObj != null ? rayTraceBlocks(worldObj, new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), false, false, false) : null;
     }
 
-    public static MovingObjectPosition rayTraceAll(Entity entity, int reach)
+    public static RayTraceResult rayTraceAll(Entity entity, int reach)
     {
-        return rayTraceAll(entity.worldObj, entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch, reach, new ArrayList<Entity>(Arrays.asList(new Entity[] { entity })));
+        return rayTraceAll(entity.worldObj, new Vec3d(entity.posX, entity.posY, entity.posZ), entity.rotationYaw, entity.rotationPitch, reach, new ArrayList<Entity>(Arrays.asList(new Entity[] { entity })));
     }
 
-    public static MovingObjectPosition rayTraceAll(World world, double x, double y, double z, float rotationYaw, float rotationPitch, int reach, ArrayList<Entity> exclude)
+    public static RayTraceResult rayTraceAll(World world, Vec3d pos, float rotationYaw, float rotationPitch, int reach, ArrayList<Entity> exclude)
     {
-        Vec3 pos = Vec3.createVectorHelper(x, y, z);
-        Vec3 lookVec = getLookVector(rotationYaw, rotationPitch);
+        Vec3d lookVec = getLookVector(rotationYaw, rotationPitch);
 
         Entity entityHit = null;
-        Vec3 hitVec = null;
-        Vec3 posHit = null;
+        Vec3d hitVec = null;
+        Vec3d posHit = null;
 
         if (lookVec != null)
         {
             posHit = pos.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
-            List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1F, y + 1F, z + 1F).addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand(1.0F, 1.0F, 1.0F));
+            List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.xCoord, pos.yCoord, pos.zCoord, pos.xCoord + 1F, pos.yCoord + 1F, pos.zCoord + 1F).addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand(1.0F, 1.0F, 1.0F));
 
             for (Entity e : entities)
             {
                 if (e != null && e.canBeCollidedWith() && !exclude.contains(e))
                 {
                     float size = e.getCollisionBorderSize();
-                    AxisAlignedBB box = e.boundingBox.expand(size, size, size);
-                    MovingObjectPosition movobjpos = box.calculateIntercept(pos, posHit);
+                    AxisAlignedBB box = e.getEntityBoundingBox().expand(size, size, size);
+                    RayTraceResult movobjpos = box.calculateIntercept(pos, posHit);
 
                     entityHit = e;
 
@@ -357,12 +360,12 @@ public class Entities
 
         if (entityHit != null && hitVec != null)
         {
-            return new MovingObjectPosition(entityHit, hitVec);
+            return new RayTraceResult(entityHit, hitVec);
         }
 
         if (posHit != null)
         {
-            MovingObjectPosition blockHitVec = rayTraceBlocks(world, pos, posHit, true, true, true);
+            RayTraceResult blockHitVec = rayTraceBlocks(world, pos, posHit, true, true, true);
 
             if (blockHitVec != null)
             {
@@ -373,26 +376,28 @@ public class Entities
         return null;
     }
 
-    public static MovingObjectPosition rayTraceBlocks(World world, Pos pos, Pos pos2, boolean hitLiquid, boolean ignoreBlocksWithoutBoundingBox, boolean returnLastUncollidableBlock)
+    public static RayTraceResult rayTraceBlocks(World world, Pos pos, Pos pos2, boolean hitLiquid, boolean ignoreBlocksWithoutBoundingBox, boolean returnLastUncollidableBlock)
     {
-        return rayTraceBlocks(world, Vec3.createVectorHelper(pos.x, pos.y, pos.z), Vec3.createVectorHelper(pos2.x, pos2.y, pos2.z), hitLiquid, ignoreBlocksWithoutBoundingBox, returnLastUncollidableBlock);
+        return rayTraceBlocks(world, new Vec3d(pos.x, pos.y, pos.z), new Vec3d(pos2.x, pos2.y, pos2.z), hitLiquid, ignoreBlocksWithoutBoundingBox, returnLastUncollidableBlock);
     }
 
-    public static MovingObjectPosition rayTraceBlocks(World world, Vec3 pos, Vec3 pos2, boolean hitLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock)
+    public static RayTraceResult rayTraceBlocks(World world, Vec3d pos, Vec3d pos2, boolean hitLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock)
     {
         if (!Double.isNaN(pos.xCoord) && !Double.isNaN(pos.yCoord) && !Double.isNaN(pos.zCoord))
         {
             if (!Double.isNaN(pos2.xCoord) && !Double.isNaN(pos2.yCoord) && !Double.isNaN(pos2.zCoord))
             {
-                int posX = MathHelper.floor_double(pos.xCoord);
-                int posY = MathHelper.floor_double(pos.yCoord);
-                int posZ = MathHelper.floor_double(pos.zCoord);
-                Block posBlock = world.getBlock(posX, posY, posZ);
-                int posMeta = world.getBlockMetadata(posX, posY, posZ);
-
-                if ((!ignoreBlockWithoutBoundingBox || posBlock.getCollisionBoundingBoxFromPool(world, posX, posY, posZ) != null) && posBlock.canStopRayTrace(posMeta, hitLiquid))
+                BlockPos blockpos = new BlockPos(MathHelper.floor_double(pos.xCoord), MathHelper.floor_double(pos.yCoord), MathHelper.floor_double(pos.zCoord));
+                IBlockState blockstate = world.getBlockState(blockpos);
+                Block block = blockstate.getBlock();
+                int posMeta = block.getMetaFromState(blockstate);
+                int posX = blockpos.getX();
+                int posY = blockpos.getY();
+                int posZ = blockpos.getZ();
+                
+                if ((!ignoreBlockWithoutBoundingBox || blockstate.getCollisionBoundingBox(world, blockpos) != null) && block.isCollidable())
                 {
-                    MovingObjectPosition obj = posBlock.collisionRayTrace(world, posX, posY, posZ, pos, pos2);
+                    RayTraceResult obj = blockstate.collisionRayTrace(world, blockpos, pos, pos2);
 
                     if (obj != null)
                     {
@@ -400,8 +405,13 @@ public class Entities
                     }
                 }
 
-                MovingObjectPosition movObjPos = null;
+                RayTraceResult movObjPos = null;
                 int dist = 200;
+                
+
+                double tX = pos.xCoord;
+                double tY = pos.yCoord;
+                double tZ = pos.zCoord;
 
                 while (dist-- >= 0)
                 {
@@ -496,9 +506,9 @@ public class Entities
                             side = 5;
                         }
 
-                        pos.xCoord = distX;
-                        pos.yCoord += displacementY * dX;
-                        pos.zCoord += displacementZ * dX;
+                        tX = distX;
+                        tY += displacementY * dX;
+                        tZ += displacementZ * dX;
                     }
                     else if (dY < dZ)
                     {
@@ -511,9 +521,9 @@ public class Entities
                             side = 1;
                         }
 
-                        pos.xCoord += displacementX * dY;
-                        pos.yCoord = distY;
-                        pos.zCoord += displacementZ * dY;
+                        tX += displacementX * dY;
+                        tY = distY;
+                        tZ += displacementZ * dY;
                     }
                     else
                     {
@@ -526,44 +536,43 @@ public class Entities
                             side = 3;
                         }
 
-                        pos.xCoord += displacementX * dZ;
-                        pos.yCoord += displacementY * dZ;
-                        pos.zCoord = distZ;
+                        tX += displacementX * dZ;
+                        tY += displacementY * dZ;
+                        tZ = distZ;
                     }
+                    
+                    pos = new Vec3d(tX, tY, tZ);
 
-                    Vec3 posNew = Vec3.createVectorHelper(pos.xCoord, pos.yCoord, pos.zCoord);
-                    posX = (int) (posNew.xCoord = (double) MathHelper.floor_double(pos.xCoord));
+                    posX = (int) ((double) MathHelper.floor_double(pos.xCoord));
 
                     if (side == 5)
                     {
                         --posX;
-                        ++posNew.xCoord;
                     }
 
-                    posY = (int) (posNew.yCoord = (double) MathHelper.floor_double(pos.yCoord));
+                    posY = (int) ((double) MathHelper.floor_double(pos.yCoord));
 
                     if (side == 1)
                     {
                         --posY;
-                        ++posNew.yCoord;
                     }
 
-                    posZ = (int) (posNew.zCoord = (double) MathHelper.floor_double(pos.zCoord));
+                    posZ = (int) ((double) MathHelper.floor_double(pos.zCoord));
 
                     if (side == 3)
                     {
                         --posZ;
-                        ++posNew.zCoord;
                     }
-
-                    Block newPosBlock = world.getBlock(posX, posY, posZ);
-                    int newPosMeta = world.getBlockMetadata(posX, posY, posZ);
-
-                    if (!ignoreBlockWithoutBoundingBox || newPosBlock.getCollisionBoundingBoxFromPool(world, posX, posY, posZ) != null)
+                    
+                    BlockPos newPos = new BlockPos(posX, posY, posZ);
+                    IBlockState newBlockstate = world.getBlockState(newPos);
+                    Block newPosBlock = newBlockstate.getBlock();
+                    
+                    if (!ignoreBlockWithoutBoundingBox || newBlockstate.getCollisionBoundingBox(world, newPos) != null)
                     {
-                        if (newPosBlock.canStopRayTrace(newPosMeta, hitLiquid))
+                        if (newPosBlock.isCollidable())
                         {
-                            MovingObjectPosition obj = newPosBlock.collisionRayTrace(world, posX, posY, posZ, pos, pos2);
+                            RayTraceResult obj = newBlockstate.collisionRayTrace(world, newPos, pos, pos2);
 
                             if (obj != null)
                             {
@@ -572,7 +581,7 @@ public class Entities
                         }
                         else
                         {
-                            movObjPos = new MovingObjectPosition(posX, posY, posZ, side, pos, false);
+                            movObjPos = new RayTraceResult(RayTraceResult.Type.MISS, pos, EnumFacing.getFront(side), newPos);
                         }
                     }
                 }
@@ -594,7 +603,7 @@ public class Entities
      * @param partialTicks - The partial tick time or amount of partial ticks between each CPU tick.
      * @return an interpolated look vector used for ray tracing.
      */
-    public static Vec3 getLookVector(float rotationYaw, float rotationPitch)
+    public static Vec3d getLookVector(float rotationYaw, float rotationPitch)
     {
         return getLookVector(rotationYaw, rotationPitch, 0F, 0F, 1.0F);
     }
@@ -603,7 +612,7 @@ public class Entities
      * @param partialTicks - The partial tick time or amount of partial ticks between each CPU tick.
      * @return an interpolated look vector used for ray tracing.
      */
-    public static Vec3 getLookVector(float rotationYaw, float rotationPitch, float prevRotationYaw, float prevRotationPitch, float partialTicks)
+    public static Vec3d getLookVector(float rotationYaw, float rotationPitch, float prevRotationYaw, float prevRotationPitch, float partialTicks)
     {
         float f1;
         float f2;
@@ -616,7 +625,7 @@ public class Entities
             f2 = MathHelper.sin(-rotationYaw * 0.017453292F - (float) Math.PI);
             f3 = -MathHelper.cos(-rotationPitch * 0.017453292F);
             f4 = MathHelper.sin(-rotationPitch * 0.017453292F);
-            return Vec3.createVectorHelper((double) (f2 * f3), (double) f4, (double) (f1 * f3));
+            return new Vec3d((double) (f2 * f3), (double) f4, (double) (f1 * f3));
         }
         else
         {
@@ -626,7 +635,7 @@ public class Entities
             f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
             float f5 = -MathHelper.cos(-f1 * 0.017453292F);
             float f6 = MathHelper.sin(-f1 * 0.017453292F);
-            return Vec3.createVectorHelper((double) (f4 * f5), (double) f6, (double) (f3 * f5));
+            return new Vec3d((double) (f4 * f5), (double) f6, (double) (f3 * f5));
         }
     }
 
@@ -705,7 +714,7 @@ public class Entities
         }
         else
         {
-            yDistance = (faced.boundingBox.minY + faced.boundingBox.maxY) / 2.0D - (facer.posY + facer.getEyeHeight());
+            yDistance = (faced.getEntityBoundingBox().minY + faced.getEntityBoundingBox().maxY) / 2.0D - (facer.posY + facer.getEyeHeight());
         }
 
         double d3 = MathHelper.sqrt_double(xDistance * xDistance + zDistance * zDistance);
@@ -723,7 +732,7 @@ public class Entities
      */
     public static float updateRotation(float currentRotation, float targetRotation, float maxChange)
     {
-        float newRotation = MathHelper.wrapAngleTo180_float(targetRotation - currentRotation);
+        float newRotation = MathHelper.wrapDegrees(targetRotation - currentRotation);
         return currentRotation + (newRotation > maxChange ? maxChange : newRotation < -maxChange ? -maxChange : maxChange);
     }
 
@@ -733,14 +742,14 @@ public class Entities
      */
     public static void applyCollision(Entity entity)
     {
-        int minX = MathHelper.floor_double(entity.boundingBox.minX + 0.001D);
-        int minY = MathHelper.floor_double(entity.boundingBox.minY + 0.001D);
-        int minZ = MathHelper.floor_double(entity.boundingBox.minZ + 0.001D);
-        int maxX = MathHelper.floor_double(entity.boundingBox.maxX - 0.001D);
-        int maxY = MathHelper.floor_double(entity.boundingBox.maxY - 0.001D);
-        int maxZ = MathHelper.floor_double(entity.boundingBox.maxZ - 0.001D);
+        int minX = MathHelper.floor_double(entity.getEntityBoundingBox().minX + 0.001D);
+        int minY = MathHelper.floor_double(entity.getEntityBoundingBox().minY + 0.001D);
+        int minZ = MathHelper.floor_double(entity.getEntityBoundingBox().minZ + 0.001D);
+        int maxX = MathHelper.floor_double(entity.getEntityBoundingBox().maxX - 0.001D);
+        int maxY = MathHelper.floor_double(entity.getEntityBoundingBox().maxY - 0.001D);
+        int maxZ = MathHelper.floor_double(entity.getEntityBoundingBox().maxZ - 0.001D);
 
-        if (entity.worldObj.checkChunksExist(minX, minY, minZ, maxX, maxY, maxZ))
+        if (entity.worldObj.isBlockLoaded(entity.getPosition()))
         {
             for (int x = minX; x <= maxX; ++x)
             {
@@ -748,11 +757,13 @@ public class Entities
                 {
                     for (int z = minZ; z <= maxZ; ++z)
                     {
-                        Block block = entity.worldObj.getBlock(x, y, z);
+                        BlockPos pos = new BlockPos(x, y, z);
+                        IBlockState blockstate = entity.worldObj.getBlockState(pos);
+                        Block block = blockstate.getBlock();
 
                         try
                         {
-                            block.onEntityCollidedWithBlock(entity.worldObj, x, y, z, entity);
+                            block.onEntityCollidedWithBlock(entity.worldObj, pos, blockstate, entity);
                         }
                         catch (Throwable throwable)
                         {
@@ -766,19 +777,19 @@ public class Entities
 
     public static boolean isInLava(Entity entity)
     {
-        return isInMaterial(entity, Material.lava);
+        return isInMaterial(entity, Material.LAVA);
     }
 
     public static boolean isInWater(Entity entity)
     {
-        return isInMaterial(entity, Material.water);
+        return isInMaterial(entity, Material.WATER);
     }
 
     public static boolean isInMaterial(Entity entity, Material material)
     {
-        if (entity != null && entity.worldObj != null && entity.getBoundingBox() != null)
+        if (entity != null && entity.worldObj != null && entity.getEntityBoundingBox() != null)
         {
-            return entity.worldObj.isMaterialInBB(entity.getBoundingBox().expand(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), material);
+            return entity.worldObj.isMaterialInBB(entity.getEntityBoundingBox().expand(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), material);
         }
 
         return false;
@@ -812,7 +823,7 @@ public class Entities
 
     public static Class<? extends Entity> getRegisteredEntityClass(String entityId)
     {
-        return (Class<? extends Entity>) EntityList.stringToClassMapping.get(entityId);
+        return (Class<? extends Entity>) EntityList.NAME_TO_CLASS.get(entityId);
     }
 
     public static String getEntityRegistrationId(Entity entity)
@@ -822,12 +833,12 @@ public class Entities
 
     public static String getEntityRegistrationId(Class<? extends Entity> c)
     {
-        return (String) EntityList.classToStringMapping.get(c);
+        return (String) EntityList.CLASS_TO_NAME.get(c);
     }
 
     public static Pos getSafeLocationAround(Entity toCheck, Pos around)
     {
-        ArrayList<Pos> potentialLocations = com.arisux.mdxlib.lib.world.block.Blocks.getCoordDataInRangeIncluding((int) around.x, (int) around.y, (int) around.z, 2, toCheck.worldObj, Blocks.air);
+        ArrayList<Pos> potentialLocations = com.arisux.mdxlib.lib.world.block.Blocks.getCoordDataInRangeIncluding((int) around.x, (int) around.y, (int) around.z, 2, toCheck.worldObj, Blocks.AIR);
 
         for (Pos potentialLocation : potentialLocations)
         {
@@ -836,13 +847,13 @@ public class Entities
 
             if (blockAt != null && blockBelow != null)
             {
-                if (blockAt == Blocks.air)
+                if (blockAt == Blocks.AIR)
                 {
                     if (isGround(blockBelow))
                     {
-                        double entityWidth = toCheck.boundingBox.maxX - toCheck.boundingBox.minX;
-                        double entityHeight = toCheck.boundingBox.maxY - toCheck.boundingBox.minY;
-                        double entityDepth = toCheck.boundingBox.maxZ - toCheck.boundingBox.minZ;
+                        double entityWidth = toCheck.getEntityBoundingBox().maxX - toCheck.getEntityBoundingBox().minX;
+                        double entityHeight = toCheck.getEntityBoundingBox().maxY - toCheck.getEntityBoundingBox().minY;
+                        double entityDepth = toCheck.getEntityBoundingBox().maxZ - toCheck.getEntityBoundingBox().minZ;
 
                         entityWidth = entityWidth < 1 ? 1 : entityWidth;
                         entityDepth = entityDepth < 1 ? 1 : entityDepth;
@@ -869,13 +880,18 @@ public class Entities
         return null;
     }
 
+    public static boolean isGround(IBlockState blockstate)
+    {
+        return blockstate.getMaterial().isSolid() && blockstate.getBlock() != Blocks.AIR;
+    }
+
     public static boolean isGround(Block block)
     {
-        return block.getMaterial().isSolid() && block != Blocks.air;
+        return block.getDefaultState().getMaterial().isSolid() && block != Blocks.AIR;
     }
 
     public static boolean isSafe(Block block)
     {
-        return block == Blocks.air;
+        return block == Blocks.AIR;
     }
 }

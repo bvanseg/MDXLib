@@ -1,5 +1,6 @@
 package com.arisux.mdxlib.lib.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -12,7 +13,14 @@ public class GuiCustomScreen extends GuiScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+        try
+        {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
         for (GuiCustomButton button : customButtonList)
         {

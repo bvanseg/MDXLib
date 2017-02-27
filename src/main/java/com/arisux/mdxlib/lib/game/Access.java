@@ -6,15 +6,14 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -23,6 +22,8 @@ import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Access
 {
@@ -53,7 +54,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public void setEquippedProgress(float value)
     {
-        Game.minecraft().entityRenderer.itemRenderer.equippedProgress = value;
+        Game.minecraft().entityRenderer.itemRenderer.equippedProgressOffHand = value;
     }
 
     @SideOnly(Side.CLIENT)
@@ -62,10 +63,17 @@ public class Access
         return Game.minecraft().entityRenderer.torchFlickerX;
     }
 
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public float getTorchFlickerY()
     {
-        return Game.minecraft().entityRenderer.torchFlickerY;
+        return Game.minecraft().entityRenderer.torchFlickerDX;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getTorchFlickerDX()
+    {
+        return Game.minecraft().entityRenderer.torchFlickerDX;
     }
 
     @SideOnly(Side.CLIENT)
@@ -74,10 +82,17 @@ public class Access
         Game.minecraft().entityRenderer.torchFlickerX = value;
     }
 
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public void setTorchFlickerYX(float value)
     {
-        Game.minecraft().entityRenderer.torchFlickerY = value;
+        Game.minecraft().entityRenderer.torchFlickerDX = value;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void setTorchFlickerDX(float value)
+    {
+        Game.minecraft().entityRenderer.torchFlickerDX = value;
     }
 
     @SideOnly(Side.CLIENT)
@@ -128,19 +143,22 @@ public class Access
         Game.minecraft().entityRenderer.lightmapUpdateNeeded = value;
     }
 
+    @Deprecated
     public void setMoveHelper(EntityLiving living, EntityMoveHelper moveHelper)
     {
-        living.moveHelper = moveHelper;
+        ;
     }
 
+    @Deprecated
     public void setNavigator(EntityLiving living, PathNavigate navigator)
     {
-        living.navigator = navigator;
+        ;
     }
 
+    @Deprecated
     public void setLookHelper(EntityLiving living, EntityLookHelper lookHelper)
     {
-        living.lookHelper = lookHelper;
+        ;
     }
 
     public double getMoveHelperPosX(EntityMoveHelper moveHelper)
@@ -193,13 +211,8 @@ public class Access
         return block.blockHardness;
     }
 
-    public String getBlockTextureName(Block block)
-    {
-        return block.textureName;
-    }
-
     @SideOnly(Side.CLIENT)
-    public ModelBase getMainModel(RendererLivingEntity renderLiving)
+    public ModelBase getMainModel(RenderLivingBase<EntityLivingBase> renderLiving)
     {
         return renderLiving.mainModel;
     }
@@ -217,7 +230,7 @@ public class Access
             method.setAccessible(true);
             CompressedStreamTools_writeTag = MethodHandles.publicLookup().unreflect(method);
 
-            method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "func_152455_a" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
+            method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "read" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
             method.setAccessible(true);
             CompressedStreamTools_readTag = MethodHandles.publicLookup().unreflect(method);
         }

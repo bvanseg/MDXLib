@@ -1,10 +1,10 @@
 package com.arisux.mdxlib.lib.world.tile;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public interface IRotatable
 {
-    public ForgeDirection getDirection();
+    public EnumFacing getDirection();
 
-    public void setDirection(ForgeDirection facing);
+    public void setDirection(EnumFacing facing);
 }

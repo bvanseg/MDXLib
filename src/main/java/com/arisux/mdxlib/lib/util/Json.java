@@ -10,7 +10,8 @@ import org.apache.logging.log4j.Level;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.fml.common.FMLLog;
+
 
 public class Json
 {

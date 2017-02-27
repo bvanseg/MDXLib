@@ -5,14 +5,13 @@ import java.util.UUID;
 
 import com.arisux.mdxlib.lib.world.entity.Entities;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 @SuppressWarnings("all")
@@ -32,9 +31,7 @@ public class Worlds
      */
     public static Explosion createExplosion(Entity entity, World worldObj, Pos data, float strength, boolean isFlaming, boolean isSmoking, boolean doesBlockDamage)
     {
-        Explosion explosion = new Explosion(worldObj, entity, data.x, data.y, data.z, strength);
-        explosion.isFlaming = isFlaming;
-        explosion.isSmoking = isSmoking;
+        Explosion explosion = new Explosion(worldObj, entity, data.x, data.y, data.z, strength, isFlaming, isSmoking);
 
         if (doesBlockDamage)
         {
@@ -73,7 +70,7 @@ public class Worlds
         {
             Pos position = new Pos(pos.x, y + 1, pos.z);
 
-            if (position.getBlock(world) != net.minecraft.init.Blocks.air)
+            if (position.getBlock(world) != net.minecraft.init.Blocks.AIR)
             {
                 return false;
             }
@@ -86,15 +83,21 @@ public class Worlds
      * Get the light intensity as an Integer at the specified coordinates in the specified world.
      * 
      * @param worldObj - World to check for brightness values in.
-     * @param data - CoordData containing coordinates of the location to check brightness at.
+     * @param pos - BlockPos containing coordinates of the location to check brightness at.
      * @return Returns light intensity of a block as an Integer.
      */
-    public static int getLightAtCoord(World worldObj, Pos data)
+    public static int getLightAtCoord(World worldObj, BlockPos pos)
     {
-        int block = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Block, (int) data.x, (int) data.y, (int) data.z);
-        int sky = worldObj.getSkyBlockTypeBrightness(EnumSkyBlock.Sky, (int) data.x, (int) data.y, (int) data.z) - worldObj.calculateSkylightSubtracted(0f);
+        int sky = worldObj.getLightFor(EnumSkyBlock.BLOCK, pos);
+        int block = worldObj.getLightFor(EnumSkyBlock.SKY, pos) - worldObj.calculateSkylightSubtracted(0F);
 
         return Math.max(block, sky);
+    }
+    
+    @Deprecated
+    public static int getLightAtCoord(World worldObj, Pos pos)
+    {
+        return getLightAtCoord(worldObj, pos.blockPos());
     }
 
     /**
@@ -128,7 +131,7 @@ public class Worlds
      * @param genPerChunk - The amount of times to generate this block group per chunk.
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      */
-    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, Pos chunkCoord)
+    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, BlockPos chunkCoord)
     {
         generateInChunk(world, generator, seed, genPerChunk, 0, 128, chunkCoord);
     }
@@ -145,14 +148,15 @@ public class Worlds
      * @param levelEnd - The level that this block group can stop generating on
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      */
-    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, Pos chunkCoord)
+    public static void generateInChunk(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, BlockPos pos)
     {
         for (int i = 0; i < genPerChunk; ++i)
         {
-            int posX = (int) chunkCoord.x + seed.nextInt(16);
-            int posY = levelStart + seed.nextInt(levelEnd);
-            int posZ = (int) chunkCoord.z + seed.nextInt(16);
-            generator.generate(world, seed, posX, posY, posZ);
+            // TODO: Verify
+            // int posX = (int) chunkCoord.x + seed.nextInt(16);
+            // int posY = levelStart + seed.nextInt(levelEnd);
+            // int posZ = (int) chunkCoord.z + seed.nextInt(16);
+            generator.generate(world, seed, pos);
         }
     }
 
@@ -167,7 +171,7 @@ public class Worlds
      * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      * @param biomes - The BiomeGenBase instances to generate in.
      */
-    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, Pos chunkCoord, BiomeGenBase[] biomes)
+    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, BlockPos chunkCoord, Biome[] biomes)
     {
         generateInBiome(world, generator, seed, genPerChunk, 0, 128, chunkCoord, biomes);
     }
@@ -182,16 +186,16 @@ public class Worlds
      * @param genPerChunk - The amount of times to generate this block group per chunk.
      * @param levelStart - The level that this block group can start generating on
      * @param levelEnd - The level that this block group can stop generating on
-     * @param chunkCoord - The CoordData containing the X and Z coordinates of the Chunk to generate in.
+     * @param pos - The CoordData containing the X and Z coordinates of the Chunk to generate in.
      * @param biomes - The BiomeGenBase instances to generate in.
      */
-    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, Pos chunkCoord, BiomeGenBase[] biomes)
+    public static void generateInBiome(World world, WorldGenerator generator, Random seed, int genPerChunk, int levelStart, int levelEnd, BlockPos pos, Biome[] biomes)
     {
-        for (BiomeGenBase biome : biomes)
+        for (Biome biome : biomes)
         {
-            if (world.provider.getBiomeGenForCoords((int) chunkCoord.x, (int) chunkCoord.z) == biome)
+            if (world.provider.getBiomeForCoords(pos) == biome)
             {
-                generateInChunk(world, generator, seed, genPerChunk, levelStart, levelEnd, chunkCoord);
+                generateInChunk(world, generator, seed, genPerChunk, levelStart, levelEnd, pos);
             }
         }
     }
@@ -203,14 +207,14 @@ public class Worlds
             if (o instanceof Entity)
             {
                 Entity entity = (Entity) o;
-                
+
                 if (entity.getUniqueID().equals(uuid))
                 {
                     return entity;
                 }
             }
         }
-        
+
         return null;
     }
 

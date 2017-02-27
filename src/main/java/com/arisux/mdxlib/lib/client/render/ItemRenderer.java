@@ -1,191 +1,201 @@
 package com.arisux.mdxlib.lib.client.render;
 
-import com.arisux.mdxlib.lib.client.Model;
-import com.arisux.mdxlib.lib.client.PlayerResourceStorage;
-import com.arisux.mdxlib.lib.client.TexturedModel;
-import com.arisux.mdxlib.lib.game.Game;
+import java.util.Collections;
+import java.util.List;
 
+import javax.vecmath.Matrix4f;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
 
-public abstract class ItemRenderer implements IItemRenderer
+public abstract class ItemRenderer implements IPerspectiveAwareModel, IBakedModel
 {
-    protected Minecraft                             mc = Game.minecraft();
-    private TexturedModel<? extends Model> modelTexMap;
-    protected PlayerResourceStorage                 resourceStorage;
-    private boolean                                 rendersInFirstPerson;
-    private boolean                                 rendersInThirdPerson;
-    private boolean                                 rendersInInventory;
-    private boolean                                 rendersInWorld;
+    protected static final Minecraft                    mc    = Minecraft.getMinecraft();
+    private ItemRenderList                              overrides;
+    private final Pair<? extends IBakedModel, Matrix4f> selfPair;
+    private static List<BakedQuad>                      quads = Collections.emptyList();
+    protected ResourceLocation                          resource;
+    protected ModelBase                                 model;
+    protected ItemStack                                 stack;
+    protected EntityLivingBase                          entity;
 
-    public ItemRenderer(TexturedModel<? extends Model> modelTexMap)
+    public static class ItemRenderList extends ItemOverrideList
     {
-        this.resourceStorage = new PlayerResourceStorage();
-        this.modelTexMap = modelTexMap;
-        this.rendersInFirstPerson = true;
-        this.rendersInThirdPerson = true;
-        this.rendersInInventory = true;
-        this.rendersInWorld = true;
-    }
-
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type)
-    {
-        switch (type)
+        public ItemRenderList()
         {
-            case EQUIPPED:
-                return rendersInThirdPerson;
+            super(Lists.<ItemOverride> newArrayList());
+        }
 
-            case EQUIPPED_FIRST_PERSON:
-                return rendersInFirstPerson;
+        @Override
+        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity)
+        {
+            if (originalModel instanceof ItemRenderer)
+            {
+                ItemRenderer model = (ItemRenderer) originalModel;
+                model.setItemstack(stack);
+                model.setEntity(entity);
+            }
 
-            case INVENTORY:
-                return rendersInInventory;
-
-            case ENTITY:
-                return rendersInWorld;
-
-            default:
-                return false;
+            return super.handleItemState(originalModel, stack, world, entity);
         }
     }
 
+    public ItemRenderer(ModelBase model, ResourceLocation resource)
+    {
+        this.overrides = new ItemRenderList();
+        this.selfPair = Pair.of(this, null);
+        this.model = model;
+        this.resource = resource;
+    }
+
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type)
+    {
+        GL11.glPushMatrix();
+        this.renderPre(this.stack, this.entity, type);
+
+        switch (type)
+        {
+            case FIRST_PERSON_LEFT_HAND: {
+                this.renderFirstPersonLeft(this.stack, this.entity, type);
+            }
+                break;
+            case FIRST_PERSON_RIGHT_HAND: {
+                this.renderFirstPersonRight(this.stack, this.entity, type);
+            }
+                break;
+            case GUI: {
+                this.renderInInventory(this.stack, this.entity, type);
+            }
+                break;
+            case THIRD_PERSON_LEFT_HAND: {
+                this.renderThirdPersonLeft(this.stack, this.entity, type);
+            }
+                break;
+            case THIRD_PERSON_RIGHT_HAND: {
+                this.renderThirdPersonRight(this.stack, this.entity, type);
+            }
+                break;
+            case GROUND: {
+                this.renderInWorld(this.stack, this.entity, type);
+            }
+                break;
+
+            default:
+                break;
+        }
+
+        this.renderPost(this.stack, this.entity, type);
+        GL11.glPopMatrix();
+
+        return selfPair;
+    }
+
+    public void renderPre(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
+    {
+        ;
+    }
+
+    public void renderPost(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
+    {
+        ;
+    }
+
+    public abstract void renderThirdPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+
+    public abstract void renderThirdPersonRight(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+
+    public abstract void renderFirstPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+
+    public abstract void renderFirstPersonRight(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+
+    public abstract void renderInInventory(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+
+    public abstract void renderInWorld(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+
+    @Override
+    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
+    {
+        return quads;
+    }
+
+    @Override
+    public boolean isAmbientOcclusion()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isGui3d()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isBuiltInRenderer()
     {
         return false;
     }
 
     @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data)
+    public TextureAtlasSprite getParticleTexture()
     {
-        try
-        {
-            switch (type)
-            {
-                case EQUIPPED:
-                    OpenGL.pushMatrix();
-                    OpenGL.enableBlend();
-                    OpenGL.blendClear();
-                    OpenGL.enableCullFace();
-                    this.renderThirdPerson(item, data);
-                    OpenGL.enableCullFace();
-                    OpenGL.blendClear();
-                    OpenGL.disableBlend();
-                    OpenGL.popMatrix();
-                    break;
-                case EQUIPPED_FIRST_PERSON:
-                    OpenGL.pushMatrix();
-                    OpenGL.enableBlend();
-                    OpenGL.blendClear();
-                    OpenGL.enableCullFace();
-                    this.renderFirstPerson(item, data);
-                    OpenGL.enableCullFace();
-                    OpenGL.blendClear();
-                    OpenGL.disableBlend();
-                    OpenGL.popMatrix();
-                    break;
-                case INVENTORY:
-                    OpenGL.pushMatrix();
-                    RenderHelper.enableGUIStandardItemLighting();
-                    OpenGL.rotate(-45, 1, 0, 0);
-                    OpenGL.rotate(180, 0, 1, 0);
-                    OpenGL.translate(-16, 0, 0);
-                    OpenGL.enableBlend();
-                    OpenGL.blendClear();
-                    OpenGL.enableCullFace();
-                    this.renderInInventory(item, data);
-                    OpenGL.enableCullFace();
-                    OpenGL.blendClear();
-                    OpenGL.disableBlend();
-                    OpenGL.popMatrix();
-                    break;
-                case ENTITY:
-                    OpenGL.pushMatrix();
-                    OpenGL.enableBlend();
-                    OpenGL.blendClear();
-                    OpenGL.enableCullFace();
-                    this.renderInWorld(item, data);
-                    OpenGL.enableCullFace();
-                    OpenGL.blendClear();
-                    OpenGL.disableBlend();
-                    OpenGL.popMatrix();
-                    break;
-                default:
-                    break;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        return null;
     }
 
-    public void renderThirdPerson(ItemStack item, Object... data)
+    @Override
+    public ItemCameraTransforms getItemCameraTransforms()
     {
-        ;
+        return ItemCameraTransforms.DEFAULT;
     }
 
-    public void renderFirstPerson(ItemStack item, Object... data)
+    @Override
+    public ItemOverrideList getOverrides()
     {
-        ;
+        return this.overrides;
     }
 
-    public void renderInInventory(ItemStack item, Object... data)
+    public ModelBase getModel()
     {
-        ;
+        return model;
     }
 
-    public void renderInWorld(ItemStack item, Object... data)
+    public ResourceLocation getResourceLocation()
     {
-        ;
+        return resource;
     }
 
-    public ItemRenderer setRendersInThirdPerson(boolean rendersInThirdPerson)
+    public void setResourceLocation(ResourceLocation resource)
     {
-        this.rendersInThirdPerson = rendersInThirdPerson;
-        return this;
+        this.resource = resource;
     }
 
-    public ItemRenderer setRendersInFirstPerson(boolean rendersInFirstPerson)
+    private void setItemstack(ItemStack stack)
     {
-        this.rendersInFirstPerson = rendersInFirstPerson;
-        return this;
+        this.stack = stack;
     }
 
-    public ItemRenderer setRendersInInventory(boolean rendersInInventory)
+    private void setEntity(EntityLivingBase entity)
     {
-        this.rendersInInventory = rendersInInventory;
-        return this;
-    }
-
-    public ItemRenderer setRendersInWorld(boolean rendersInWorld)
-    {
-        this.rendersInWorld = rendersInWorld;
-        return this;
-    }
-
-    public TexturedModel<? extends Model> getModelTexMap()
-    {
-        return modelTexMap;
-    }
-
-    public Model getModel()
-    {
-        return this.getModelTexMap().getModel();
-    }
-
-    public Texture getTexture()
-    {
-        return this.getModelTexMap().getTexture();
-    }
-
-    public boolean firstPersonRenderCheck(Object o)
-    {
-        return o == mc.renderViewEntity && mc.gameSettings.thirdPersonView == 0 && (!(mc.currentScreen instanceof GuiInventory) && !(mc.currentScreen instanceof GuiContainerCreative));
+        this.entity = entity;
     }
 }

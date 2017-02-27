@@ -19,7 +19,7 @@ public class Inventories
         {
             for (byte i = 0; i < inv.getSizeInventory(); i++)
             {
-                ItemStack stack = inv.getStackInSlotOnClosing(i);
+                ItemStack stack = inv.getStackInSlot(i);
 
                 if (stack != null)
                 {
@@ -136,10 +136,37 @@ public class Inventories
     {
         if (!player.capabilities.isCreativeMode || force)
         {
-            return player.inventory.consumeInventoryItem(item);
+            int i = getSlotFor(player.inventory, item);
+
+            if (i < 0)
+            {
+                return false;
+            }
+            else
+            {
+                if (--player.inventory.mainInventory[i].stackSize <= 0)
+                {
+                    player.inventory.mainInventory[i] = null;
+                }
+
+                return true;
+            }
         }
 
         return true;
+    }
+    
+    public static int getSlotFor(InventoryPlayer inventory, Item item)
+    {
+        for (int i = 0; i < inventory.mainInventory.length; ++i)
+        {
+            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == item)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     /**

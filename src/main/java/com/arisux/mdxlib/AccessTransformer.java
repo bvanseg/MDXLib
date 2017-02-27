@@ -1,6 +1,6 @@
 package com.arisux.mdxlib;
 
-public class AccessTransformer extends cpw.mods.fml.common.asm.transformers.AccessTransformer
+public class AccessTransformer extends net.minecraftforge.fml.common.asm.transformers.AccessTransformer
 {
     public AccessTransformer() throws Exception
     {

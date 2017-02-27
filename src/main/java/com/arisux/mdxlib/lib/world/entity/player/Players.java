@@ -6,7 +6,7 @@ import com.arisux.mdxlib.lib.util.Remote;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 public class Players
@@ -62,7 +62,7 @@ public class Players
      */
     public static void sendToChat(EntityPlayer player, String message)
     {
-        player.addChatComponentMessage(new ChatComponentText(message));
+        player.addChatComponentMessage(new TextComponentString(message));
     }
 
     /**
@@ -89,7 +89,7 @@ public class Players
     {
         for (Object player : worldObj.playerEntities)
         {
-            if (((EntityPlayer) player).getCommandSenderName().equalsIgnoreCase(username))
+            if (((EntityPlayer) player).getName().equalsIgnoreCase(username))
             {
                 return (EntityPlayer) player;
             }
@@ -106,7 +106,7 @@ public class Players
      */
     public static EntityPlayer getPlayerForCommandSender(ICommandSender commandSender)
     {
-        return getPlayerForUsername(commandSender.getEntityWorld(), commandSender.getCommandSenderName());
+        return getPlayerForUsername(commandSender.getEntityWorld(), commandSender.getName());
     }
 
     public static List<EntityPlayer> getPlayersInWorld(World world)

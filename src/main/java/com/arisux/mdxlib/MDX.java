@@ -18,13 +18,14 @@ import com.arisux.mdxlib.lib.game.ModIdentityMap;
 import com.arisux.mdxlib.lib.game.ModIdentityMap.IdentityMap;
 import com.arisux.mdxlib.lib.world.storage.Schematic;
 
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MDX
 {
@@ -312,7 +313,7 @@ public class MDX
 
     public static void registerRemappedEntity(Class<? extends Entity> entityClass, String invalidId)
     {
-        EntityList.stringToClassMapping.put(invalidId, entityClass);
+        EntityList.NAME_TO_CLASS.put(invalidId, entityClass);
     }
 
     public static void registerRemappedMod(String oldID, String newID, String modClassLocation)
@@ -327,14 +328,14 @@ public class MDX
 
     public static void replaceMapping(MissingMapping mapping, String oldID, String newID)
     {
-        String newName = (mapping.name).replace(oldID, newID);
+        ResourceLocation newName = new ResourceLocation((mapping.name).replace(oldID, newID));
 
         /** Check for and replace missing item mappings **/
         if (mapping.type == GameRegistry.Type.ITEM)
         {
             MDX.log().info("Converting item mapping [" + mapping.name + "@" + mapping.id + "] -> [" + newName + "@" + mapping.id + "]");
 
-            Item item = (Item) Item.itemRegistry.getObject(newName);
+            Item item = (Item) Item.REGISTRY.getObject(newName);
 
             if (item != null)
             {
@@ -349,7 +350,7 @@ public class MDX
         /** Check for and replace missing block mappings **/
         if (mapping.type == GameRegistry.Type.BLOCK)
         {
-            Block block = (Block) Block.blockRegistry.getObject(newName);
+            Block block = (Block) Block.REGISTRY.getObject(newName);
 
             MDX.log().info("Converting block mapping [" + mapping.name + "@" + mapping.id + "] -> [" + newName + "@" + mapping.id + "]");
 

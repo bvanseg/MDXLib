@@ -1,9 +1,9 @@
 package com.arisux.mdxlib.lib.client.render;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ScaledResolution
@@ -14,20 +14,20 @@ public class ScaledResolution
     private double scaledHeightD;
     private int scaleFactor;
 
-    public ScaledResolution(Minecraft mc, int p_i1094_2_, int p_i1094_3_)
+    public ScaledResolution(Minecraft mc, int width, int height)
     {
-        this.scaledWidth = p_i1094_2_;
-        this.scaledHeight = p_i1094_3_;
+        this.scaledWidth = width;
+        this.scaledHeight = height;
         this.scaleFactor = 1;
         boolean flag = mc.getLanguageManager().isCurrentLocaleUnicode() || mc.gameSettings.forceUnicodeFont;
-        int k = mc.gameSettings.guiScale;
+        int scale = mc.gameSettings.guiScale;
 
-        if (k == 0)
+        if (scale == 0)
         {
-            k = 1000;
+            scale = 1000;
         }
 
-        while (this.scaleFactor < k && this.scaledWidth / (this.scaleFactor + 1) >= 320 && this.scaledHeight / (this.scaleFactor + 1) >= 240)
+        while (this.scaleFactor < scale && this.scaledWidth / (this.scaleFactor + 1) >= 320 && this.scaledHeight / (this.scaleFactor + 1) >= 240)
         {
             ++this.scaleFactor;
         }

@@ -6,13 +6,12 @@ import java.util.Arrays;
 import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.world.Pos;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Blocks
 {
@@ -117,10 +116,12 @@ public class Blocks
      * @param side - Side to get the ResourceLocation from
      * @return The ResourceLocation of the side of the specified Block
      */
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public static ResourceLocation getBlockTexture(Block block, int side)
     {
-        IIcon icon = block.getBlockTextureFromSide(side);
-        return new ResourceLocation(getDomain(block).replace(":", ""), "textures/blocks/" + icon.getIconName().replace(getDomain(block), "") + ".png");
+        // IIcon icon = block.getBlockTextureFromSide(side);
+        // return new ResourceLocation(getDomain(block).replace(":", ""), "textures/blocks/" + icon.getIconName().replace(getDomain(block), "") + ".png");
+        return new ResourceLocation(getDomain(block).replace(":", ""), "textures/blocks/" + block.getUnlocalizedName().replace(getDomain(block), "") + ".png");
     }
 }

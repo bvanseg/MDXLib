@@ -2,6 +2,7 @@ package com.arisux.mdxlib.lib.world;
 
 import java.util.ArrayList;
 
+import com.arisux.mdxlib.lib.world.Pos.BlockDataStore;
 import com.arisux.mdxlib.lib.world.storage.Schematic;
 
 import net.minecraft.init.Blocks;
@@ -9,9 +10,9 @@ import net.minecraft.world.WorldServer;
 
 public abstract class Structure
 {
-    private Schematic schematic;
-    private WorldServer world;
-    private Pos data;
+    private Schematic      schematic;
+    private WorldServer    world;
+    private Pos            data;
     private ArrayList<Pos> blockQueue;
 
     public Structure(Schematic schematic, WorldServer world, Pos data)
@@ -69,14 +70,18 @@ public abstract class Structure
 
             for (int i = 0; i < sectionSize; i++)
             {
-                Pos coord = this.blockQueue.get(this.blockQueue.size() - 1 - i);
+                Pos pos = this.blockQueue.get(this.blockQueue.size() - 1 - i);
 
-                if (coord.getBlock(world) != Blocks.air)
+                if (pos.getBlock(world) != Blocks.AIR)
                 {
-                    this.world.setBlock((int) coord.x, (int) coord.y, (int) coord.z, coord.getBlock(world), coord.getBlockMetadata(world), 2);
+                    if (pos.store() instanceof BlockDataStore)
+                    {
+                        BlockDataStore data = (BlockDataStore) pos.store();
+                        this.world.setBlockState(pos.blockPos(), data.asBlock().getStateFromMeta(data.metadata), 2);
+                    }
                 }
 
-                this.blockQueue.remove(coord);
+                this.blockQueue.remove(pos);
             }
 
             if (this.blockQueue.size() <= 0)

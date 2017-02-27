@@ -2,7 +2,7 @@ package com.arisux.mdxlib.lib.world;
 
 import java.util.Iterator;
 
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class CoordSelection implements Iterable<Pos>
 {
@@ -67,7 +67,7 @@ public class CoordSelection implements Iterable<Pos>
 
     public AxisAlignedBB asAxisAlignedBB()
     {
-        return AxisAlignedBB.getBoundingBox(min().x, min().y, min().z, max().x, max().y, max().z);
+        return new AxisAlignedBB(min().x, min().y, min().z, max().x, max().y, max().z);
     }
 
     @Override

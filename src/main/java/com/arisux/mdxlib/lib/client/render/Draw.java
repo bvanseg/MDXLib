@@ -15,31 +15,56 @@ import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.game.GameResources;
 import com.arisux.mdxlib.lib.util.MDXMath;
 import com.arisux.mdxlib.lib.util.Remote;
-import com.arisux.mdxlib.lib.world.block.Blocks;
+import com.arisux.mdxlib.lib.world.Worlds;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class Draw
 {
+    public static VertexBuffer buffer()
+    {
+        return Tessellator.getInstance().getBuffer();
+    }
+    
+    public static void bufferStart()
+    {
+        buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+    }
+    
+    public static void bufferEnd()
+    {
+        buffer().endVertex();
+    }
+    
+    public static void vertex(int x, int y, int z)
+    {
+        buffer().pos(x, y, z);
+    }
+    
+    public static void vertex(int x, int y, int z, float u, float v)
+    {
+        buffer().pos(x, y, z);
+        buffer().tex(u, v);
+    }
+    
     public static interface ITooltipLineHandler
     {
         public Dimension getSize();
@@ -108,15 +133,14 @@ public class Draw
     {
         OpenGL.disableTexture2d();
         OpenGL.shadeSmooth();
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.setColorRGBA_F((color1 >> 16 & 255) / 255.0F, (color1 >> 8 & 255) / 255.0F, (color1 & 255) / 255.0F, (color1 >> 24 & 255) / 255.0F);
-        tessellator.addVertex(w, y, zLevel);
-        tessellator.addVertex(x, y, zLevel);
-        tessellator.setColorRGBA_F((color2 >> 16 & 255) / 255.0F, (color2 >> 8 & 255) / 255.0F, (color2 & 255) / 255.0F, (color2 >> 24 & 255) / 255.0F);
-        tessellator.addVertex(x, h, zLevel);
-        tessellator.addVertex(w, h, zLevel);
-        tessellator.draw();
+        bufferStart();
+        buffer().color((color1 >> 16 & 255) / 255.0F, (color1 >> 8 & 255) / 255.0F, (color1 & 255) / 255.0F, (color1 >> 24 & 255) / 255.0F);
+        vertex(w, y, zLevel);
+        vertex(x, y, zLevel);
+        buffer().color((color2 >> 16 & 255) / 255.0F, (color2 >> 8 & 255) / 255.0F, (color2 & 255) / 255.0F, (color2 >> 24 & 255) / 255.0F);
+        vertex(x, h, zLevel);
+        vertex(w, h, zLevel);
+        bufferEnd();
         OpenGL.shadeFlat();
         OpenGL.enableTexture2d();
     }
@@ -182,13 +206,12 @@ public class Draw
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + h, z, (u + 0) * f, (v + h) * f1);
-        tessellator.addVertexWithUV(x + w, y + h, z, (u + w) * f, (v + h) * f1);
-        tessellator.addVertexWithUV(x + w, y + 0, z, (u + w) * f, (v + 0) * f1);
-        tessellator.addVertexWithUV(x + 0, y + 0, z, (u + 0) * f, (v + 0) * f1);
-        tessellator.draw();
+        bufferStart();
+        vertex(x + 0, y + h, z, (u + 0) * f, (v + h) * f1);
+        vertex(x + w, y + h, z, (u + w) * f, (v + h) * f1);
+        vertex(x + w, y + 0, z, (u + w) * f, (v + 0) * f1);
+        vertex(x + 0, y + 0, z, (u + 0) * f, (v + 0) * f1);
+        bufferEnd();
     }
 
     /**
@@ -225,13 +248,13 @@ public class Draw
      */
     public static void drawQuad(int x, int y, int w, int h, int z, float minU, float maxU, float minV, float maxV)
     {
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + h, z, minU, maxV);
-        tessellator.addVertexWithUV(x + w, y + h, z, maxU, maxV);
-        tessellator.addVertexWithUV(x + w, y + 0, z, maxU, minV);
-        tessellator.addVertexWithUV(x + 0, y + 0, z, minU, minV);
-        tessellator.draw();
+        VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+        bufferStart();
+        vertex(x + 0, y + h, z, minU, maxV);
+        vertex(x + w, y + h, z, maxU, maxV);
+        vertex(x + w, y + 0, z, maxU, minV);
+        vertex(x + 0, y + 0, z, minU, minV);
+        bufferEnd();
     }
 
     /**
@@ -246,7 +269,7 @@ public class Draw
     public static void drawString(String text, int x, int y, int color, boolean shadow)
     {
         String original = text;
-        text = I18n.format(text);
+        text = I18n.translateToLocal(text);
         
         if (text.toLowerCase().contains("error:".toLowerCase()))
         {
@@ -292,7 +315,7 @@ public class Draw
      */
     public static void drawStringAlignCenter(String text, int x, int y, int w, int h, int color, boolean shadow)
     {
-        drawString(text, x + (w - Draw.getStringRenderWidth(StatCollector.translateToLocal(text))) / 2, y + (h - 8) / 2, color, shadow);
+        drawString(text, x + (w - Draw.getStringRenderWidth(I18n.translateToLocal(text))) / 2, y + (h - 8) / 2, color, shadow);
     }
 
     /**
@@ -319,7 +342,7 @@ public class Draw
      */
     public static void drawStringAlignCenter(String text, int x, int y, int color, boolean shadow)
     {
-        drawString(text, x - Draw.getStringRenderWidth(StatCollector.translateToLocal(text)) / 2, y, color, shadow);
+        drawString(text, x - Draw.getStringRenderWidth(I18n.translateToLocal(text)) / 2, y, color, shadow);
     }
 
     /**
@@ -346,7 +369,7 @@ public class Draw
      */
     public static void drawStringAlignRight(String text, int x, int y, int color, boolean shadow)
     {
-        drawString(text, x - Draw.getStringRenderWidth(StatCollector.translateToLocal(text)), y, color, shadow);
+        drawString(text, x - Draw.getStringRenderWidth(I18n.translateToLocal(text)), y, color, shadow);
     }
 
     /**
@@ -368,7 +391,7 @@ public class Draw
      */
     public static int getStringRenderWidth(String s)
     {
-        return Game.fontRenderer().getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(s));
+        return Game.fontRenderer().getStringWidth(TextFormatting.getTextWithoutFormattingCodes(s));
     }
 
     /**
@@ -746,7 +769,7 @@ public class Draw
             OpenGL.rotate(180.0F, 0.0F, 0.0F, 1.0F);
             OpenGL.rotate(yaw, 0.0F, 1.0F, 0.0F);
             OpenGL.rotate(pitch, 1.0F, 0.0F, 0.0F);
-            RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+            Game.minecraft().getRenderManager().renderEntityStatic(entity, Game.partialTicks(), true);
             OpenGL.enableLightMapping();
         }
         OpenGL.popMatrix();
@@ -764,7 +787,7 @@ public class Draw
      */
     public static void drawPlayerFace(String username, int x, int y, int width, int height)
     {
-        ResourceLocation resource = Remote.downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), AbstractClientPlayer.locationStevePng, false);
+        ResourceLocation resource = Remote.downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), DefaultPlayerSkin.getDefaultSkin(EntityPlayer.getOfflineUUID(username)), false);
     
         Draw.bindTexture(resource);
         drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.25F, 0.5F);
@@ -903,6 +926,11 @@ public class Draw
         Draw.bindTexture(GameResources.particleTexture);
         drawQuad(x, y, width, height, 0, u, mU, v, mV);
     }
+    
+    public static void renderItem(ItemStack stack, int x, int y)
+    {
+        Game.minecraft().getRenderItem().renderItemIntoGUI(stack, x, y);
+    }
 
     /**
      * Draw the IIcon of the specified Item at the specified coordinates and dimensions
@@ -913,15 +941,10 @@ public class Draw
      * @param width - Width to render the icon at
      * @param height - Height to render the icon at
      */
+    @Deprecated
     public static void drawItemIcon(Item item, int x, int y, int width, int height)
     {
-        IIcon icon = item.getIcon(new ItemStack(item), 1);
-    
-        if (icon != null)
-        {
-            Draw.bindTexture(Game.minecraft().getTextureManager().getResourceLocation(item.getSpriteNumber()));
-            drawQuad(x, y, width, height, 0, icon.getMinU(), icon.getMaxU(), icon.getMinV(), icon.getMaxV());
-        }
+        ;
     }
 
     /**
@@ -934,6 +957,7 @@ public class Draw
      * @param width - Width to render the icon at
      * @param height - Height to render the icon at
      */
+    @Deprecated
     public static void drawBlockSide(Block block, int side, int x, int y, int width, int height)
     {
         Draw.drawBlockSide(block, side, x, y, width, height, 1, 1);
@@ -951,15 +975,10 @@ public class Draw
      * @param u - x coordinate of the texture offset
      * @param v - y coordinate of the texture offset
      */
+    @Deprecated
     public static void drawBlockSide(Block block, int side, int x, int y, int width, int height, float u, float v)
     {
-        IIcon icon = block.getBlockTextureFromSide(side);
-    
-        if (icon != null)
-        {
-            Draw.bindTexture(Blocks.getBlockTexture(block, side));
-            drawQuad(x, y, width, height, 0, 0, u, 0, v);
-        }
+        ;
     }
 
     /**
@@ -1062,7 +1081,8 @@ public class Draw
     public static final GuiCustomScreen guiHook = new GuiCustomScreen();
     public static void lightingHelper(Entity entity, float offset)
     {
-        int brightness = entity.worldObj.getLightBrightnessForSkyBlocks(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY + offset / 16.0F), MathHelper.floor_double(entity.posZ), 0);
+       
+        int brightness =  Worlds.getLightAtCoord(entity.worldObj, entity.getPosition());
         OpenGL.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
         OpenGL.color(1.0F, 1.0F, 1.0F);
     }

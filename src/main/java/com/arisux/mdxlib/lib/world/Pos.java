@@ -2,14 +2,14 @@ package com.arisux.mdxlib.lib.world;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class Pos
@@ -26,28 +26,23 @@ public class Pos
     
     public static class BlockDataStore implements IStorable
     {
-        public String blockid;
+        public int blockid;
         public byte metadata;
         
         public BlockDataStore(Block block, byte metadata)
         {
-            this(identity(block), metadata);
+            this(Block.getIdFromBlock(block), metadata);
         }
         
-        public BlockDataStore(UniqueIdentifier uid, byte metadata)
-        {
-            this(uid.toString(), metadata);
-        }
-        
-        public BlockDataStore(String blockid, byte metadata)
+        public BlockDataStore(int blockid, byte metadata)
         {
             this.blockid = blockid;
             this.metadata = metadata;
         }
-
-        public static UniqueIdentifier identity(Block block)
+        
+        public Block asBlock()
         {
-            return GameRegistry.findUniqueIdentifierFor(block);
+            return Block.getBlockById(this.blockid);
         }
     }
 
@@ -58,7 +53,7 @@ public class Pos
 
     public Pos(TileEntity tileEntity)
     {
-        this(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+        this(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
     }
 
     public Pos(double posX, double posY, double posZ)
@@ -131,17 +126,22 @@ public class Pos
 
     public Block getBlock(World world)
     {
-        return world.getBlock((int) this.x, (int) this.y, (int) this.z);
+        return getBlockState(world).getBlock();
+    }
+    
+    public IBlockState getBlockState(World world)
+    {
+        return world.getBlockState(new BlockPos((int) this.x, (int) this.y, (int) this.z));
     }
 
     public int getBlockMetadata(World world)
     {
-        return world != null ? world.getBlockMetadata((int) this.x, (int) this.y, (int) this.z) : 0;
+        return world != null ? getBlock(world).getMetaFromState(getBlockState(world)) : 0;
     }
 
     public TileEntity getTileEntity(World world)
     {
-        return world.getTileEntity((int) this.x, (int) this.y, (int) this.z);
+        return world.getTileEntity(blockPos());
     }
 
     public Pos min(Pos data)
@@ -213,7 +213,7 @@ public class Pos
                 if (this.stored instanceof BlockDataStore)
                 {
                     BlockDataStore blockdata = (BlockDataStore) this.stored;
-                    dataTag.setString(labelId, blockdata.toString());
+                    dataTag.setInteger(labelId, blockdata.blockid);
                 }
             }
         }
@@ -237,7 +237,7 @@ public class Pos
     
     public Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ, String labelMeta)
     {
-        return new Pos(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ)).store(new BlockDataStore(nbt.getString(labelId), nbt.getByte(labelMeta)));
+        return new Pos(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ)).store(new BlockDataStore(nbt.getInteger(labelId), nbt.getByte(labelMeta)));
     }
 
     @Override
@@ -248,7 +248,7 @@ public class Pos
 
     public boolean isAnySurfaceEmpty(World world)
     {
-        return isAnySurfaceNextTo(world, net.minecraft.init.Blocks.air);
+        return isAnySurfaceNextTo(world, net.minecraft.init.Blocks.AIR);
     }
 
     public boolean isAnySurfaceNextTo(World world, Block block)
@@ -277,27 +277,27 @@ public class Pos
         Pos backLeft = pos.add(-1, 0, 1);
         Pos backRight = pos.add(1, 0, 1);
 
-        if (pos.getBlock(world) != net.minecraft.init.Blocks.air)
+        if (pos.getBlock(world) != net.minecraft.init.Blocks.AIR)
         {
-            if (left.getBlock(world) == net.minecraft.init.Blocks.air)
+            if (left.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = left;
-            else if (right.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (right.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = right;
-            else if (front.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (front.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = front;
-            else if (frontLeft.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (frontLeft.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = frontLeft;
-            else if (frontRight.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (frontRight.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = frontRight;
-            else if (back.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (back.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = left;
-            else if (backLeft.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (backLeft.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = backLeft;
-            else if (backRight.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (backRight.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = backRight;
-            else if (up.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (up.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = up;
-            else if (down.getBlock(world) == net.minecraft.init.Blocks.air)
+            else if (down.getBlock(world) == net.minecraft.init.Blocks.AIR)
                 pos = down;
         }
 
@@ -414,5 +414,15 @@ public class Pos
         double y = y1 - y2;
         double z = z1 - z2;
         return x * x + y * y + z * z;
+    }
+
+    public BlockPos blockPos()
+    {
+        return new BlockPos(this.x, this.y, this.z);
+    }
+    
+    public IStorable store()
+    {
+        return stored;
     }
 }

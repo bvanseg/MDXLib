@@ -3,8 +3,8 @@ package com.arisux.mdxlib;
 import java.util.Map;
 
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @MCVersion(value = MinecraftForge.MC_VERSION)
 public class FMLModule implements IFMLLoadingPlugin

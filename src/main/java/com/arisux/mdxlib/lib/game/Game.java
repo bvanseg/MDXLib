@@ -6,15 +6,6 @@ import java.util.List;
 import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.world.entity.player.inventory.Inventories;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -25,8 +16,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * A class designed to provide easy access to a variety of Minecraft core methods, some
@@ -245,9 +246,9 @@ public class Game
 
     public static Item register(String modid, Item item, String identifier)
     {
-        GameRegistry.registerItem(item, identifier);
+        GameRegistry.register(item, new ResourceLocation(identifier));
         item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        item.setTextureName((item.getUnlocalizedName()).replace("item.", ""));
+        item.setRegistryName((item.getUnlocalizedName()).replace("item.", ""));
 
         return item;
     }
@@ -259,9 +260,9 @@ public class Game
     
     public static Block register(String modid, Block block, String identifier, String texture)
     {
-        GameRegistry.registerBlock(block, identifier);
+        GameRegistry.register(block, new ResourceLocation(identifier));
         block.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        block.setTextureName(texture == null ? (block.getUnlocalizedName()).replace("tile.", "") : texture);
+        block.setRegistryName(texture == null ? (block.getUnlocalizedName()).replace("tile.", "") : texture);
 
         return block;
     }

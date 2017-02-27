@@ -6,10 +6,12 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -32,7 +34,7 @@ public class LargeExplosion
 
     static
     {
-        excludeDefault.add(Blocks.bedrock);
+        excludeDefault.add(Blocks.BEDROCK);
     }
 
     public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, long seed)
@@ -124,10 +126,11 @@ public class LargeExplosion
     public void start()
     {
         this.process();
-        worldObj.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
-        @SuppressWarnings("unchecked")
-        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox((double) x - rX, (double) y - rY, (double) z - rY, (double) x + rY, (double) y + rY, (double) z + rY));
+        // TODO: FIX SOUND
+        // worldObj.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+
+        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB((double) x - rX, (double) y - rY, (double) z - rY, (double) x + rY, (double) y + rY, (double) z + rY));
 
         for (int idx = 0; idx < entities.size(); ++idx)
         {
@@ -145,19 +148,20 @@ public class LargeExplosion
         int dX = (int) posX + this.x;
         int dY = (int) posY + this.y;
         int dZ = (int) posZ + this.z;
-        Block block = this.worldObj.getBlock(dX, dY, dZ);
+        BlockPos pos = new BlockPos(dX, dY, dZ);
+        IBlockState state = this.worldObj.getBlockState(pos);
 
-        if (excludedBlocks != null && (excludedBlocks.contains(block) && (erb > 0 && this.random.nextInt(this.erb) == 0 || erb == 0)) || block == Blocks.air)
+        if (excludedBlocks != null && (excludedBlocks.contains(state.getBlock()) && (erb > 0 && this.random.nextInt(this.erb) == 0 || erb == 0)) || state.getBlock() == Blocks.AIR)
         {
             return;
         }
 
-        if (excludedMaterials != null && excludedMaterials.contains(block.getMaterial()) && (erm > 0 && this.random.nextInt(this.erm) == 0 || erm == 0))
+        if (excludedMaterials != null && excludedMaterials.contains(state.getMaterial()) && (erm > 0 && this.random.nextInt(this.erm) == 0 || erm == 0))
         {
             return;
         }
 
-        block.onBlockDestroyedByExplosion(this.worldObj, dX, dY, dZ, new Explosion(this.worldObj, null, dX, dY, dZ, 1F));
-       this.worldObj.setBlockToAir(dX, dY, dZ);
+        state.getBlock().onBlockDestroyedByExplosion(this.worldObj, pos, new Explosion(this.worldObj, null, dX, dY, dZ, 1F, false, false));
+        this.worldObj.setBlockToAir(pos);
     }
 }

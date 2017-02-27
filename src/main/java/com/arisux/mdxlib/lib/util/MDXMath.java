@@ -1,6 +1,6 @@
 package com.arisux.mdxlib.lib.util;
 
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class MDXMath
 {
@@ -47,7 +47,7 @@ public class MDXMath
 
     public static float wrapAngle(float a1, float a2, float delta)
     {
-        float angle = MathHelper.wrapAngleTo180_float(a2 - a1);
+        float angle = MathHelper.wrapDegrees(a2 - a1);
 
         if (angle > delta)
         {
@@ -153,7 +153,8 @@ public class MDXMath
 
     public static int floor_double(double d)
     {
-        return net.minecraft.util.MathHelper.floor_double(d);
+        int i = (int) d;
+        return d < (double)i ? i - 1 : i;
     }
 
     public static int roundAway(double d)

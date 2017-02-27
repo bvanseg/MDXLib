@@ -1,7 +1,7 @@
 package com.arisux.mdxlib.lib.game;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 public interface IPostInitEvent
 {

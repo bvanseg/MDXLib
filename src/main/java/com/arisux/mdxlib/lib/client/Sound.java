@@ -3,119 +3,143 @@ package com.arisux.mdxlib.lib.client;
 import com.arisux.mdxlib.lib.world.Pos;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Sound
 {
-    private String  key;
-    private float   volume;
-    private float   pitch;
-    private boolean distanceDelay;
+    private ResourceLocation location;
+    private SoundEvent       event;
+    private boolean          delay;
 
-    public Sound(String key)
+    public Sound(ResourceLocation location)
     {
-        this(key, 1F, 1F);
+        this(location, 1F, 1F);
     }
 
-    public Sound(String key, float volume)
+    public Sound(ResourceLocation location, float volume)
     {
-        this(key, volume, 1F);
+        this(location, volume, 1F);
     }
 
-    public Sound(String key, float volume, float pitch)
+    public Sound(ResourceLocation location, float volume, float pitch)
     {
-        this.key = key;
-        this.volume = volume;
-        this.pitch = pitch;
-        this.distanceDelay = true;
+        this.location = location;
+        this.delay = true;
     }
 
-    public Sound setDistanceDelay(boolean distanceDelay)
+    public void register(String soundName)
     {
-        this.distanceDelay = distanceDelay;
+        this.event = GameRegistry.register(new SoundEvent(this.location).setRegistryName(this.location));
+    }
+
+    public Sound setDistanceDelay(boolean delay)
+    {
+        this.delay = delay;
         return this;
     }
 
-    public String getKey()
+    public SoundEvent event()
     {
-        return key;
+        return event;
     }
 
+    @Deprecated
     public float getVolume()
     {
-        return volume;
-    }
-    
-    private void setReflectedVolume(Float volume)
-    {
-        this.volume = volume;
+        return 1F;
     }
 
+    @Deprecated
+    private void setReflectedVolume(Float volume)
+    {
+    }
+
+    @Deprecated
     public Sound setVolume(float volume)
     {
-        this.volume = volume;
         return this;
     }
 
+    @Deprecated
     public float getPitch()
     {
-        return pitch;
+        return 1F;
     }
 
+    @Deprecated
     public Sound setPitch(float pitch)
     {
-        this.pitch = pitch;
         return this;
     }
 
     @Override
     public String toString()
     {
-        return this.getKey();
+        return this.event.getRegistryName().toString();
     }
 
+    @Deprecated
     public void playSound(Entity entity)
     {
-        playSound(entity, volume, pitch);
+        playSound(entity, 1F, 1F);
     }
 
     public void playSound(Entity entity, float volume, float pitch)
     {
-        entity.playSound(key, volume, pitch);
+        entity.playSound(event, volume, pitch);
     }
 
-    public void playSound(World world, Pos data)
+    @Deprecated
+    public void playSound(World world, BlockPos pos)
     {
-        playSound(world, (int) data.x, (int) data.y, (int) data.z, volume, pitch);
+        playSound(world, (int) pos.getX(), (int) pos.getY(), (int) pos.getZ(), 1F, 1F);
     }
 
-    public void playSound(World world, Pos data, float volume, float pitch)
+    public void playSound(World world, BlockPos pos, float volume, float pitch)
     {
-        playSound(world, (int) data.x, (int) data.y, (int) data.z, volume, pitch);
+        playSound(world, (int) pos.getX(), (int) pos.getY(), (int) pos.getZ(), volume, pitch);
     }
 
-    public void playSound(World world, double posX, double posY, double posZ)
+    @Deprecated
+    public void playSound(World world, Pos pos)
     {
-        playSound(world, (int) posX, (int) posY, (int) posZ, volume, pitch);
+        playSound(world, (int) pos.x, (int) pos.y, (int) pos.z, 1F, 1F);
     }
 
-    public void playSound(World world, int posX, int posY, int posZ)
+    public void playSound(World world, Pos pos, float volume, float pitch)
     {
-        playSound(world, posX, posY, posZ, volume, pitch);
+        playSound(world, (int) pos.x, (int) pos.y, (int) pos.z, volume, pitch);
     }
 
-    public void playSound(World world, double posX, double posY, double posZ, float volume, float pitch)
+    @Deprecated
+    public void playSound(World world, double x, double y, double z)
     {
-        playSound(world, (int) posX, (int) posY, (int) posZ, volume, pitch, distanceDelay);
+        playSound(world, (int) x, (int) y, (int) z, 1F, 1F);
     }
 
-    public void playSound(World world, int posX, int posY, int posZ, float volume, float pitch)
+    @Deprecated
+    public void playSound(World world, int x, int y, int z)
     {
-        playSound(world, posX, posY, posZ, volume, pitch, distanceDelay);
+        playSound(world, x, y, z, 1F, 1F);
     }
 
-    public void playSound(World world, int posX, int posY, int posZ, float volume, float pitch, boolean distanceDelay)
+    public void playSound(World world, double x, double y, double z, float volume, float pitch)
     {
-        world.playSound(posX, posY, posZ, key, volume, pitch, distanceDelay);
+        playSound(world, (int) x, (int) y, (int) z, volume, pitch, delay);
+    }
+
+    public void playSound(World world, int x, int y, int z, float volume, float pitch)
+    {
+        playSound(world, x, y, z, volume, pitch, delay);
+    }
+
+    public void playSound(World world, int x, int y, int z, float volume, float pitch, boolean distanceDelay)
+    {
+        world.playSound(x, y, z, this.event, SoundCategory.NEUTRAL, volume, pitch, distanceDelay);
     }
 }

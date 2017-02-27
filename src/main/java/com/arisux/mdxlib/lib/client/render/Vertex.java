@@ -52,11 +52,12 @@ public class Vertex
     {
         if (uv == null)
         {
-            tessellator.addVertex(x, y, z);
+            tessellator.getBuffer().pos(x, y, z);
         }
         else
         {
-            tessellator.addVertexWithUV(x, y, z, uv.u, uv.v);
+            tessellator.getBuffer().pos(x, y, z);
+            tessellator.getBuffer().tex(uv.u, uv.v);
         }
         return this;
     }

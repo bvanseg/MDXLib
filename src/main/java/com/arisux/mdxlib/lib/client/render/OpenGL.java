@@ -23,8 +23,6 @@ import org.lwjgl.opengl.GL12;
 import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.world.tile.IRotatable;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -32,8 +30,10 @@ import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class OpenGL
 {
@@ -456,19 +456,19 @@ public class OpenGL
             {
                 if (rotatable.getDirection() != null)
                 {
-                    if (rotatable.getDirection() == ForgeDirection.NORTH)
+                    if (rotatable.getDirection() == EnumFacing.NORTH)
                     {
                         rotate(180F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == ForgeDirection.SOUTH)
+                    else if (rotatable.getDirection() == EnumFacing.SOUTH)
                     {
                         rotate(0F, 0F, 0F, 0F);
                     }
-                    else if (rotatable.getDirection() == ForgeDirection.WEST)
+                    else if (rotatable.getDirection() == EnumFacing.WEST)
                     {
                         rotate(-90F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == ForgeDirection.EAST)
+                    else if (rotatable.getDirection() == EnumFacing.EAST)
                     {
                         rotate(90F, 0F, 1F, 0F);
                     }
@@ -488,19 +488,19 @@ public class OpenGL
             {
                 if (rotatable.getDirection() != null)
                 {
-                    if (rotatable.getDirection() == ForgeDirection.SOUTH)
+                    if (rotatable.getDirection() == EnumFacing.SOUTH)
                     {
                         rotate(180F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == ForgeDirection.NORTH)
+                    else if (rotatable.getDirection() == EnumFacing.NORTH)
                     {
                         rotate(0F, 0F, 0F, 0F);
                     }
-                    else if (rotatable.getDirection() == ForgeDirection.EAST)
+                    else if (rotatable.getDirection() == EnumFacing.EAST)
                     {
                         rotate(-90F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == ForgeDirection.WEST)
+                    else if (rotatable.getDirection() == EnumFacing.WEST)
                     {
                         rotate(90F, 0F, 1F, 0F);
                     }

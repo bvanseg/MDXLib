@@ -4,10 +4,10 @@ import java.io.File;
 
 import com.arisux.mdxlib.lib.game.IPreInitEvent;
 
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class Settings implements IPreInitEvent
 {

@@ -3,8 +3,8 @@ package com.arisux.mdxlib.lib.game;
 import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.game.ModIdentityMap.IdentityMap;
 
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 
 public class IdentityRemapModule
 {

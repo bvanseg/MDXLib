@@ -4,13 +4,13 @@ import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.util.MDXMath;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class Model extends ModelBase
@@ -174,7 +174,7 @@ public abstract class Model extends ModelBase
         return null;
     }
 
-    public static ModelBase getMainModel(RendererLivingEntity renderer)
+    public static ModelBase getMainModel(RenderLivingBase<EntityLivingBase> renderer)
     {
         return MDX.access().getMainModel(renderer);
     }

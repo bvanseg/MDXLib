@@ -1,6 +1,6 @@
 package com.arisux.mdxlib.lib.game;
 
-import cpw.mods.fml.common.ModContainer;
+import net.minecraftforge.fml.common.ModContainer;
 
 public interface IMod extends IInitEvent, IPreInitEvent, IPostInitEvent
 {

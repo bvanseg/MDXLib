@@ -10,13 +10,11 @@ public class TileEntities
      * Move the specified TileEntity to the specified CoordData coordinates.
      * 
      * @param tileEntity - The TileEntity to change the position of.
-     * @param coord - The CoordData instance containing the new set of coordinates.
+     * @param pos - The CoordData instance containing the new set of coordinates.
      */
-    public static void setTileEntityPosition(TileEntity tileEntity, Pos coord)
+    public static void setTileEntityPosition(TileEntity tileEntity, Pos pos)
     {
-        tileEntity.xCoord = (int) coord.x;
-        tileEntity.yCoord = (int) coord.y;
-        tileEntity.zCoord = (int) coord.z;
+        tileEntity.setPos(pos.blockPos());
     }
 
     /**
