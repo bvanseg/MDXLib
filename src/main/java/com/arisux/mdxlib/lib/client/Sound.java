@@ -47,6 +47,11 @@ public class Sound
     {
         return event;
     }
+    
+    public ResourceLocation getLocation()
+    {
+        return location;
+    }
 
     @Deprecated
     public float getVolume()

@@ -9,6 +9,7 @@ import com.arisux.mdxlib.lib.world.entity.player.inventory.Inventories;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -40,6 +41,13 @@ public class Game
     public static Minecraft minecraft()
     {
         return Minecraft.getMinecraft();
+    }
+
+    /** A wrapper method for the RenderManager instance. **/
+    @SideOnly(Side.CLIENT)
+    public static RenderManager renderManager()
+    {
+        return minecraft().getRenderManager();
     }
 
     /** A wrapper method for the FontRenderer instance. **/

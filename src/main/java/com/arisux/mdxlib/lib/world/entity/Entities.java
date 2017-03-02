@@ -29,7 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -893,5 +892,28 @@ public class Entities
     public static boolean isSafe(Block block)
     {
         return block == Blocks.AIR;
+    }
+    
+    public static boolean isRiding(Entity check, Entity checkFor)
+    {
+        return isRiding(check, checkFor.getClass());
+    }
+    
+    public static boolean isRiding(Entity check, Class<? extends Entity> type)
+    {
+        if (check.getPassengers() == null || check.getPassengers() != null && check.getPassengers().isEmpty())
+        {
+            return false;
+        }
+        
+        for (Entity entity : check.getPassengers())
+        {
+            if (type.isInstance(entity))
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

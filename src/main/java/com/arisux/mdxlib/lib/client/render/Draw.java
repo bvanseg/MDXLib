@@ -43,36 +43,72 @@ public class Draw
     {
         return Tessellator.getInstance().getBuffer();
     }
-    
+
     public static void startQuads()
     {
         buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
     }
-    
+
+    public static void startTriangleFan()
+    {
+        buffer().begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION);
+    }
+
     public static void startQuadsColored()
     {
         buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
     }
-    
+
     public static void tessellate()
     {
         Tessellator.getInstance().draw();
     }
-    
+
     public static VertexBuffer vertex(int x, int y, int z)
+    {
+        return vertex((double) x, (double) y, (double) z);
+    }
+
+    public static VertexBuffer vertex(double x, double y, double z)
     {
         return buffer().pos(x, y, z);
     }
-    
+
     public static VertexBuffer vertex(int x, int y, int z, float u, float v)
+    {
+        return vertex((double) x, (double) y, (double) z, u, v);
+    }
+
+    public static VertexBuffer vertex(double x, double y, double z, float u, float v)
     {
         return buffer().pos(x, y, z).tex(u, v);
     }
     
+    public static void triangle(Vertex vertex1, Vertex vertex2, Vertex vertex3)
+    {
+        triangle(vertex1, vertex2, vertex3, false);
+    }
+
+    public static void triangle(Vertex vertex1, Vertex vertex2, Vertex vertex3, boolean cullFace)
+    {
+        Draw.startTriangleFan();
+        Draw.vertex(vertex1.x, vertex1.y, vertex1.z).endVertex();
+        Draw.vertex(vertex2.x, vertex2.y, vertex2.z).endVertex();
+        Draw.vertex(vertex3.x, vertex3.y, vertex3.z).endVertex();
+
+        if (cullFace)
+        {
+            Draw.vertex(vertex3.x, vertex3.y, vertex3.z).endVertex();
+            Draw.vertex(vertex2.x, vertex2.y, vertex2.z).endVertex();
+            Draw.vertex(vertex1.x, vertex1.y, vertex1.z).endVertex();
+        }
+        Draw.tessellate();
+    }
+
     public static interface ITooltipLineHandler
     {
         public Dimension getSize();
-    
+
         public void draw(int x, int y);
     }
 
@@ -89,7 +125,7 @@ public class Draw
         GL11.glLineWidth(1.0F);
         OpenGL.translate(0F, 0F, -depth);
     }
-    
+
     /**
      * Draws a rectangle at the specified coordinates, with the 
      * specified width, height and color.
@@ -271,22 +307,22 @@ public class Draw
     {
         String original = text;
         text = I18n.translateToLocal(text);
-        
+
         if (text.toLowerCase().contains("error:".toLowerCase()))
         {
             text = original;
         }
-    
+
         if (shadow)
         {
             Game.fontRenderer().drawStringWithShadow(text, x, y, color);
         }
-    
+
         if (!shadow)
         {
             Game.fontRenderer().drawString(text, x, y, color);
         }
-    
+
         OpenGL.color3i(0xFFFFFF);
     }
 
@@ -407,9 +443,10 @@ public class Draw
         Draw.drawMultilineToolTip(x, y, Arrays.asList(text));
     }
 
-    public static final String TOOLTIP_LINESPACE = "\u00A7h";
-    public static final String TOOLTIP_HANDLER = "\u00A7x";
-    public static List<Draw.ITooltipLineHandler> tipLineHandlers = new ArrayList<Draw.ITooltipLineHandler>();
+    public static final String                   TOOLTIP_LINESPACE = "\u00A7h";
+    public static final String                   TOOLTIP_HANDLER   = "\u00A7x";
+    public static List<Draw.ITooltipLineHandler> tipLineHandlers   = new ArrayList<Draw.ITooltipLineHandler>();
+
     public static int getTipLineId(ITooltipLineHandler handler)
     {
         tipLineHandlers.add(handler);
@@ -434,11 +471,11 @@ public class Draw
         {
             return;
         }
-    
+
         OpenGL.disableRescaleNormal();
         OpenGL.disableDepthTest();
         OpenGL.disableStandardItemLighting();
-    
+
         int w = 0;
         int h = -2;
         for (int i = 0; i < list.size(); i++)
@@ -449,7 +486,7 @@ public class Draw
             w = java.lang.Math.max(w, d.width);
             h += d.height;
         }
-    
+
         if (x < 8)
         {
             x = 8;
@@ -459,10 +496,10 @@ public class Draw
             x -= 24 + w;
         }
         y = (int) MDXMath.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
-    
+
         Draw.guiHook.incZLevel(300);
         Draw.drawTooltipBox(x - 4, y - 4, w + 7, h + 7);
-    
+
         for (String s : list)
         {
             ITooltipLineHandler line = getTipLine(s);
@@ -477,10 +514,10 @@ public class Draw
                 y += s.endsWith(TOOLTIP_LINESPACE) ? 12 : 10;
             }
         }
-    
+
         tipLineHandlers.clear();
         Draw.guiHook.incZLevel(-300);
-    
+
         OpenGL.enableDepthTest();
         OpenGL.enableRescaleNormal();
     }
@@ -529,7 +566,7 @@ public class Draw
         OpenGL.pushMatrix();
         {
             Gui.drawRect(posX + 0, posY + 0, posX + barWidth, posY + 5 + barHeight, 0x77000000);
-    
+
             if (!barStyle && curProgress > maxProgress / barWidth)
             {
                 Gui.drawRect(posX + 1, posY + 1, posX + ((((curProgress * maxProgress) / maxProgress) * barWidth) / maxProgress) - 1, posY + 4 + barHeight, color);
@@ -540,16 +577,16 @@ public class Draw
                 int spaceBetweenBars = 1;
                 int amountOfBars = 70;
                 int widthOfBar = (barWidth / amountOfBars - spaceBetweenBars);
-    
+
                 for (int x = 1; x <= amountOfBars - ((curProgress * amountOfBars) / maxProgress); x++)
                 {
                     int barStartX = (posX + widthOfBar) * (x) - widthOfBar;
-    
+
                     Gui.drawRect(barStartX + spaceBetweenBars * x, posY + 1, barStartX + widthOfBar + spaceBetweenBars * x, posY + 4 + barHeight, color);
                     Gui.drawRect(barStartX + spaceBetweenBars * x, posY + 2 + (barHeight / 2), barStartX + widthOfBar + spaceBetweenBars * x, posY + 4 + barHeight, 0x55000000);
                 }
             }
-    
+
             Game.fontRenderer().drawStringWithShadow(label, posX + (barWidth / 2) - Game.fontRenderer().getStringWidth(label) + (Game.fontRenderer().getStringWidth(label) / 2), (posY - 1) + stringPosY, 0xFFFFFFFF);
         }
         OpenGL.popMatrix();
@@ -594,7 +631,7 @@ public class Draw
         int y1 = y;
         int x2 = x + w;
         int y2 = y + h;
-    
+
         Gui.drawRect(x1, y1, x2, y2, fillColor);
         Gui.drawRect(x1, y1, x2, y2 - h + borderWidth, borderColor);
         Gui.drawRect(x1, y1 + h - borderWidth, x2, y2, borderColor);
@@ -789,7 +826,7 @@ public class Draw
     public static void drawPlayerFace(String username, int x, int y, int width, int height)
     {
         ResourceLocation resource = Remote.downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), DefaultPlayerSkin.getDefaultSkin(EntityPlayer.getOfflineUUID(username)), false);
-    
+
         Draw.bindTexture(resource);
         drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.25F, 0.5F);
         drawQuad(x, y, width, height, 90, 0.75F, 0.625F, 0.25F, 0.5F);
@@ -923,11 +960,11 @@ public class Draw
         float mU = u + tS;
         float v = (float) (index / 16) / 16.0F;
         float mV = v + tS;
-        
+
         Draw.bindTexture(GameResources.particleTexture);
         drawQuad(x, y, width, height, 0, u, mU, v, mV);
     }
-    
+
     public static void renderItem(ItemStack stack, int x, int y)
     {
         Game.minecraft().getRenderItem().renderItemIntoGUI(stack, x, y);
@@ -995,43 +1032,43 @@ public class Draw
     public static void drawRecipe(Object obj, int x, int y, int size, int slotPadding, int backgroundColor)
     {
         IRecipe irecipe = obj instanceof Item ? (Game.getRecipe(obj)) : obj instanceof Block ? (Game.getRecipe(obj)) : null;
-    
+
         if (irecipe == null)
         {
             return;
         }
-    
+
         for (int gX = 0; gX < 3; ++gX)
         {
             for (int gY = 0; gY < 3; ++gY)
             {
                 drawRect(x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size, backgroundColor);
-    
+
                 if (irecipe instanceof ShapedRecipes)
                 {
                     ItemStack slotStack = ((ShapedRecipes) irecipe).recipeItems[gX + gY * 3];
-    
+
                     if (slotStack != null)
                     {
                         drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                     }
                 }
-    
+
                 if (irecipe instanceof ShapedOreRecipe)
                 {
                     ShapedOreRecipe recipe = (ShapedOreRecipe) irecipe;
-    
+
                     for (Object o : recipe.getInput())
                     {
                         try
                         {
                             Class<?> unmodifiableArrayList = Class.forName("net.minecraftforge.oredict.OreDictionary$UnmodifiableArrayList");
-    
+
                             if (unmodifiableArrayList.isInstance(o))
                             {
                                 String domain = o.toString().contains("item.") ? o.toString().substring(o.toString().indexOf("x") + 1, o.toString().indexOf("item.")).equalsIgnoreCase("") ? "minecraft" : o.toString().substring(o.toString().indexOf("x") + 1, o.toString().indexOf("item.")) : "null";
                                 Item item = GameRegistry.findItem(domain, o.toString().substring(o.toString().indexOf(".") + 1, o.toString().indexOf("@")));
-    
+
                                 if (item != null)
                                 {
                                     drawItemIcon(item, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
@@ -1042,7 +1079,7 @@ public class Draw
                                 if (recipe.getInput()[gX + gY * 3] instanceof ItemStack)
                                 {
                                     ItemStack slotStack = (ItemStack) recipe.getInput()[gX + gY * 3];
-    
+
                                     if (slotStack != null)
                                     {
                                         drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
@@ -1080,10 +1117,11 @@ public class Draw
     }
 
     public static final GuiCustomScreen guiHook = new GuiCustomScreen();
+
     public static void lightingHelper(Entity entity, float offset)
     {
-       
-        int brightness =  Worlds.getLightAtCoord(entity.worldObj, entity.getPosition());
+
+        int brightness = Worlds.getLightAtCoord(entity.worldObj, entity.getPosition());
         OpenGL.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
         OpenGL.color(1.0F, 1.0F, 1.0F);
     }
@@ -1092,16 +1130,16 @@ public class Draw
     {
         ArrayList<String> strings = new ArrayList<String>();
         int stringWidth = getStringRenderWidth(string);
-    
+
         if (stringWidth > width)
         {
             String currentLine = "";
-    
+
             for (String word : string.split(" "))
             {
                 int wordWidth = getStringRenderWidth(word);
                 int currentLineWidth = getStringRenderWidth(currentLine);
-    
+
                 if ((currentLineWidth + wordWidth) <= width)
                 {
                     currentLine = currentLine.isEmpty() ? word : currentLine + " " + word;
@@ -1112,7 +1150,7 @@ public class Draw
                     currentLine = word;
                 }
             }
-    
+
             if (!currentLine.isEmpty())
             {
                 strings.add(currentLine);
@@ -1122,7 +1160,7 @@ public class Draw
         {
             strings.add(string);
         }
-    
+
         return strings;
     }
 

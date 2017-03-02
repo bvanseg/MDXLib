@@ -54,7 +54,31 @@ public class Access
     @SideOnly(Side.CLIENT)
     public void setEquippedProgress(float value)
     {
-        Game.minecraft().entityRenderer.itemRenderer.equippedProgressOffHand = value;
+        Game.minecraft().entityRenderer.itemRenderer.equippedProgressMainHand = value;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getEquippedProgress()
+    {
+        return Game.minecraft().entityRenderer.itemRenderer.equippedProgressMainHand;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getEquippedProgressPrev()
+    {
+        return Game.minecraft().entityRenderer.itemRenderer.prevEquippedProgressMainHand;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getEquippedProgressOffHand()
+    {
+        return Game.minecraft().entityRenderer.itemRenderer.equippedProgressOffHand;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getEquippedProgressOffHandPrev()
+    {
+        return Game.minecraft().entityRenderer.itemRenderer.prevEquippedProgressOffHand;
     }
 
     @SideOnly(Side.CLIENT)
@@ -120,9 +144,33 @@ public class Access
     }
 
     @SideOnly(Side.CLIENT)
+    public double getCameraZoom()
+    {
+        return Game.minecraft().entityRenderer.cameraZoom;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public double getCameraPitch()
+    {
+        return Game.minecraft().entityRenderer.cameraPitch;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public double getCameraYaw()
+    {
+        return Game.minecraft().entityRenderer.cameraYaw;
+    }
+
+    @SideOnly(Side.CLIENT)
     public int[] getLightmapColors()
     {
         return Game.minecraft().entityRenderer.lightmapColors;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getDebugViewDirection()
+    {
+        return Game.minecraft().entityRenderer.debugViewDirection;
     }
 
     @SideOnly(Side.CLIENT)
@@ -138,9 +186,27 @@ public class Access
     }
 
     @SideOnly(Side.CLIENT)
+    public float getFarPlaneDistance()
+    {
+        return Game.minecraft().entityRenderer.farPlaneDistance;
+    }
+
+    @SideOnly(Side.CLIENT)
     public void setLightmapUpdateNeeded(boolean value)
     {
         Game.minecraft().entityRenderer.lightmapUpdateNeeded = value;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getFOVModifier(float partialTicks, boolean b)
+    {
+        return Game.minecraft().entityRenderer.getFOVModifier(partialTicks, b);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setupViewBobbing(float partialTicks)
+    {
+        Game.minecraft().entityRenderer.setupViewBobbing(partialTicks);        
     }
 
     @Deprecated

@@ -3,10 +3,13 @@ package com.arisux.mdxlib.lib.client;
 import com.arisux.mdxlib.lib.game.Game;
 
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class RenderLivingWrapper extends RenderLiving
+@SideOnly(Side.CLIENT)
+public abstract class RenderLivingWrapper<T extends EntityLiving> extends RenderLiving<T>
 {
     protected TexturedModel<? extends Model> model;
     
@@ -22,7 +25,7 @@ public class RenderLivingWrapper extends RenderLiving
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity entity)
+    protected ResourceLocation getEntityTexture(T entity)
     {
         return this.model.getTexture();
     }
