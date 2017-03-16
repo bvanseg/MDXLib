@@ -3,6 +3,7 @@ package com.arisux.mdxlib.lib.world.entity.player.inventory;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -155,7 +156,7 @@ public class Inventories
 
         return true;
     }
-    
+
     public static int getSlotFor(InventoryPlayer inventory, Item item)
     {
         for (int i = 0; i < inventory.mainInventory.length; ++i)
@@ -211,6 +212,26 @@ public class Inventories
     public static ItemStack getBootSlotItemStack(EntityPlayer player)
     {
         return player.inventory.armorItemInSlot(0);
+    }
+    
+    public static boolean playerHas(Item item, Entity entity)
+    {
+        return getAmountOfItemPlayerHas(item, entity) > 0;
+    }
+    
+    public static boolean playerHas(Item item, EntityPlayer player)
+    {
+        return getAmountOfItemPlayerHas(item, player) > 0;
+    }
+
+    public static int getAmountOfItemPlayerHas(Item item, Entity entity)
+    {
+        if (entity instanceof EntityPlayer)
+        {
+            return getAmountOfItemPlayerHas(item, (EntityPlayer) entity);
+        }
+
+        return 0;
     }
 
     public static int getAmountOfItemPlayerHas(Item item, EntityPlayer player)

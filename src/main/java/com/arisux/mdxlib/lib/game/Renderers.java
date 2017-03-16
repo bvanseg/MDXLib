@@ -16,12 +16,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Renderers implements IInitEvent
 {
-    public static Renderers                                    INSTANCE       = new Renderers();
-    private final HashMap<ModelResourceLocation, ItemRenderer> ITEM_RENDERERS = new HashMap<ModelResourceLocation, ItemRenderer>();
+    public static Renderers                      INSTANCE       = new Renderers();
+    private final HashMap<Item, ItemRenderer<?>> ITEM_RENDERERS = new HashMap<Item, ItemRenderer<?>>();
 
-    public static void register(Item item, ItemRenderer renderer)
+    public static void register(Item item, ItemRenderer<?> renderer)
     {
-        INSTANCE.ITEM_RENDERERS.put(new ModelResourceLocation(item.getRegistryName(), "inventory"), renderer);
+        INSTANCE.ITEM_RENDERERS.put(item, renderer);
+    }
+
+    public static ItemRenderer<?> getItemRenderer(Item item)
+    {
+        if (INSTANCE.ITEM_RENDERERS.containsKey(item))
+        {
+            return INSTANCE.ITEM_RENDERERS.get(item);
+        }
+
+        return null;
     }
 
     @Override
@@ -34,8 +44,9 @@ public class Renderers implements IInitEvent
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event)
     {
-        for (ModelResourceLocation resource : ITEM_RENDERERS.keySet())
+        for (Item item : ITEM_RENDERERS.keySet())
         {
+            ModelResourceLocation resource = new ModelResourceLocation(item.getRegistryName(), "inventory");
             event.getModelRegistry().putObject(resource, ITEM_RENDERERS.get(resource));
         }
     }

@@ -21,6 +21,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -153,7 +154,7 @@ public class Entities
      * @param range - Range of blocks to scan within.
      * @return All the Entity instances found using the specified parameters.
      */
-    public static List<? extends Entity> getEntitiesInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range)
+    public static <T extends Entity> List<T> getEntitiesInCoordsRange(World worldObj, Class<T> entityClass, Pos data, int range)
     {
         return getEntitiesInCoordsRange(worldObj, entityClass, data, range, 16);
     }
@@ -169,8 +170,7 @@ public class Entities
      * @param height - Height to scan for entities within
      * @return All the Entity instances found using the specified parameters.
      */
-    @SuppressWarnings("unchecked")
-    public static List<? extends Entity> getEntitiesInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range, int height)
+    public static <T extends Entity> List<T> getEntitiesInCoordsRange(World worldObj, Class<? extends T> entityClass, Pos data, int range, int height)
     {
         return worldObj.getEntitiesWithinAABB(entityClass, new AxisAlignedBB(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
     }
@@ -201,6 +201,11 @@ public class Entities
     public static boolean canEntityBeSeenBy(Entity e, Pos coord)
     {
         return rayTraceBlocks(e, coord) == null;
+    }
+
+    public static boolean canEntityBeSeenBy(Entity e, BlockPos pos)
+    {
+        return rayTraceBlocks(e, pos) == null;
     }
 
     public static boolean canCoordBeSeenBy(World world, Pos p1, Pos p2)
@@ -305,6 +310,11 @@ public class Entities
     public static RayTraceResult rayTraceBlocks(Entity e, Pos p)
     {
         return e != null && p != null ? rayTraceBlocks(e.worldObj, e.posX, e.posY + (e.height / 2), e.posZ, p.x, p.y, p.z) : null;
+    }
+
+    public static RayTraceResult rayTraceBlocks(Entity e, BlockPos p)
+    {
+        return e != null && p != null ? rayTraceBlocks(e.worldObj, e.posX, e.posY + (e.height / 2), e.posZ, p.getX(), p.getY(), p.getZ()) : null;
     }
 
     public static RayTraceResult rayTraceBlocks(World worldObj, Pos p1, Pos p2)
@@ -894,6 +904,11 @@ public class Entities
         return block == Blocks.AIR;
     }
     
+    public static Entity getEntityRiddenBy(Entity check)
+    {
+        return !check.getPassengers().isEmpty() && check.getPassengers().get(0) != null ? check.getPassengers().get(0) : null;
+    }
+    
     public static boolean isRiding(Entity check, Entity checkFor)
     {
         return isRiding(check, checkFor.getClass());
@@ -915,5 +930,17 @@ public class Entities
         }
         
         return false;
+    }
+
+    public static boolean canPlaceEntityOnSide(World world, Block block, BlockPos pos, boolean skipBoundsCheck, int side, Entity entity, ItemStack stack)
+    {
+        return canPlaceEntityOnSide(world, block, pos, skipBoundsCheck, EnumFacing.getFront(side), entity, stack);
+    }
+
+    public static boolean canPlaceEntityOnSide(World world, Block block, BlockPos pos, boolean skipBoundsCheck, EnumFacing side, Entity entity, ItemStack stack)
+    {
+        IBlockState blockstate = world.getBlockState(pos);
+        AxisAlignedBB box = skipBoundsCheck ? null : blockstate.getCollisionBoundingBox(world, pos);
+        return box != null && !world.checkNoEntityCollision(box, entity) ? false : (blockstate.getMaterial() == Material.CIRCUITS && block == Blocks.ANVIL ? true : blockstate.getBlock().isReplaceable(world, pos) && block.canReplace(world, pos, side, stack));
     }
 }

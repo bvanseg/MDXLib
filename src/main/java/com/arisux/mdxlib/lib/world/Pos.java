@@ -14,32 +14,32 @@ import net.minecraft.world.World;
 
 public class Pos
 {
-    public double  x;
-    public double  y;
-    public double  z;
+    public double     x;
+    public double     y;
+    public double     z;
     private IStorable stored;
-    
+
     public static interface IStorable
     {
         ;
     }
-    
+
     public static class BlockDataStore implements IStorable
     {
-        public int blockid;
+        public int  blockid;
         public byte metadata;
-        
+
         public BlockDataStore(Block block, byte metadata)
         {
             this(Block.getIdFromBlock(block), metadata);
         }
-        
+
         public BlockDataStore(int blockid, byte metadata)
         {
             this.blockid = blockid;
             this.metadata = metadata;
         }
-        
+
         public Block asBlock()
         {
             return Block.getBlockById(this.blockid);
@@ -49,6 +49,11 @@ public class Pos
     public Pos(Entity entity)
     {
         this(Math.round(entity.posX), Math.round(entity.posY), Math.round(entity.posZ));
+    }
+
+    public Pos(BlockPos pos)
+    {
+        this(pos.getX(), pos.getY(), pos.getZ());
     }
 
     public Pos(TileEntity tileEntity)
@@ -77,7 +82,7 @@ public class Pos
     {
         this((double) posX, (double) posY, (double) posZ);
     }
-    
+
     public Pos store(IStorable store)
     {
         this.stored = store;
@@ -128,7 +133,7 @@ public class Pos
     {
         return getBlockState(world).getBlock();
     }
-    
+
     public IBlockState getBlockState(World world)
     {
         return world.getBlockState(new BlockPos((int) this.x, (int) this.y, (int) this.z));
@@ -205,7 +210,7 @@ public class Pos
     public NBTTagCompound writeToNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
     {
         NBTTagCompound dataTag = nbt == null ? new NBTTagCompound() : nbt;
-        
+
         if (this.stored != null)
         {
             if (this.stored instanceof IStorable)
@@ -225,17 +230,17 @@ public class Pos
         return dataTag;
     }
 
-    public Pos readFromNBT(NBTTagCompound nbt)
+    public static Pos readFromNBT(NBTTagCompound nbt)
     {
-        return this.readFromNBT(nbt, "Id", "PosX", "PosY", "PosZ");
+        return readFromNBT(nbt, "Id", "PosX", "PosY", "PosZ");
     }
 
-    public Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
+    public static Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ)
     {
         return readFromNBT(nbt, labelId, labelX, labelY, labelZ, "Meta");
     }
-    
-    public Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ, String labelMeta)
+
+    public static Pos readFromNBT(NBTTagCompound nbt, String labelId, String labelX, String labelY, String labelZ, String labelMeta)
     {
         return new Pos(nbt.getInteger(labelX), nbt.getInteger(labelY), nbt.getInteger(labelZ)).store(new BlockDataStore(nbt.getInteger(labelId), nbt.getByte(labelMeta)));
     }
@@ -251,6 +256,11 @@ public class Pos
         return isAnySurfaceNextTo(world, net.minecraft.init.Blocks.AIR);
     }
 
+    public static boolean isAnySurfaceEmpty(BlockPos pos, World world)
+    {
+        return isAnySurfaceNextTo(pos, world, net.minecraft.init.Blocks.AIR);
+    }
+
     public boolean isAnySurfaceNextTo(World world, Block block)
     {
         Pos up = this.add(0, 1, 0);
@@ -261,6 +271,24 @@ public class Pos
         Pos back = this.add(0, 0, 1);
 
         return up.getBlock(world) == block || down.getBlock(world) == block || left.getBlock(world) == block || right.getBlock(world) == block || front.getBlock(world) == block || back.getBlock(world) == block;
+    }
+
+    public static boolean isAnySurfaceNextTo(BlockPos pos, World world, Block block)
+    {
+        BlockPos up = pos.add(0, 1, 0);
+        IBlockState upState = world.getBlockState(up);
+        BlockPos down = pos.add(0, -1, 0);
+        IBlockState downState = world.getBlockState(down);
+        BlockPos left = pos.add(-1, 0, 0);
+        IBlockState leftState = world.getBlockState(left);
+        BlockPos right = pos.add(1, 0, 0);
+        IBlockState rightState = world.getBlockState(right);
+        BlockPos front = pos.add(0, 0, -1);
+        IBlockState frontState = world.getBlockState(front);
+        BlockPos back = pos.add(0, 0, 1);
+        IBlockState backState = world.getBlockState(back);
+
+        return upState.getBlock() == block || downState.getBlock() == block || leftState.getBlock() == block || rightState.getBlock() == block || frontState.getBlock() == block || backState.getBlock() == block;
     }
 
     public Pos findSafePosAround(World world)
@@ -304,6 +332,57 @@ public class Pos
         return pos.add(0.5, 0.0, 0.5);
     }
 
+    public static BlockPos findSafeBlockPosAround(BlockPos pos, World world)
+    {
+        IBlockState state = world.getBlockState(pos);
+        BlockPos up = pos.add(0, 1, 0);
+        IBlockState upState = world.getBlockState(up);
+        BlockPos down = pos.add(0, -1, 0);
+        IBlockState downState = world.getBlockState(down);
+        BlockPos left = pos.add(-1, 0, 0);
+        IBlockState leftState = world.getBlockState(left);
+        BlockPos right = pos.add(1, 0, 0);
+        IBlockState rightState = world.getBlockState(right);
+        BlockPos front = pos.add(0, 0, -1);
+        IBlockState frontState = world.getBlockState(front);
+        BlockPos frontLeft = pos.add(-1, 0, -1);
+        IBlockState frontLeftState = world.getBlockState(frontLeft);
+        BlockPos frontRight = pos.add(1, 0, -1);
+        IBlockState frontRightState = world.getBlockState(frontRight);
+        BlockPos back = pos.add(0, 0, 1);
+        IBlockState backState = world.getBlockState(back);
+        BlockPos backLeft = pos.add(-1, 0, 1);
+        IBlockState backLeftState = world.getBlockState(backLeft);
+        BlockPos backRight = pos.add(1, 0, 1);
+        IBlockState backRightState = world.getBlockState(backRight);
+
+        if (state.getBlock() != net.minecraft.init.Blocks.AIR)
+        {
+            if (leftState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = left;
+            else if (rightState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = right;
+            else if (frontState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = front;
+            else if (frontLeftState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = frontLeft;
+            else if (frontRightState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = frontRight;
+            else if (backState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = left;
+            else if (backLeftState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = backLeft;
+            else if (backRightState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = backRight;
+            else if (upState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = up;
+            else if (downState.getBlock() == net.minecraft.init.Blocks.AIR)
+                pos = down;
+        }
+
+        return pos.add(0.5, 0.0, 0.5);
+    }
+
     public Pos writeToBuffer(ByteBuf buf)
     {
         buf.writeDouble(this.x());
@@ -311,7 +390,7 @@ public class Pos
         buf.writeDouble(this.z());
         return this;
     }
-    
+
     public Pos readFromBuffer(ByteBuf buf)
     {
         this.x = buf.readDouble();
@@ -342,7 +421,7 @@ public class Pos
 
         return this;
     }
-    
+
     public double distanceFrom(Pos coord)
     {
         return distance(coord.x, coord.y, coord.z, this.x, this.y, this.z);
@@ -362,11 +441,11 @@ public class Pos
     {
         return distanceSq(entity.posX, entity.posY, entity.posZ, this.x, this.y, this.z);
     }
-    
+
     /**
      * STATIC ACCESS METHODS
      */
-    
+
     /**
      * Generates an arraylist of equally segmented coodinates between the two specified coordinates.
      * (x, y, z) = (x1 + (sectionIndex / sectionsMax) * (x2 - x1), y1 + (sectionIndex / sectionsMax) * (y2 - y1), z1 + (sectionIndex / sectionsMax) * (z2 - z1))
@@ -392,12 +471,12 @@ public class Pos
 
         return points;
     }
-    
+
     public static double distance(Pos p1, Pos p2)
     {
         return distance(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
     }
-    
+
     public static double distanceSq(Pos p1, Pos p2)
     {
         return distanceSq(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
@@ -407,7 +486,7 @@ public class Pos
     {
         return (double) MathHelper.sqrt_double(distanceSq(x1, y1, z1, x2, y2, z2));
     }
-    
+
     public static double distanceSq(double x1, double y1, double z1, double x2, double y2, double z2)
     {
         double x = x1 - x2;
@@ -420,7 +499,7 @@ public class Pos
     {
         return new BlockPos(this.x, this.y, this.z);
     }
-    
+
     public IStorable store()
     {
         return stored;

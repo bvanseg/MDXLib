@@ -8,11 +8,15 @@ import javax.vecmath.Matrix4f;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
+import com.arisux.mdxlib.lib.client.Model;
+import com.arisux.mdxlib.lib.client.TexturedModel;
+import com.arisux.mdxlib.lib.game.Game;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -20,37 +24,39 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 
-public abstract class ItemRenderer implements IPerspectiveAwareModel, IBakedModel
+public abstract class ItemRenderer<M extends Model> implements IPerspectiveAwareModel, IBakedModel
 {
+    protected TexturedModel<M>                          model;
     protected static final Minecraft                    mc    = Minecraft.getMinecraft();
-    private ItemRenderList                              overrides;
+    private ItemRenderList<M>                              overrides;
     private final Pair<? extends IBakedModel, Matrix4f> selfPair;
     private static List<BakedQuad>                      quads = Collections.emptyList();
-    protected ResourceLocation                          resource;
-    protected ModelBase                                 model;
+    // protected ResourceLocation resource;
+    // protected ModelBase model;
     protected ItemStack                                 stack;
     protected EntityLivingBase                          entity;
 
-    public static class ItemRenderList extends ItemOverrideList
+    public static class ItemRenderList<M extends Model> extends ItemOverrideList
     {
         public ItemRenderList()
         {
             super(Lists.<ItemOverride> newArrayList());
         }
 
+        @SuppressWarnings("all")
         @Override
         public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity)
         {
             if (originalModel instanceof ItemRenderer)
             {
-                ItemRenderer model = (ItemRenderer) originalModel;
+                ItemRenderer<M> model = (ItemRenderer<M>) originalModel;
                 model.setItemstack(stack);
                 model.setEntity(entity);
             }
@@ -59,12 +65,12 @@ public abstract class ItemRenderer implements IPerspectiveAwareModel, IBakedMode
         }
     }
 
-    public ItemRenderer(ModelBase model, ResourceLocation resource)
+    public ItemRenderer(TexturedModel<M> model)
     {
         this.overrides = new ItemRenderList();
         this.selfPair = Pair.of(this, null);
-        this.model = model;
-        this.resource = resource;
+        this.model = model.clone();
+        // this.resource = resource;
     }
 
     @Override
@@ -174,20 +180,25 @@ public abstract class ItemRenderer implements IPerspectiveAwareModel, IBakedMode
         return this.overrides;
     }
 
-    public ModelBase getModel()
+    public TexturedModel<M> getModel()
     {
-        return model;
+        return this.model;
     }
 
-    public ResourceLocation getResourceLocation()
-    {
-        return resource;
-    }
-
-    public void setResourceLocation(ResourceLocation resource)
-    {
-        this.resource = resource;
-    }
+    // public ModelBase getModel()
+    // {
+    // return model;
+    // }
+    //
+    // public ResourceLocation getResourceLocation()
+    // {
+    // return resource;
+    // }
+    //
+    // public void setResourceLocation(ResourceLocation resource)
+    // {
+    // this.resource = resource;
+    // }
 
     private void setItemstack(ItemStack stack)
     {
@@ -197,5 +208,10 @@ public abstract class ItemRenderer implements IPerspectiveAwareModel, IBakedMode
     private void setEntity(EntityLivingBase entity)
     {
         this.entity = entity;
+    }
+
+    public boolean firstPersonRenderCheck(Entity entity)
+    {
+        return entity == Game.minecraft().getRenderViewEntity() && Game.minecraft().gameSettings.thirdPersonView == 0 && (!(Game.minecraft().currentScreen instanceof GuiInventory) && !(Game.minecraft().currentScreen instanceof GuiContainerCreative) || Game.renderManager().playerViewY != 180.0F);
     }
 }

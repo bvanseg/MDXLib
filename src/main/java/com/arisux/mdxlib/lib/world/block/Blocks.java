@@ -9,6 +9,7 @@ import com.arisux.mdxlib.lib.world.Pos;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,6 +27,24 @@ public class Blocks
                 for (int z = posZ - range; z < posZ + range * 2; z++)
                 {
                     data.add(new Pos(x, y, z));
+                }
+            }
+        }
+
+        return data;
+    }
+    
+    public static ArrayList<BlockPos> getPositionsInRange(int posX, int posY, int posZ, int range)
+    {
+        ArrayList<BlockPos> data = new ArrayList<BlockPos>();
+
+        for (int x = posX - range; x < posX + range * 2; x++)
+        {
+            for (int y = posY - range; y < posY + range * 2; y++)
+            {
+                for (int z = posZ - range; z < posZ + range * 2; z++)
+                {
+                    data.add(new BlockPos(x, y, z));
                 }
             }
         }

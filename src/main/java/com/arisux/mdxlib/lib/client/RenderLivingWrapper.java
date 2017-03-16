@@ -9,16 +9,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class RenderLivingWrapper<T extends EntityLiving> extends RenderLiving<T>
+public abstract class RenderLivingWrapper<T extends EntityLiving, MODEL extends Model> extends RenderLiving<T>
 {
-    protected TexturedModel<? extends Model> model;
+    protected TexturedModel<MODEL> model;
     
-    public RenderLivingWrapper(TexturedModel<? extends Model> model)
+    public RenderLivingWrapper(TexturedModel<MODEL> model)
     {
         this(model, 0F);
     }
     
-    public RenderLivingWrapper(TexturedModel<? extends Model> model, float shadowSize)
+    public RenderLivingWrapper(TexturedModel<MODEL> model, float shadowSize)
     {
         super(Game.minecraft().getRenderManager(), model.getModel(), shadowSize);
         this.model = model;
@@ -30,7 +30,7 @@ public abstract class RenderLivingWrapper<T extends EntityLiving> extends Render
         return this.model.getTexture();
     }
     
-    public TexturedModel<? extends Model> getModelTexMap()
+    public TexturedModel<MODEL> getModel()
     {
         return model;
     }
