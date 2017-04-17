@@ -35,7 +35,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
 {
     protected TexturedModel<M>                          model;
     protected static final Minecraft                    mc    = Minecraft.getMinecraft();
-    private ItemRenderList<M>                              overrides;
+    private ItemRenderList<M>                           overrides;
     private final Pair<? extends IBakedModel, Matrix4f> selfPair;
     private static List<BakedQuad>                      quads = Collections.emptyList();
     // protected ResourceLocation resource;
@@ -69,7 +69,11 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
     {
         this.overrides = new ItemRenderList();
         this.selfPair = Pair.of(this, null);
-        this.model = model.clone();
+
+        if (model != null)
+        {
+            this.model = model.clone();
+        }
         // this.resource = resource;
     }
 

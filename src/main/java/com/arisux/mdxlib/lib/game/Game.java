@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -254,9 +255,9 @@ public class Game
 
     public static Item register(String modid, Item item, String identifier)
     {
-        GameRegistry.register(item, new ResourceLocation(identifier));
+        GameRegistry.register(item, new ResourceLocation(modid, identifier));
         item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        item.setRegistryName((item.getUnlocalizedName()).replace("item.", ""));
+//        item.setRegistryName((item.getUnlocalizedName()).replace("item.", ""));
 
         return item;
     }
@@ -268,9 +269,14 @@ public class Game
     
     public static Block register(String modid, Block block, String identifier, String texture)
     {
-        GameRegistry.register(block, new ResourceLocation(identifier));
         block.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        block.setRegistryName(texture == null ? (block.getUnlocalizedName()).replace("tile.", "") : texture);
+        GameRegistry.register(block, new ResourceLocation(modid, identifier));
+
+        ItemBlock item = new ItemBlock(block);
+        item.setRegistryName(block.getRegistryName());
+        
+        GameRegistry.register(item);
+//        block.setRegistryName(texture == null ? (block.getUnlocalizedName()).replace("tile.", "") : texture);
 
         return block;
     }

@@ -10,11 +10,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class Inventories
 {
-    public static void dropItemsInAt(IInventory inv, World world, double xCoord, double yCoord, double zCoord)
+    public static void dropItemsInAt(IInventory inv, World world, BlockPos pos)
     {
         if (inv != null)
         {
@@ -24,7 +25,7 @@ public class Inventories
 
                 if (stack != null)
                 {
-                    EntityItem entity = new EntityItem(world, xCoord + world.rand.nextFloat(), yCoord + world.rand.nextFloat(), zCoord + world.rand.nextFloat(), stack);
+                    EntityItem entity = new EntityItem(world, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), stack);
                     float velocity = 0.05F;
 
                     entity.motionX = (-0.5F + world.rand.nextFloat()) * velocity;

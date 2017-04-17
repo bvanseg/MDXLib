@@ -83,6 +83,11 @@ public class Draw
     {
         return buffer().pos(x, y, z).tex(u, v);
     }
+
+    public static VertexBuffer vertex(double x, double y, double z, double u, double v)
+    {
+        return buffer().pos(x, y, z).tex(u, v);
+    }
     
     public static void triangle(Vertex vertex1, Vertex vertex2, Vertex vertex3)
     {
