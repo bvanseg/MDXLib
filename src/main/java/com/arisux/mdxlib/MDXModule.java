@@ -5,6 +5,7 @@ import com.arisux.mdxlib.lib.client.Notification;
 import com.arisux.mdxlib.lib.client.NotifierModule;
 import com.arisux.mdxlib.lib.game.Game;
 import com.arisux.mdxlib.lib.game.IdentityRemapModule;
+import com.arisux.mdxlib.lib.game.Renderers;
 import com.arisux.mdxlib.lib.util.Remote;
 import com.arisux.mdxlib.lib.util.SystemInfo;
 import com.arisux.mdxlib.lib.world.StructureGenerationHandler;
@@ -73,6 +74,7 @@ public class MDXModule
         }
 
         Console.postInit();
+        Renderers.INSTANCE.post(event);
         Console.postInitComplete();
 
         if (Settings.instance.isStartupNotificationEnabled())
