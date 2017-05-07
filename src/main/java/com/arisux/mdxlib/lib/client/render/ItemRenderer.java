@@ -94,6 +94,8 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
             }
                 break;
             case GUI: {
+                OpenGL.color(1F, 1F, 1F, 1F);
+                OpenGL.enableStandardItemLighting();
                 this.renderInInventory(this.stack, this.entity, type);
             }
                 break;

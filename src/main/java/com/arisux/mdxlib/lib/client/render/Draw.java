@@ -46,7 +46,7 @@ public class Draw
 
     public static void startQuads()
     {
-        buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        buffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
     }
 
     public static void startTriangleFan()

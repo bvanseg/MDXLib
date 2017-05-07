@@ -257,6 +257,11 @@ public class Game
     {
         GameRegistry.register(item, new ResourceLocation(modid, identifier));
         item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
+        
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+        {
+            Renderers.registerIcon(item);
+        }
 //        item.setRegistryName((item.getUnlocalizedName()).replace("item.", ""));
 
         return item;
@@ -276,6 +281,11 @@ public class Game
         item.setRegistryName(block.getRegistryName());
         
         GameRegistry.register(item);
+        
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+        {
+            Renderers.registerIcon(Item.getItemFromBlock(block));
+        }
 //        block.setRegistryName(texture == null ? (block.getUnlocalizedName()).replace("tile.", "") : texture);
 
         return block;

@@ -29,7 +29,7 @@ public class Dimension
         if (!this.registered)
         {
             this.id = DimensionManager.getNextFreeDimId();
-            this.type = DimensionType.register(this.name, this.suffix, this.id, provider, keepLoaded);
+            this.type = DimensionType.register(this.name, this.suffix, this.id, this.provider, this.keepLoaded);
             DimensionManager.registerDimension(this.id, this.type);
             this.registered = true;
         }

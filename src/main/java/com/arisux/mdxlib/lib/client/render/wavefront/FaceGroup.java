@@ -50,17 +50,17 @@ public class FaceGroup
 
     public void drawNoBind()
     {
-        if (listReady == false)
-        {
-            listReady = true;
-            glList = GL11.glGenLists(1);
-
-            OpenGL.newList(glList, GL11.GL_COMPILE);
+//        if (listReady == false)
+//        {
+//            listReady = true;
+//            glList = GL11.glGenLists(1);
+//
+//            OpenGL.newList(glList, GL11.GL_COMPILE);
             this.drawVertex();
-            OpenGL.endList();
-        }
+//            OpenGL.endList();
+//        }
 
-        OpenGL.callList(glList);
+//        OpenGL.callList(glList);
     }
 
     private void drawVertex()
@@ -97,7 +97,7 @@ public class FaceGroup
 
             if (this.color != null)
             {
-                OpenGL.color(this.color.r, this.color.g, this.color.b);
+                //OpenGL.color(this.color.r, this.color.g, this.color.b);
             }
 
             OpenGL.normal(f.normal.x, f.normal.y, f.normal.z);
@@ -116,6 +116,7 @@ public class FaceGroup
         if (mode != 0)
         {
             OpenGL.end();
+            OpenGL.color(1F, 1F, 1F);
         }
     }
 }
