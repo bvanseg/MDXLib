@@ -484,7 +484,7 @@ public class Pos
 
     public static double distance(double x1, double y1, double z1, double x2, double y2, double z2)
     {
-        return (double) MathHelper.sqrt_double(distanceSq(x1, y1, z1, x2, y2, z2));
+        return (double) MathHelper.sqrt(distanceSq(x1, y1, z1, x2, y2, z2));
     }
 
     public static double distanceSq(double x1, double y1, double z1, double x2, double y2, double z2)

@@ -151,7 +151,7 @@ public class MDXMath
         return r == a ? b : r;
     }
 
-    public static int floor_double(double d)
+    public static int floor(double d)
     {
         int i = (int) d;
         return d < (double)i ? i - 1 : i;

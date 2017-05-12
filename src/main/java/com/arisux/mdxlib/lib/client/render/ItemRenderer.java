@@ -82,7 +82,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
     {
         GL11.glPushMatrix();
         this.renderPre(this.stack, this.entity, type);
-
+        
         switch (type)
         {
             case FIRST_PERSON_LEFT_HAND: {

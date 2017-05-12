@@ -21,7 +21,7 @@ public class Worlds
      * Create an explosion in the specified world, at the specified coordinates, with the specified effects.
      * 
      * @param entity - The entity that triggered the explosion.
-     * @param worldObj - The world that the explosion should be created in.
+     * @param world - The world that the explosion should be created in.
      * @param data - The CoordData containing the coordinates to create an explosion at.
      * @param strength - The strength of the explosion
      * @param isFlaming - Set to true if the explosion causes surrounding blocks to catch on fire.
@@ -29,9 +29,9 @@ public class Worlds
      * @param doesBlockDamage - Set to true if the explosion does physical Block damage.
      * @return Return the instance of the explosion that was just created.
      */
-    public static Explosion createExplosion(Entity entity, World worldObj, Pos data, float strength, boolean isFlaming, boolean isSmoking, boolean doesBlockDamage)
+    public static Explosion createExplosion(Entity entity, World world, Pos data, float strength, boolean isFlaming, boolean isSmoking, boolean doesBlockDamage)
     {
-        Explosion explosion = new Explosion(worldObj, entity, data.x, data.y, data.z, strength, isFlaming, isSmoking);
+        Explosion explosion = new Explosion(world, entity, data.x, data.y, data.z, strength, isFlaming, isSmoking);
 
         if (doesBlockDamage)
         {
@@ -82,22 +82,22 @@ public class Worlds
     /**
      * Get the light intensity as an Integer at the specified coordinates in the specified world.
      * 
-     * @param worldObj - World to check for brightness values in.
+     * @param world - World to check for brightness values in.
      * @param pos - BlockPos containing coordinates of the location to check brightness at.
      * @return Returns light intensity of a block as an Integer.
      */
-    public static int getLightAtCoord(World worldObj, BlockPos pos)
+    public static int getLightAtCoord(World world, BlockPos pos)
     {
-        int sky = worldObj.getLightFor(EnumSkyBlock.BLOCK, pos);
-        int block = worldObj.getLightFor(EnumSkyBlock.SKY, pos) - worldObj.calculateSkylightSubtracted(0F);
+        int sky = world.getLightFor(EnumSkyBlock.BLOCK, pos);
+        int block = world.getLightFor(EnumSkyBlock.SKY, pos) - world.calculateSkylightSubtracted(0F);
 
         return Math.max(block, sky);
     }
     
     @Deprecated
-    public static int getLightAtCoord(World worldObj, Pos pos)
+    public static int getLightAtCoord(World world, Pos pos)
     {
-        return getLightAtCoord(worldObj, pos.blockPos());
+        return getLightAtCoord(world, pos.blockPos());
     }
 
     /**

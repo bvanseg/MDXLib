@@ -42,15 +42,15 @@ public class Entities
      * Get the first Entity instance of the specified class type found, 
      * within specified range, at the specified world coordinates.
      * 
-     * @param worldObj - World instance to scan for entities in
+     * @param world - World instance to scan for entities in
      * @param entityClass - Entity class type to scan for.
      * @param data - The CoordData containing the coordinates to start scanning at.
      * @param range - Range of blocks to scan within.
      * @return First Entity instance found using the specified parameters.
      */
-    public static Entity getEntityInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range)
+    public static Entity getEntityInCoordsRange(World world, Class<? extends Entity> entityClass, Pos data, int range)
     {
-        return getEntityInCoordsRange(worldObj, entityClass, data, range, 16);
+        return getEntityInCoordsRange(world, entityClass, data, range, 16);
     }
 
     /**
@@ -97,49 +97,49 @@ public class Entities
      * Get the first Entity instance of the specified class type found, 
      * within specified range, at the specified world coordinates, within specified height.
      * 
-     * @param worldObj - World instance to scan for entities in
+     * @param world - World instance to scan for entities in
      * @param entityClass - Entity class type to scan for.
      * @param data - The CoordData containing the coordinates to start scanning at.
      * @param range - Range of blocks to scan within.
      * @param height - Height to scan for entities within
      * @return First Entity instance found using the specified parameters.
      */
-    public static Entity getEntityInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range, int height)
+    public static Entity getEntityInCoordsRange(World world, Class<? extends Entity> entityClass, Pos data, int range, int height)
     {
-        List<? extends Entity> entities = getEntitiesInCoordsRange(worldObj, entityClass, data, range, height);
+        List<? extends Entity> entities = getEntitiesInCoordsRange(world, entityClass, data, range, height);
 
-        return entities.size() >= 1 ? (Entity) entities.get(worldObj.rand.nextInt(entities.size())) : null;
+        return entities.size() >= 1 ? (Entity) entities.get(world.rand.nextInt(entities.size())) : null;
     }
 
     /**
      * Get a random Entity instance of the specified class type found, 
      * within specified range, at the specified world coordinates, within specified height.
      * 
-     * @param worldObj - World instance to scan for entities in
+     * @param world - World instance to scan for entities in
      * @param entityClass - Entity class type to scan for.
      * @param data - The CoordData containing the coordinates to start scanning at.
      * @param range - Range of blocks to scan within.
      * @return First Entity instance found using the specified parameters.
      */
-    public static Entity getRandomEntityInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range)
+    public static Entity getRandomEntityInCoordsRange(World world, Class<? extends Entity> entityClass, Pos data, int range)
     {
-        return getRandomEntityInCoordsRange(worldObj, entityClass, data, range, 16);
+        return getRandomEntityInCoordsRange(world, entityClass, data, range, 16);
     }
 
     /**
      * Get a random Entity instance of the specified class type found, 
      * within specified range, at the specified world coordinates, within specified height.
      * 
-     * @param worldObj - World instance to scan for entities in
+     * @param world - World instance to scan for entities in
      * @param entityClass - Entity class type to scan for.
      * @param data - The CoordData containing the coordinates to start scanning at.
      * @param range - Range of blocks to scan within.
      * @param height - Height to scan for entities within
      * @return First Entity instance found using the specified parameters.
      */
-    public static Entity getRandomEntityInCoordsRange(World worldObj, Class<? extends Entity> entityClass, Pos data, int range, int height)
+    public static Entity getRandomEntityInCoordsRange(World world, Class<? extends Entity> entityClass, Pos data, int range, int height)
     {
-        List<? extends Entity> entities = getEntitiesInCoordsRange(worldObj, entityClass, data, range, height);
+        List<? extends Entity> entities = getEntitiesInCoordsRange(world, entityClass, data, range, height);
 
         return entities.size() > 1 ? (Entity) entities.get((new Random()).nextInt(entities.size())) : null;
     }
@@ -148,31 +148,31 @@ public class Entities
      * Gets all Entity instances of the specified class type found, 
      * within specified range, at the specified world coordinates, within specified height.
      * 
-     * @param worldObj - World instance to scan for entities in
+     * @param world - World instance to scan for entities in
      * @param entityClass - Entity class type to scan for.
      * @param data - The CoordData containing the coordinates to start scanning at.
      * @param range - Range of blocks to scan within.
      * @return All the Entity instances found using the specified parameters.
      */
-    public static <T extends Entity> List<T> getEntitiesInCoordsRange(World worldObj, Class<T> entityClass, Pos data, int range)
+    public static <T extends Entity> List<T> getEntitiesInCoordsRange(World world, Class<T> entityClass, Pos data, int range)
     {
-        return getEntitiesInCoordsRange(worldObj, entityClass, data, range, 16);
+        return getEntitiesInCoordsRange(world, entityClass, data, range, 16);
     }
 
     /**
      * Gets all Entity instances of the specified class type found, 
      * within specified range, at the specified world coordinates, within specified height.
      * 
-     * @param worldObj - World instance to scan for entities in
+     * @param world - World instance to scan for entities in
      * @param entityClass - Entity class type to scan for.
      * @param data - The CoordData containing the coordinates to start scanning at.
      * @param range - Range of blocks to scan within.
      * @param height - Height to scan for entities within
      * @return All the Entity instances found using the specified parameters.
      */
-    public static <T extends Entity> List<T> getEntitiesInCoordsRange(World worldObj, Class<? extends T> entityClass, Pos data, int range, int height)
+    public static <T extends Entity> List<T> getEntitiesInCoordsRange(World world, Class<? extends T> entityClass, Pos data, int range, int height)
     {
-        return worldObj.getEntitiesWithinAABB(entityClass, new AxisAlignedBB(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
+        return world.getEntitiesWithinAABB(entityClass, new AxisAlignedBB(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
     }
     
     public static RayTraceResult.Type getMovingObjectType(int ordinal)
@@ -221,14 +221,14 @@ public class Entities
     {
         if (Game.minecraft().getRenderViewEntity() != null)
         {
-            if (Game.minecraft().theWorld != null)
+            if (Game.minecraft().world != null)
             {
                 pointedEntity = null;
                 double distance = reach;
                 Vec3d renderPosition = Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks);
                 Vec3d lookVec = Game.minecraft().getRenderViewEntity().getLook(partialTicks);
                 Vec3d lookPos = renderPosition.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
-                RayTraceResult blockTrace = rayTraceBlocks(Game.minecraft().theWorld, Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks), lookPos, false, true, true);
+                RayTraceResult blockTrace = rayTraceBlocks(Game.minecraft().world, Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks), lookPos, false, true, true);
 
                 if (blockTrace != null)
                 {
@@ -237,7 +237,7 @@ public class Entities
 
                 pointedEntity = null;
                 Vec3d hitVec = null;
-                List list = Game.minecraft().theWorld.getEntitiesWithinAABBExcludingEntity(Game.minecraft().getRenderViewEntity(), Game.minecraft().getRenderViewEntity().getEntityBoundingBox().addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand((double) 1F, (double) 1F, (double) 1F));
+                List list = Game.minecraft().world.getEntitiesWithinAABBExcludingEntity(Game.minecraft().getRenderViewEntity(), Game.minecraft().getRenderViewEntity().getEntityBoundingBox().addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand((double) 1F, (double) 1F, (double) 1F));
                 double entityDist = distance;
 
                 for (int idx = 0; idx < list.size(); ++idx)
@@ -304,32 +304,32 @@ public class Entities
      */
     public static RayTraceResult rayTraceBlocks(Entity e1, Entity e2)
     {
-        return e1 != null && e2 != null ? rayTraceBlocks(e1.worldObj, e1.posX, e1.posY + (e1.height / 2), e1.posZ, e2.posX, e2.posY + e2.getEyeHeight(), e2.posZ) : null;
+        return e1 != null && e2 != null ? rayTraceBlocks(e1.world, e1.posX, e1.posY + (e1.height / 2), e1.posZ, e2.posX, e2.posY + e2.getEyeHeight(), e2.posZ) : null;
     }
 
     public static RayTraceResult rayTraceBlocks(Entity e, Pos p)
     {
-        return e != null && p != null ? rayTraceBlocks(e.worldObj, e.posX, e.posY + (e.height / 2), e.posZ, p.x, p.y, p.z) : null;
+        return e != null && p != null ? rayTraceBlocks(e.world, e.posX, e.posY + (e.height / 2), e.posZ, p.x, p.y, p.z) : null;
     }
 
     public static RayTraceResult rayTraceBlocks(Entity e, BlockPos p)
     {
-        return e != null && p != null ? rayTraceBlocks(e.worldObj, e.posX, e.posY + (e.height / 2), e.posZ, p.getX(), p.getY(), p.getZ()) : null;
+        return e != null && p != null ? rayTraceBlocks(e.world, e.posX, e.posY + (e.height / 2), e.posZ, p.getX(), p.getY(), p.getZ()) : null;
     }
 
-    public static RayTraceResult rayTraceBlocks(World worldObj, Pos p1, Pos p2)
+    public static RayTraceResult rayTraceBlocks(World world, Pos p1, Pos p2)
     {
-        return p1 != null && p2 != null ? rayTraceBlocks(worldObj, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z) : null;
+        return p1 != null && p2 != null ? rayTraceBlocks(world, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z) : null;
     }
 
-    public static RayTraceResult rayTraceBlocks(World worldObj, double x1, double y1, double z1, double x2, double y2, double z2)
+    public static RayTraceResult rayTraceBlocks(World world, double x1, double y1, double z1, double x2, double y2, double z2)
     {
-        return worldObj != null ? rayTraceBlocks(worldObj, new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), false, false, false) : null;
+        return world != null ? rayTraceBlocks(world, new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), false, false, false) : null;
     }
 
     public static RayTraceResult rayTraceAll(Entity entity, int reach)
     {
-        return rayTraceAll(entity.worldObj, new Vec3d(entity.posX, entity.posY, entity.posZ), entity.rotationYaw, entity.rotationPitch, reach, new ArrayList<Entity>(Arrays.asList(new Entity[] { entity })));
+        return rayTraceAll(entity.world, new Vec3d(entity.posX, entity.posY, entity.posZ), entity.rotationYaw, entity.rotationPitch, reach, new ArrayList<Entity>(Arrays.asList(new Entity[] { entity })));
     }
 
     public static RayTraceResult rayTraceAll(World world, Vec3d pos, float rotationYaw, float rotationPitch, int reach, ArrayList<Entity> exclude)
@@ -396,7 +396,7 @@ public class Entities
         {
             if (!Double.isNaN(pos2.xCoord) && !Double.isNaN(pos2.yCoord) && !Double.isNaN(pos2.zCoord))
             {
-                BlockPos blockpos = new BlockPos(MathHelper.floor_double(pos.xCoord), MathHelper.floor_double(pos.yCoord), MathHelper.floor_double(pos.zCoord));
+                BlockPos blockpos = new BlockPos(MathHelper.floor(pos.xCoord), MathHelper.floor(pos.yCoord), MathHelper.floor(pos.zCoord));
                 IBlockState blockstate = world.getBlockState(blockpos);
                 Block block = blockstate.getBlock();
                 int posMeta = block.getMetaFromState(blockstate);
@@ -552,21 +552,21 @@ public class Entities
                     
                     pos = new Vec3d(tX, tY, tZ);
 
-                    posX = (int) ((double) MathHelper.floor_double(pos.xCoord));
+                    posX = (int) ((double) MathHelper.floor(pos.xCoord));
 
                     if (side == 5)
                     {
                         --posX;
                     }
 
-                    posY = (int) ((double) MathHelper.floor_double(pos.yCoord));
+                    posY = (int) ((double) MathHelper.floor(pos.yCoord));
 
                     if (side == 1)
                     {
                         --posY;
                     }
 
-                    posZ = (int) ((double) MathHelper.floor_double(pos.zCoord));
+                    posZ = (int) ((double) MathHelper.floor(pos.zCoord));
 
                     if (side == 3)
                     {
@@ -651,16 +651,16 @@ public class Entities
     /**
      * Constructs a new Entity instance from the specified class name in the specified world.
      * 
-     * @param worldObj - World to construct the Entity instance in.
+     * @param world - World to construct the Entity instance in.
      * @param name - String name of the entity class of which will be constructed.
      * @return Entity instance constructed using this method.
      */
     @SuppressWarnings("unchecked")
-    public static Entity constructEntityViaClasspath(World worldObj, String name)
+    public static Entity constructEntityViaClasspath(World world, String name)
     {
         try
         {
-            return constructEntity(worldObj, (Class<? extends Entity>) Class.forName(name));
+            return constructEntity(world, (Class<? extends Entity>) Class.forName(name));
         }
         catch (Exception e)
         {
@@ -672,13 +672,13 @@ public class Entities
     /**
      * Constructs a new Entity instance from the specified class in the specified world.
      * 
-     * @param worldObj - World to construct the Entity instance in.
+     * @param world - World to construct the Entity instance in.
      * @param c - The entity class of which will be constructed.
      * @return Entity instance constructed using this method.
      */
-    public static Entity constructEntity(World worldObj, Class<? extends Entity> c)
+    public static Entity constructEntity(World world, Class<? extends Entity> c)
     {
-        if (worldObj == null)
+        if (world == null)
         {
             MDX.log().warn("World object null while attempting to construct entity.");
             return null;
@@ -692,7 +692,7 @@ public class Entities
 
         try
         {
-            return (c.getConstructor(World.class)).newInstance(new Object[] { worldObj });
+            return (c.getConstructor(World.class)).newInstance(new Object[] { world });
         }
         catch (Exception e)
         {
@@ -726,7 +726,7 @@ public class Entities
             yDistance = (faced.getEntityBoundingBox().minY + faced.getEntityBoundingBox().maxY) / 2.0D - (facer.posY + facer.getEyeHeight());
         }
 
-        double d3 = MathHelper.sqrt_double(xDistance * xDistance + zDistance * zDistance);
+        double d3 = MathHelper.sqrt(xDistance * xDistance + zDistance * zDistance);
         float f2 = (float) (Math.atan2(zDistance, xDistance) * 180.0D / Math.PI) - 90.0F;
         float f3 = (float) (-(Math.atan2(yDistance, d3) * 180.0D / Math.PI));
         facer.rotationPitch = updateRotation(facer.rotationPitch, f3, maxPitch);
@@ -751,14 +751,14 @@ public class Entities
      */
     public static void applyCollision(Entity entity)
     {
-        int minX = MathHelper.floor_double(entity.getEntityBoundingBox().minX + 0.001D);
-        int minY = MathHelper.floor_double(entity.getEntityBoundingBox().minY + 0.001D);
-        int minZ = MathHelper.floor_double(entity.getEntityBoundingBox().minZ + 0.001D);
-        int maxX = MathHelper.floor_double(entity.getEntityBoundingBox().maxX - 0.001D);
-        int maxY = MathHelper.floor_double(entity.getEntityBoundingBox().maxY - 0.001D);
-        int maxZ = MathHelper.floor_double(entity.getEntityBoundingBox().maxZ - 0.001D);
+        int minX = MathHelper.floor(entity.getEntityBoundingBox().minX + 0.001D);
+        int minY = MathHelper.floor(entity.getEntityBoundingBox().minY + 0.001D);
+        int minZ = MathHelper.floor(entity.getEntityBoundingBox().minZ + 0.001D);
+        int maxX = MathHelper.floor(entity.getEntityBoundingBox().maxX - 0.001D);
+        int maxY = MathHelper.floor(entity.getEntityBoundingBox().maxY - 0.001D);
+        int maxZ = MathHelper.floor(entity.getEntityBoundingBox().maxZ - 0.001D);
 
-        if (entity.worldObj.isBlockLoaded(entity.getPosition()))
+        if (entity.world.isBlockLoaded(entity.getPosition()))
         {
             for (int x = minX; x <= maxX; ++x)
             {
@@ -767,12 +767,12 @@ public class Entities
                     for (int z = minZ; z <= maxZ; ++z)
                     {
                         BlockPos pos = new BlockPos(x, y, z);
-                        IBlockState blockstate = entity.worldObj.getBlockState(pos);
+                        IBlockState blockstate = entity.world.getBlockState(pos);
                         Block block = blockstate.getBlock();
 
                         try
                         {
-                            block.onEntityCollidedWithBlock(entity.worldObj, pos, blockstate, entity);
+                            block.onEntityCollidedWithBlock(entity.world, pos, blockstate, entity);
                         }
                         catch (Throwable throwable)
                         {
@@ -796,9 +796,9 @@ public class Entities
 
     public static boolean isInMaterial(Entity entity, Material material)
     {
-        if (entity != null && entity.worldObj != null && entity.getEntityBoundingBox() != null)
+        if (entity != null && entity.world != null && entity.getEntityBoundingBox() != null)
         {
-            return entity.worldObj.isMaterialInBB(entity.getEntityBoundingBox().expand(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), material);
+            return entity.world.isMaterialInBB(entity.getEntityBoundingBox().expand(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), material);
         }
 
         return false;
@@ -847,12 +847,12 @@ public class Entities
 
     public static Pos getSafeLocationAround(Entity toCheck, Pos around)
     {
-        ArrayList<Pos> potentialLocations = com.arisux.mdxlib.lib.world.block.Blocks.getCoordDataInRangeIncluding((int) around.x, (int) around.y, (int) around.z, 2, toCheck.worldObj, Blocks.AIR);
+        ArrayList<Pos> potentialLocations = com.arisux.mdxlib.lib.world.block.Blocks.getCoordDataInRangeIncluding((int) around.x, (int) around.y, (int) around.z, 2, toCheck.world, Blocks.AIR);
 
         for (Pos potentialLocation : potentialLocations)
         {
-            Block blockAt = potentialLocation.getBlock(toCheck.worldObj);
-            Block blockBelow = potentialLocation.add(0, -1, 0).getBlock(toCheck.worldObj);
+            Block blockAt = potentialLocation.getBlock(toCheck.world);
+            Block blockBelow = potentialLocation.add(0, -1, 0).getBlock(toCheck.world);
 
             if (blockAt != null && blockBelow != null)
             {
@@ -868,14 +868,14 @@ public class Entities
                         entityDepth = entityDepth < 1 ? 1 : entityDepth;
                         entityHeight = entityHeight < 1 ? 1 : entityHeight;
 
-                        Block blockAbove = potentialLocation.add(0, entityHeight, 0).getBlock(toCheck.worldObj);
+                        Block blockAbove = potentialLocation.add(0, entityHeight, 0).getBlock(toCheck.world);
 
                         if (isSafe(blockAbove))
                         {
-                            Block blockToLeft = potentialLocation.add(-entityWidth, 0, 0).getBlock(toCheck.worldObj);
-                            Block blockToRight = potentialLocation.add(entityWidth, 0, 0).getBlock(toCheck.worldObj);
-                            Block blockInFront = potentialLocation.add(0, 0, entityDepth).getBlock(toCheck.worldObj);
-                            Block blockInBack = potentialLocation.add(0, 0, -entityDepth).getBlock(toCheck.worldObj);
+                            Block blockToLeft = potentialLocation.add(-entityWidth, 0, 0).getBlock(toCheck.world);
+                            Block blockToRight = potentialLocation.add(entityWidth, 0, 0).getBlock(toCheck.world);
+                            Block blockInFront = potentialLocation.add(0, 0, entityDepth).getBlock(toCheck.world);
+                            Block blockInBack = potentialLocation.add(0, 0, -entityDepth).getBlock(toCheck.world);
 
                             if (isSafe(blockToLeft) && isSafe(blockToRight) && isSafe(blockInFront) && isSafe(blockInBack))
                             {

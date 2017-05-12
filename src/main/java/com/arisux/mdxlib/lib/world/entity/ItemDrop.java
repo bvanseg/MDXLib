@@ -122,7 +122,7 @@ public class ItemDrop
      */
     public boolean tryDrop(Entity entity, int rate, DropType type)
     {
-        if (!entity.worldObj.isRemote)
+        if (!entity.world.isRemote)
         {
             Random rand = new Random();
 

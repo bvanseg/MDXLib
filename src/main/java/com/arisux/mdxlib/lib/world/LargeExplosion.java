@@ -26,7 +26,7 @@ public class LargeExplosion
     private int                           erb;
     private int                           erm;
     private float                         damage;
-    private World                         worldObj;
+    private World                         world;
     private Random                        random;
     private ArrayList<Block>              excludedBlocks;
     private ArrayList<Material>           excludedMaterials;
@@ -37,24 +37,24 @@ public class LargeExplosion
         excludeDefault.add(Blocks.BEDROCK);
     }
 
-    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, long seed)
+    public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, long seed)
     {
-        this(worldObj, rX, rY, rZ, x, y, z, 1000F, seed, excludeDefault);
+        this(world, rX, rY, rZ, x, y, z, 1000F, seed, excludeDefault);
     }
 
-    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed)
+    public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed)
     {
-        this(worldObj, rX, rY, rZ, x, y, z, damage, seed, excludeDefault);
+        this(world, rX, rY, rZ, x, y, z, damage, seed, excludeDefault);
     }
 
-    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> exclude)
+    public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> exclude)
     {
-        this(worldObj, rX, rY, rZ, x, y, z, damage, seed, excludeDefault, null, 0, 0);
+        this(world, rX, rY, rZ, x, y, z, damage, seed, excludeDefault, null, 0, 0);
     }
 
-    public LargeExplosion(World worldObj, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> excludedBlocks, ArrayList<Material> excludedMaterials, int erb, int erm)
+    public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> excludedBlocks, ArrayList<Material> excludedMaterials, int erb, int erm)
     {
-        this.worldObj = worldObj;
+        this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -128,9 +128,9 @@ public class LargeExplosion
         this.process();
 
         // TODO: FIX SOUND
-        // worldObj.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+        // world.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-        List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB((double) x - rX, (double) y - rY, (double) z - rY, (double) x + rY, (double) y + rY, (double) z + rY));
+        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB((double) x - rX, (double) y - rY, (double) z - rY, (double) x + rY, (double) y + rY, (double) z + rY));
 
         for (int idx = 0; idx < entities.size(); ++idx)
         {
@@ -149,7 +149,7 @@ public class LargeExplosion
         int dY = (int) posY + this.y;
         int dZ = (int) posZ + this.z;
         BlockPos pos = new BlockPos(dX, dY, dZ);
-        IBlockState state = this.worldObj.getBlockState(pos);
+        IBlockState state = this.world.getBlockState(pos);
 
         if (excludedBlocks != null && (excludedBlocks.contains(state.getBlock()) && (erb > 0 && this.random.nextInt(this.erb) == 0 || erb == 0)) || state.getBlock() == Blocks.AIR)
         {
@@ -161,7 +161,7 @@ public class LargeExplosion
             return;
         }
 
-        state.getBlock().onBlockDestroyedByExplosion(this.worldObj, pos, new Explosion(this.worldObj, null, dX, dY, dZ, 1F, false, false));
-        this.worldObj.setBlockToAir(pos);
+        state.getBlock().onBlockDestroyedByExplosion(this.world, pos, new Explosion(this.world, null, dX, dY, dZ, 1F, false, false));
+        this.world.setBlockToAir(pos);
     }
 }

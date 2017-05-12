@@ -1126,7 +1126,7 @@ public class Draw
     public static void lightingHelper(Entity entity, float offset)
     {
 
-        int brightness = Worlds.getLightAtCoord(entity.worldObj, entity.getPosition());
+        int brightness = Worlds.getLightAtCoord(entity.world, entity.getPosition());
         OpenGL.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness % 65536, brightness / 65536);
         OpenGL.color(1.0F, 1.0F, 1.0F);
     }

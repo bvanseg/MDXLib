@@ -62,7 +62,7 @@ public class Players
      */
     public static void sendToChat(EntityPlayer player, String message)
     {
-        player.addChatComponentMessage(new TextComponentString(message));
+        player.sendMessage(new TextComponentString(message));
     }
 
     /**
@@ -81,13 +81,13 @@ public class Players
     /**
      * Returns an instance of EntityPlayer for the first player found with the specified username.
      * 
-     * @param worldObj - World instance to scan for players in.
+     * @param world - World instance to scan for players in.
      * @param username - Username to scan players for.
      * @return EntityPlayer instance of the specified player's username.
      */
-    public static EntityPlayer getPlayerForUsername(World worldObj, String username)
+    public static EntityPlayer getPlayerForUsername(World world, String username)
     {
-        for (Object player : worldObj.playerEntities)
+        for (Object player : world.playerEntities)
         {
             if (((EntityPlayer) player).getName().equalsIgnoreCase(username))
             {

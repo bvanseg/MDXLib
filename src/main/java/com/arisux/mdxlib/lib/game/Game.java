@@ -7,6 +7,8 @@ import com.arisux.mdxlib.MDX;
 import com.arisux.mdxlib.lib.world.entity.player.inventory.Inventories;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -92,13 +94,11 @@ public class Game
         return MDX.access().getLightmapTexture();
     }
 
-
     /** Easy way to gain access to the lightmap colors array. **/
     public static int[] getLightmapColors()
     {
         return MDX.access().getLightmapColors();
     }
-
 
     /** Allows for the developer to specify if a lightmap update is required. **/
     public static void setLightmapUpdateNeeded(boolean b)
@@ -106,13 +106,11 @@ public class Game
         MDX.access().setLightmapUpdateNeeded(b);
     }
 
-
     /** Get the boss color modifier. **/
     public static float getBossColorModifier()
     {
         return MDX.access().getBossColorModifier();
     }
-
 
     /** Get the torch flicker X variable. **/
     public static float getTorchFlickerX()
@@ -125,7 +123,6 @@ public class Game
     {
         return MDX.access().getTorchFlickerY();
     }
-
 
     /** Get the boss color modifier previous variable. **/
     public static float getBossColorModifierPrev()
@@ -257,21 +254,21 @@ public class Game
     {
         GameRegistry.register(item, new ResourceLocation(modid, identifier));
         item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        
+
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            Renderers.registerIcon(item);
+            Renderers.registerIconRenderer(item);
         }
-//        item.setRegistryName((item.getUnlocalizedName()).replace("item.", ""));
+        // item.setRegistryName((item.getUnlocalizedName()).replace("item.", ""));
 
         return item;
     }
-    
+
     public static Block register(String modid, Block block, String identifier)
     {
         return register(modid, block, identifier, null);
     }
-    
+
     public static Block register(String modid, Block block, String identifier, String texture)
     {
         block.setUnlocalizedName(String.format("%s:%s", modid, identifier));
@@ -279,18 +276,23 @@ public class Game
 
         ItemBlock item = new ItemBlock(block);
         item.setRegistryName(block.getRegistryName());
-        
         GameRegistry.register(item);
-        
+
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            Renderers.registerIcon(Item.getItemFromBlock(block));
+            if (!(block instanceof BlockStairs) && !(block instanceof BlockSlab))
+            {
+                Renderers.registerIconRenderer(Item.getItemFromBlock(block));
+            }
+            else
+            {
+                Renderers.registerBlockModel(block);
+            }
         }
-//        block.setRegistryName(texture == null ? (block.getUnlocalizedName()).replace("tile.", "") : texture);
 
         return block;
     }
-    
+
     public static Item getItem(Block block)
     {
         return Item.getItemFromBlock(block);

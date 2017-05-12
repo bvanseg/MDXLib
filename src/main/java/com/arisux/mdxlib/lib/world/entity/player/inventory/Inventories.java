@@ -32,7 +32,7 @@ public class Inventories
                     entity.motionY = (4F + world.rand.nextFloat()) * velocity;
                     entity.motionZ = (-0.5F + world.rand.nextFloat()) * velocity;
 
-                    world.spawnEntityInWorld(entity);
+                    world.spawnEntity(entity);
                 }
             }
         }

@@ -206,7 +206,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public void setupViewBobbing(float partialTicks)
     {
-        Game.minecraft().entityRenderer.setupViewBobbing(partialTicks);        
+        Game.minecraft().entityRenderer.applyBobbing(partialTicks);        
     }
 
     @Deprecated

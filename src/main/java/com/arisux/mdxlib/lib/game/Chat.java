@@ -38,16 +38,16 @@ public class Chat
 
     public static void sendTo(EntityPlayer player, String message)
     {
-        player.addChatMessage(component(message));
+        player.sendMessage(component(message));
     }
 
     public static void sendTo(EntityPlayer player, TextComponentString component)
     {
-        player.addChatMessage(component);
+        player.sendMessage(component);
     }
 
     public static void sendTo(ICommandSender sender, TextComponentString component)
     {
-        sender.addChatMessage(component);
+        sender.sendMessage(component);
     }
 }
