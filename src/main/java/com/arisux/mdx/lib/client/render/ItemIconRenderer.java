@@ -25,14 +25,15 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
         {
             ResourceLocation registryName = item.getRegistryName();
             String domain = registryName.getResourceDomain();
-            String path = String.format("%s\\%s.png", getIconDirectory(), registryName.getResourcePath());
+            String path = String.format("%s/%s.png", getIconDirectory(), registryName.getResourcePath());
+            System.out.println(String.format("DOMAIN(%s) PATH(%s) RESOURCE(%s)", domain, registryName.getResourcePath(), new ResourceLocation(domain, path)));
 
             return new ResourceLocation(domain, path);
         }
 
         public String getIconDirectory()
         {
-            return String.format("textures\\%s", this.type);
+            return String.format("textures/%s", this.type);
         }
     }
 
@@ -94,7 +95,7 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
         OpenGL.translate(0.5F, -0.5F, 0F);
         OpenGL.rotate(180F, 0, 1, 0);
         OpenGL.disableStandardItemLighting();
-        Draw.bindTexture(icon);
+        Draw.bindTexture(this.icon);
         Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
         OpenGL.enableStandardItemLighting();
         OpenGL.popMatrix();
