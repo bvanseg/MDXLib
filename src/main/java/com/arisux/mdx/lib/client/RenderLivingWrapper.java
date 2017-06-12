@@ -1,8 +1,7 @@
 package com.arisux.mdx.lib.client;
 
-import com.arisux.mdx.lib.game.Game;
-
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,14 +12,14 @@ public abstract class RenderLivingWrapper<T extends EntityLiving, MODEL extends 
 {
     protected TexturedModel<MODEL> model;
     
-    public RenderLivingWrapper(TexturedModel<MODEL> model)
+    public RenderLivingWrapper(RenderManager m, TexturedModel<MODEL> model)
     {
-        this(model, 0F);
+        this(m, model, 0F);
     }
     
-    public RenderLivingWrapper(TexturedModel<MODEL> model, float shadowSize)
+    public RenderLivingWrapper(RenderManager m, TexturedModel<MODEL> model, float shadowSize)
     {
-        super(Game.minecraft().getRenderManager(), model.getModel(), shadowSize);
+        super(m, model.getModel(), shadowSize);
         this.model = model;
     }
 
