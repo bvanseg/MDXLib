@@ -4,6 +4,7 @@ import com.arisux.mdx.lib.client.GUIElementTracker;
 import com.arisux.mdx.lib.client.Notification;
 import com.arisux.mdx.lib.client.NotifierModule;
 import com.arisux.mdx.lib.game.Game;
+import com.arisux.mdx.lib.game.IMod;
 import com.arisux.mdx.lib.game.IdentityRemapModule;
 import com.arisux.mdx.lib.game.Renderers;
 import com.arisux.mdx.lib.util.Remote;
@@ -32,7 +33,7 @@ public class MDXModule
     }
 
     @EventHandler
-    public void pre(FMLPreInitializationEvent event)
+    public void pre(IMod mod, FMLPreInitializationEvent event)
     {
         this.enable();
 
@@ -43,7 +44,7 @@ public class MDXModule
 
         systemInfo.runtimeTasks();
         Console.preInit();
-        Settings.instance.pre(event);
+        Settings.instance.pre(mod, event);
         Game.registerEventHandler(StructureGenerationHandler.instance);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
@@ -54,7 +55,7 @@ public class MDXModule
     }
     
     @EventHandler
-    public void init(FMLInitializationEvent event)
+    public void init(IMod mod, FMLInitializationEvent event)
     {
         if (!enable)
         {
@@ -66,7 +67,7 @@ public class MDXModule
     }
 
     @EventHandler
-    public void post(FMLPostInitializationEvent event)
+    public void post(IMod mod, FMLPostInitializationEvent event)
     {
         if (!enable)
         {
@@ -74,7 +75,7 @@ public class MDXModule
         }
 
         Console.postInit();
-        Renderers.INSTANCE.post(event);
+        Renderers.INSTANCE.post(mod, event);
         Console.postInitComplete();
 
         if (Settings.instance.isStartupNotificationEnabled())

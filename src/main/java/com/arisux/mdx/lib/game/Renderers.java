@@ -124,7 +124,7 @@ public class Renderers implements IPostInitEvent
     }
 
     @Override
-    public void post(FMLPostInitializationEvent event)
+    public void post(IMod mod, FMLPostInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(this);
     }

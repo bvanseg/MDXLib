@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.IInitEvent;
+import com.arisux.mdx.lib.game.IMod;
 import com.arisux.mdx.lib.game.IPreInitEvent;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -62,13 +63,13 @@ public class JsonResourceGenerator implements IPreInitEvent, IInitEvent
     }
 
     @Override
-    public void init(FMLInitializationEvent event)
+    public void init(IMod mod, FMLInitializationEvent event)
     {
 
     }
 
     @Override
-    public void pre(FMLPreInitializationEvent event)
+    public void pre(IMod mod, FMLPreInitializationEvent event)
     {
         try
         {
