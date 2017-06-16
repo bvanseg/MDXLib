@@ -63,13 +63,13 @@ public class JsonResourceGenerator implements IPreInitEvent, IInitEvent
     }
 
     @Override
-    public void init(IMod mod, FMLInitializationEvent event)
+    public void init(FMLInitializationEvent event)
     {
 
     }
 
     @Override
-    public void pre(IMod mod, FMLPreInitializationEvent event)
+    public void pre(FMLPreInitializationEvent event)
     {
         try
         {

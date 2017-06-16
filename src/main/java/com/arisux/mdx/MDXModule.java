@@ -1,12 +1,9 @@
 package com.arisux.mdx;
 
 import com.arisux.mdx.lib.client.GUIElementTracker;
-import com.arisux.mdx.lib.client.Notification;
 import com.arisux.mdx.lib.client.NotifierModule;
 import com.arisux.mdx.lib.game.Game;
-import com.arisux.mdx.lib.game.IMod;
 import com.arisux.mdx.lib.game.IdentityRemapModule;
-import com.arisux.mdx.lib.game.Renderers;
 import com.arisux.mdx.lib.util.Remote;
 import com.arisux.mdx.lib.util.SystemInfo;
 import com.arisux.mdx.lib.world.StructureGenerationHandler;
@@ -23,9 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid = MDX.MODID, version = MDX.VERSION)
 public class MDXModule
 {
-    private static MDX       instance   = new MDX();
-    public static boolean    enable     = true;
-    private final SystemInfo systemInfo = new SystemInfo();
+    private static MDX     instance = new MDX();
+    private static boolean enabled  = true;
 
     public static MDX instance()
     {
@@ -33,18 +29,18 @@ public class MDXModule
     }
 
     @EventHandler
-    public void pre(IMod mod, FMLPreInitializationEvent event)
+    public void pre(FMLPreInitializationEvent event)
     {
         this.enable();
 
-        if (!enable)
+        if (!enabled)
         {
             return;
         }
 
-        systemInfo.runtimeTasks();
-        Console.preInit();
-        Settings.instance.pre(mod, event);
+        SystemInfo.instance.runtimeTasks();
+        MDX.console().pre(event);
+        MDX.settings().pre(event);
         Game.registerEventHandler(StructureGenerationHandler.instance);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
@@ -53,49 +49,35 @@ public class MDXModule
             Game.registerEventHandler(GUIElementTracker.instance);
         }
     }
-    
+
     @EventHandler
-    public void init(IMod mod, FMLInitializationEvent event)
+    public void init(FMLInitializationEvent event)
     {
-        if (!enable)
+        if (!enabled)
         {
             return;
         }
 
-        Console.copyright();
-        Console.init();
+        MDX.console().init(event);
     }
 
     @EventHandler
-    public void post(IMod mod, FMLPostInitializationEvent event)
+    public void post(FMLPostInitializationEvent event)
     {
-        if (!enable)
+        if (!enabled)
         {
             return;
         }
 
-        Console.postInit();
-        Renderers.INSTANCE.post(mod, event);
-        Console.postInitComplete();
-
-        if (Settings.instance.isStartupNotificationEnabled())
-        {
-            MDX.sendNotification(new Notification()
-            {
-                @Override
-                public String getMessage()
-                {
-                    return "Notifications may pop up here throughout gameplay. These notifications will explain how certain features of the game work. You can disable these notifications in the settings.";
-                }
-            });
-            Settings.instance.disableStartupNotification();
-        }
+        MDX.console().post(event);
+        MDX.renders().post(event);
+        MDX.notifications().onStartup();
     }
 
     @EventHandler
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
-        if (!enable)
+        if (!enabled)
         {
             return;
         }
@@ -109,8 +91,13 @@ public class MDXModule
         {
             if (Remote.authorized())
             {
-                MDXModule.enable = false;
+                MDXModule.enabled = false;
             }
         }
+    }
+
+    public static boolean enabled()
+    {
+        return enabled;
     }
 }

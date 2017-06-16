@@ -3,32 +3,35 @@ package com.arisux.mdx;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Console
+import com.arisux.mdx.lib.game.IInitEvent;
+import com.arisux.mdx.lib.game.IPostInitEvent;
+import com.arisux.mdx.lib.game.IPreInitEvent;
+
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
+public class Console implements IPreInitEvent, IInitEvent, IPostInitEvent
 {
-    public static Logger logger = LogManager.getLogger("MDX");
+    public static final Console instance = new Console();
+    public static final Logger  logger   = LogManager.getLogger("MDX");
 
-    public static void copyright()
-    {
-        logger.info("Copyright(C) 2016-2017 ASX");
-    }
-
-    public static void preInit()
-    {
-        logger.info("Preparing to initialize...");
-    }
-
-    public static void init()
-    {
-        logger.info("Initializing...");
-    }
-
-    public static void postInit()
+    @Override
+    public void post(FMLPostInitializationEvent event)
     {
         logger.info("Initialized. Running post initialization tasks...");
     }
 
-    public static void postInitComplete()
+    @Override
+    public void init(FMLInitializationEvent event)
     {
-        logger.info("Initialization complete.");
+        logger.info("Copyright(C) 2016-2017 ASX");
+        logger.info("Initializing...");
+    }
+
+    @Override
+    public void pre(FMLPreInitializationEvent event)
+    {
+        logger.info("Preparing to initialize...");
     }
 }

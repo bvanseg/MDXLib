@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.arisux.mdx.MDX;
+import com.arisux.mdx.lib.client.WavefrontModelLoader;
 import com.arisux.mdx.lib.client.render.Color;
 import com.arisux.mdx.lib.client.render.Normal;
 import com.arisux.mdx.lib.client.render.UV;
@@ -354,7 +355,7 @@ public class TriangulatedWavefrontModel
      */
     public static Part getPart(String modelName, String partName)
     {
-        TriangulatedWavefrontModel model = MDX.getWavefrontModel(modelName);
+        TriangulatedWavefrontModel model = WavefrontModelLoader.get(modelName);
         return model != null ? model.getPart(partName) : null;
     }
 }

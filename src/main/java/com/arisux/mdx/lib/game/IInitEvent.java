@@ -6,5 +6,5 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 public interface IInitEvent
 {
     @Mod.EventHandler
-    public void init(IMod mod, FMLInitializationEvent event);
+    public void init(FMLInitializationEvent event);
 }

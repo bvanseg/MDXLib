@@ -2,7 +2,6 @@ package com.arisux.mdx;
 
 import java.io.File;
 
-import com.arisux.mdx.lib.game.IMod;
 import com.arisux.mdx.lib.game.IPreInitEvent;
 
 import net.minecraftforge.common.config.Configuration;
@@ -19,7 +18,7 @@ public class Settings implements IPreInitEvent
 
     @Override
     @EventHandler
-    public void pre(IMod mod, FMLPreInitializationEvent evt)
+    public void pre(FMLPreInitializationEvent evt)
     {
         configuration = new Configuration(new File(evt.getModConfigurationDirectory(), "mdx.config"));
 

@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Renderers implements IPostInitEvent
 {
-    public static Renderers                          INSTANCE       = new Renderers();
+    public static final Renderers                    instance       = new Renderers();
     private final HashMap<Item, ItemRenderer<?>>     ITEM_RENDERERS = new HashMap<Item, ItemRenderer<?>>();
     private final HashMap<Item, ItemIconRenderer<?>> ICON_RENDERERS = new HashMap<Item, ItemIconRenderer<?>>();
 
@@ -39,7 +39,7 @@ public class Renderers implements IPostInitEvent
     {
         return modelManager().getBlockModelShapes();
     }
-    
+
     /**
      * A better way of registering entity renderers.
      */
@@ -66,7 +66,7 @@ public class Renderers implements IPostInitEvent
             }
         });
     }
-    
+
     /**
      * Working replacement for ItemRenderer, but should only be used in rare cases when
      * the built in rendering system is not sufficient.
@@ -81,7 +81,7 @@ public class Renderers implements IPostInitEvent
 
         if (getItemRenderer(item) == null)
         {
-            INSTANCE.ITEM_RENDERERS.put(item, renderer);
+            instance.ITEM_RENDERERS.put(item, renderer);
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }
@@ -98,16 +98,16 @@ public class Renderers implements IPostInitEvent
 
         if (getItemRenderer(item) == null)
         {
-            INSTANCE.ICON_RENDERERS.put(item, renderer);
+            instance.ICON_RENDERERS.put(item, renderer);
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }
 
     public static ItemRenderer<?> getItemRenderer(Item item)
     {
-        if (INSTANCE.ITEM_RENDERERS.containsKey(item))
+        if (instance.ITEM_RENDERERS.containsKey(item))
         {
-            return INSTANCE.ITEM_RENDERERS.get(item);
+            return instance.ITEM_RENDERERS.get(item);
         }
 
         return null;
@@ -115,16 +115,16 @@ public class Renderers implements IPostInitEvent
 
     public static ItemRenderer<?> getIconRenderer(Item item)
     {
-        if (INSTANCE.ICON_RENDERERS.containsKey(item))
+        if (instance.ICON_RENDERERS.containsKey(item))
         {
-            return INSTANCE.ICON_RENDERERS.get(item);
+            return instance.ICON_RENDERERS.get(item);
         }
 
         return null;
     }
 
     @Override
-    public void post(IMod mod, FMLPostInitializationEvent event)
+    public void post(FMLPostInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(this);
     }

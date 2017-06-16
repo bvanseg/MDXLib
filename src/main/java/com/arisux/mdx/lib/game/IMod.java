@@ -6,7 +6,4 @@ public interface IMod
 {
     /** Return the mod's ModContainer instance **/
     public ModContainer container();
-
-    /** Return the mod's domain. EXAMPLE: "amdlibx:" **/
-    public String domain();
 }

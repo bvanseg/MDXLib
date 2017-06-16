@@ -14,6 +14,7 @@ import com.arisux.mdx.lib.client.render.OpenGL;
 
 public class SystemInfo
 {
+    public static final SystemInfo              instance  = new SystemInfo();
     public static int                           bytesUnit = 1024;
     public static Enumeration<NetworkInterface> networkAdapters;
     private static String                       processorName;
@@ -80,7 +81,7 @@ public class SystemInfo
                     if (!line.isEmpty())
                     {
                         line = StringUtils.deleteWhitespace(line);
-                        
+
                         if (StringUtils.isNumeric(line))
                         {
                             memoryCapacity = memoryCapacity + Long.parseLong(line);
@@ -110,7 +111,7 @@ public class SystemInfo
 
         return null;
     }
-    
+
     public static long getMemoryCapacity()
     {
         return memoryCapacity;

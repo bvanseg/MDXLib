@@ -16,9 +16,9 @@ public class NotifierModule
     @SubscribeEvent
     public void tick(TickEvent.ClientTickEvent event)
     {
-        if (currentNotification == null && MDX.getNotificationsInQueue().size() > 0)
+        if (currentNotification == null && MDX.notifications().queue().size() > 0)
         {
-            currentNotification = MDX.getNotificationsInQueue().get(0);
+            currentNotification = MDX.notifications().queue().get(0);
         }
 
         if (System.currentTimeMillis() % 2 == 0)

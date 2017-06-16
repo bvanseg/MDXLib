@@ -76,7 +76,7 @@ public abstract class Notification
 
     public void timeoutAction()
     {
-        MDX.getNotificationsInQueue().remove(this);
+        MDX.notifications().queue().remove(this);
         NotifierModule.currentNotification = null;
         this.ticksExisted = 0;
     }
@@ -99,7 +99,7 @@ public abstract class Notification
         OpenGL.pushMatrix();
         {
             OpenGL.scale(textScale, textScale, textScale);
-            Draw.drawString(String.format("Notification %s of %s", MDX.getNotificationsInQueue().indexOf(NotifierModule.currentNotification) + 1, MDX.getNotificationsInQueue().size()), (int) ((x + pad - 3) / textScale), (int) ((y + pad - 3) / textScale) + (lineSpacing * lineIndex), 0x66FFFFFF, false);
+            Draw.drawString(String.format("Notification %s of %s", MDX.notifications().queue().indexOf(NotifierModule.currentNotification) + 1, MDX.notifications().queue().size()), (int) ((x + pad - 3) / textScale), (int) ((y + pad - 3) / textScale) + (lineSpacing * lineIndex), 0x66FFFFFF, false);
             Draw.drawString(tickString, (int) ((x + width - pad + 3 - (tickStringWidth * textScale)) / textScale), (int) ((y + pad - 3) / textScale) + (lineSpacing * lineIndex), 0x66FFFFFF, false);
 
             for (String line : lines)
