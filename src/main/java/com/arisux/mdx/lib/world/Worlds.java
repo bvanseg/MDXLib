@@ -93,7 +93,7 @@ public class Worlds
 
         return Math.max(block, sky);
     }
-    
+
     @Deprecated
     public static int getLightAtCoord(World world, Pos pos)
     {
@@ -152,11 +152,10 @@ public class Worlds
     {
         for (int i = 0; i < genPerChunk; ++i)
         {
-            // TODO: Verify
-            // int posX = (int) chunkCoord.x + seed.nextInt(16);
-            // int posY = levelStart + seed.nextInt(levelEnd);
-            // int posZ = (int) chunkCoord.z + seed.nextInt(16);
-            generator.generate(world, seed, pos);
+            int x = (int) pos.getX() + seed.nextInt(16);
+            int y = levelStart + seed.nextInt(levelEnd);
+            int z = (int) pos.getZ() + seed.nextInt(16);
+            generator.generate(world, seed, new BlockPos(x, y, z));
         }
     }
 
@@ -198,6 +197,16 @@ public class Worlds
                 generateInChunk(world, generator, seed, genPerChunk, levelStart, levelEnd, pos);
             }
         }
+    }
+
+    public static BlockPos randPos(Random seed, BlockPos pos, int width, int height)
+    {
+        return new BlockPos(pos.getX() + seed.nextInt(width), pos.getY() + seed.nextInt(height), pos.getZ() + seed.nextInt(width));
+    }
+
+    public static BlockPos randChunkPos(Random seed, BlockPos pos)
+    {
+        return randPos(seed, pos, 16, 128);
     }
 
     public static Entity getEntityByUUID(World world, UUID uuid)
