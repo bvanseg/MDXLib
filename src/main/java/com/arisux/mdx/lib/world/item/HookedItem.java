@@ -2,6 +2,7 @@ package com.arisux.mdx.lib.world.item;
 
 import java.util.List;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,11 +11,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HookedItem extends Item
 {
-    private String description;
+    public HookedItem()
+    {
+        super();
+    }
 
     public Item setDescription(String desc)
     {
-        this.description = desc;
         return this;
     }
 
@@ -23,11 +26,18 @@ public class HookedItem extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        if (description != null)
+        String descriptionKey = String.format("%s.desc", this.getUnlocalizedName());
+
+        if (descriptionKey != null)
         {
-            for (String line : this.description.split("\n"))
+            String[] lines = I18n.format(descriptionKey).split("/n");
+
+            for (String line : lines)
             {
-                list.add(line);
+                if (!line.equals(descriptionKey))
+                {
+                    list.add(line);
+                }
             }
         }
     }
