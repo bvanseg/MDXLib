@@ -59,7 +59,7 @@ minecraft {
     runDir = "run"
     mappings = version_mappings
     
-    replace "@VERSION@", "${version}" 
+    replace "@VERSION@", "${project.version}" 
     replaceIn 'MDX.java'
 }
 
