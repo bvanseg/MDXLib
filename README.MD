@@ -6,7 +6,7 @@ MDX Library (Minecraft Development Library X)
 * [Issues]
 
 ## Prerequisites ##
-* [Java Development Kit 7 or Newer]
+* [Java Development Kit 8 or Newer]
 * [Gradle]
 
 ## Contributing ##
@@ -47,12 +47,6 @@ If you experience any new errors, it may be due to a dependency change. Please r
 
 ## Building the Project ##
 
-Before you can initiate the build process, you must create a new text document with the name `gradle.properties` in the 
-root directory of the repository. Then add `curseForgeApiKey=00000-00000-00000-00000-00000` to the start of the configuration
-and save it.
-
-__Note:__ If the above entry is not added, the build process will fail.
-
 To initiate the build process, run `gradle build`.
 You can find the compiled project artifact in `./build/libs`.
 
@@ -62,4 +56,4 @@ You can find the compiled project artifact in `./build/libs`.
 [IntelliJ IDEA]: https://www.jetbrains.com/idea/
 [Eclipse]: https://www.eclipse.org/
 [Gradle]: https://www.gradle.org/
-[Java Development Kit 7 or Newer]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+[Java Development Kit 8 or Newer]: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
