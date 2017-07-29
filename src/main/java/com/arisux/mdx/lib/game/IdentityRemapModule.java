@@ -45,9 +45,9 @@ public class IdentityRemapModule
         IdentityRemapModule.getRemappedIdentities().add(new IdentityMap(oldID, newID, new ModIdentityMap(modId)));
     }
 
-    public static void replaceMapping(MissingMapping mapping, String oldID, String newID)
+    public static void replaceMapping(MissingMapping mapping, String domain, String oldID, String newID)
     {
-        ResourceLocation newName = new ResourceLocation((mapping.name).replace(oldID, newID));
+        ResourceLocation newName = new ResourceLocation(domain, (mapping.name).replace(mapping.name, newID));
 
         /** Check for and replace missing item mappings **/
         if (mapping.type == GameRegistry.Type.ITEM)
@@ -108,7 +108,7 @@ public class IdentityRemapModule
                     {
                         if (Class.forName(mod.getClassLocation()) != null)
                         {
-                            IdentityRemapModule.replaceMapping(mapping, mod.getInvalidIdentity() + ":", mod.getValidIdentity() + ":");
+                            IdentityRemapModule.replaceMapping(mapping, mod.getValidIdentity(), mod.getInvalidIdentity() + ":", mod.getValidIdentity() + ":");
                         }
                     }
                     catch (ClassNotFoundException e)
@@ -126,7 +126,7 @@ public class IdentityRemapModule
                     {
                         if (Class.forName(newMapping.getModIdentityMap().getClassLocation()) != null)
                         {
-                            IdentityRemapModule.replaceMapping(mapping, newMapping.getInvalidIdentity(), newMapping.getValidIdentity());
+                            IdentityRemapModule.replaceMapping(mapping, newMapping.modIdentityMap.getValidIdentity(), newMapping.getInvalidIdentity(), newMapping.getValidIdentity());
                         }
                     }
                     catch (ClassNotFoundException e)

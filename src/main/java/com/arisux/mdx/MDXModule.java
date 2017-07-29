@@ -2,6 +2,7 @@ package com.arisux.mdx;
 
 import com.arisux.mdx.lib.client.GUIElementTracker;
 import com.arisux.mdx.lib.client.NotifierModule;
+import com.arisux.mdx.lib.game.CommandHandler;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.IdentityRemapModule;
 import com.arisux.mdx.lib.util.Remote;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = MDX.MODID, version = MDX.VERSION)
@@ -59,6 +61,18 @@ public class MDXModule
         }
 
         MDX.console().init(event);
+        CommandHandler.instance.init(event);
+    }
+
+    @EventHandler
+    public void onServerStarting(FMLServerStartingEvent event)
+    {
+        if (!enabled)
+        {
+            return;
+        }
+
+        CommandHandler.instance.onServerStarting(event);
     }
 
     @EventHandler
