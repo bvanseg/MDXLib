@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL12;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.world.tile.IRotatable;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -35,6 +36,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+//DO NOT WRAP GL11, Instead wrap GlStateManager
 public class OpenGL
 {
     public static ArrayList<Framebuffer> frameBuffers = new ArrayList<Framebuffer>();
@@ -129,12 +131,13 @@ public class OpenGL
 
     public static void enableBlend()
     {
-        enable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
+        GlStateManager.enableBlend();
     }
 
     public static void disableBlend()
     {
-        disable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
     }
 
     public static void color(float r, float g, float b)
