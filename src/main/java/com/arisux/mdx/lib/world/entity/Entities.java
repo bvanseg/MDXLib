@@ -943,4 +943,23 @@ public class Entities
         AxisAlignedBB box = skipBoundsCheck ? null : blockstate.getCollisionBoundingBox(world, pos);
         return box != null && !world.checkNoEntityCollision(box, entity) ? false : (blockstate.getMaterial() == Material.CIRCUITS && block == Blocks.ANVIL ? true : blockstate.getBlock().isReplaceable(world, pos) && block.canReplace(world, pos, side, stack));
     }
+
+    public static EnumFacing getDirectionFacing(Entity entity)
+    {
+        int dir = MathHelper.floor((entity.rotationYaw / 90) + 0.5) & 3;
+
+        switch (dir)
+        {
+        case 0:
+            return EnumFacing.SOUTH;
+        case 1:
+            return EnumFacing.WEST;
+        case 2:
+            return EnumFacing.NORTH;
+        case 3:
+            return EnumFacing.EAST;
+        default:
+            return EnumFacing.NORTH;
+        }
+    }
 }
