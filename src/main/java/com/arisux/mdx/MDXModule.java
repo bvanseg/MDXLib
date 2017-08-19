@@ -1,7 +1,9 @@
 package com.arisux.mdx;
 
+import com.arisux.mdx.MDX.Properties;
 import com.arisux.mdx.lib.client.GUIElementTracker;
 import com.arisux.mdx.lib.client.NotifierModule;
+import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
 import com.arisux.mdx.lib.game.CommandHandler;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.IdentityRemapModule;
@@ -9,6 +11,7 @@ import com.arisux.mdx.lib.util.Remote;
 import com.arisux.mdx.lib.util.SystemInfo;
 import com.arisux.mdx.lib.world.StructureGenerationHandler;
 
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -19,7 +22,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = MDX.MODID, version = MDX.VERSION)
+@Mod(modid = Properties.ID, version = Properties.VERSION)
 public class MDXModule
 {
     private static MDX     instance = new MDX();
@@ -47,6 +50,7 @@ public class MDXModule
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
+            ModelLoaderRegistry.registerLoader(DummyModelLoader.INSTANCE);
             Game.registerEventHandler(NotifierModule.instance);
             Game.registerEventHandler(GUIElementTracker.instance);
         }

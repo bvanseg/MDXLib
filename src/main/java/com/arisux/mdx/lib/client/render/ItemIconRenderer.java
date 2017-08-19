@@ -26,7 +26,7 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
             ResourceLocation registryName = item.getRegistryName();
             String domain = registryName.getResourceDomain();
             String path = String.format("%s/%s.png", getIconDirectory(), registryName.getResourcePath());
-            System.out.println(String.format("DOMAIN(%s) PATH(%s) RESOURCE(%s)", domain, registryName.getResourcePath(), new ResourceLocation(domain, path)));
+            //System.out.println(String.format("DOMAIN(%s) PATH(%s) RESOURCE(%s)", domain, registryName.getResourcePath(), new ResourceLocation(domain, path)));
 
             return new ResourceLocation(domain, path);
         }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.client.render.ItemIconRenderer;
 import com.arisux.mdx.lib.client.render.ItemRenderer;
+import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
+import com.arisux.mdx.lib.client.render.model.DummyModelLoader.Type;
 
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.block.model.ModelManager;
@@ -53,7 +55,6 @@ public class Renderers implements IPostInitEvent
                 try
                 {
                     Render<E> render = (Render<E>) (renderer.getConstructor(RenderManager.class)).newInstance(new Object[] { m });
-                    MDX.log().info("Registered entity renderer for " + entityClass + ": " + render);
                     return render;
                 }
                 catch (Exception e)
@@ -99,6 +100,7 @@ public class Renderers implements IPostInitEvent
         if (getItemRenderer(item) == null)
         {
             instance.ICON_RENDERERS.put(item, renderer);
+            DummyModelLoader.INSTANCE.registerDummy(Type.ITEM, item.getRegistryName());
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }

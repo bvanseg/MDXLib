@@ -18,11 +18,13 @@ import com.arisux.mdx.lib.util.Remote;
 import com.arisux.mdx.lib.world.Worlds;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
@@ -1119,6 +1121,24 @@ public class Draw
     public static String getResourcePath(ResourceLocation resource)
     {
         return String.format("%s:%s", resource.getResourceDomain(), resource.getResourcePath());
+    }
+    
+    public static ResourceLocation getMissingTexture()
+    {
+        return getResourceLocationPartialPath(Game.minecraft().getTextureMapBlocks().getMissingSprite());
+    }
+
+    public static ResourceLocation getResourceLocationFullPath(TextureAtlasSprite sprite)
+    {
+        Minecraft mc = Game.minecraft();
+        ResourceLocation r = new ResourceLocation(sprite.getIconName());
+        return new ResourceLocation(r.getResourceDomain(), String.format("%s/%s%s", new Object[] { mc.getTextureMapBlocks().getBasePath(), r.getResourcePath(), ".png" }));
+    }
+
+    public static ResourceLocation getResourceLocationPartialPath(TextureAtlasSprite sprite)
+    {
+        ResourceLocation r = new ResourceLocation(sprite.getIconName());
+        return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
     }
 
     public static final GuiCustomScreen guiHook = new GuiCustomScreen();

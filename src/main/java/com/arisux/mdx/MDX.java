@@ -8,11 +8,16 @@ import com.arisux.mdx.lib.game.Renderers;
 
 public class MDX
 {
-    public static final String MODID   = "mdxlib";
-    public static final String VERSION = "@VERSION@";
+    public static class Properties
+    {
+        public static final String NAME = "MDXLib";
+        public static final String ID = "mdxlib";
+        public static final String DOMAIN = ID + ":";
+        public static final String VERSION = "@VERSION@";
+    }
 
     /** Provides access to core Minecraft methods that have restricted access **/
-    private static Access      access;
+    private static Access access;
 
     public MDX()
     {
