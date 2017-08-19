@@ -67,7 +67,7 @@ public class Schematic
 
         if (!idMap.isEmpty())
         {
-            System.out.println("Schematic is missing mappings: " + file);
+            MDX.log().info("Schematic is missing mappings: " + file);
         }
 
         this.idMap = idMap;
