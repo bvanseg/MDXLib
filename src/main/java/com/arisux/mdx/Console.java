@@ -25,7 +25,7 @@ public class Console implements IPreInitEvent, IInitEvent, IPostInitEvent
     @Override
     public void init(FMLInitializationEvent event)
     {
-        logger.info("Minecraft Development Library X Copyright\u00A9 2016-2017 ASX");
+        logger.info("Minecraft Development Library X Copyright \u00A9 2016-2017 ASX");
         logger.info("Initializing...");
     }
 
