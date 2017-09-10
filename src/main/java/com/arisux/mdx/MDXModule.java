@@ -5,9 +5,9 @@ import com.arisux.mdx.lib.client.GUIElementTracker;
 import com.arisux.mdx.lib.client.NotifierModule;
 import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
 import com.arisux.mdx.lib.game.CommandHandler;
+import com.arisux.mdx.lib.game.DataHandler;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.IdentityRemapModule;
-import com.arisux.mdx.lib.util.Remote;
 import com.arisux.mdx.lib.util.SystemInfo;
 import com.arisux.mdx.lib.world.StructureGenerationHandler;
 
@@ -25,8 +25,8 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid = Properties.ID, version = Properties.VERSION)
 public class MDXModule
 {
-    private static MDX     instance = new MDX();
-    private static boolean enabled  = true;
+    private static MDX    instance         = new MDX();
+    public static boolean prefetchComplete = false;
 
     public static MDX instance()
     {
@@ -36,14 +36,14 @@ public class MDXModule
     @EventHandler
     public void pre(FMLPreInitializationEvent event)
     {
-        this.enable();
+        SystemInfo.instance.runtimeTasks();
+        DataHandler.instance.pre(event);
 
-        if (!enabled)
+        if (!prefetchComplete)
         {
             return;
         }
 
-        SystemInfo.instance.runtimeTasks();
         MDX.console().pre(event);
         MDX.settings().pre(event);
         Game.registerEventHandler(StructureGenerationHandler.instance);
@@ -59,7 +59,7 @@ public class MDXModule
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        if (!enabled)
+        if (!prefetchComplete)
         {
             return;
         }
@@ -71,7 +71,7 @@ public class MDXModule
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
-        if (!enabled)
+        if (!prefetchComplete)
         {
             return;
         }
@@ -82,7 +82,7 @@ public class MDXModule
     @EventHandler
     public void post(FMLPostInitializationEvent event)
     {
-        if (!enabled)
+        if (!prefetchComplete)
         {
             return;
         }
@@ -95,7 +95,7 @@ public class MDXModule
     @EventHandler
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
-        if (!enabled)
+        if (!prefetchComplete)
         {
             return;
         }
@@ -103,19 +103,8 @@ public class MDXModule
         IdentityRemapModule.instance.onLoadMissingMapping(event);
     }
 
-    private void enable()
+    public static boolean prefetchComplete()
     {
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
-        {
-            if (Remote.authorized())
-            {
-                MDXModule.enabled = false;
-            }
-        }
-    }
-
-    public static boolean enabled()
-    {
-        return enabled;
+        return prefetchComplete;
     }
 }

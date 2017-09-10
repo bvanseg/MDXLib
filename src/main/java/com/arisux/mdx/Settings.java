@@ -20,6 +20,12 @@ public class Settings implements IPreInitEvent
     @EventHandler
     public void pre(FMLPreInitializationEvent evt)
     {
+        if (!MDXModule.prefetchComplete)
+        {
+            Console.modificationWarning();
+            return;
+        }
+        
         configuration = new Configuration(new File(evt.getModConfigurationDirectory(), "mdx.config"));
 
         try

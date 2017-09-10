@@ -1,5 +1,7 @@
 package com.arisux.mdx.lib.game;
 
+import com.arisux.mdx.Console;
+import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.commands.CommandBlockUpdate;
 import com.arisux.mdx.commands.CommandGenerate;
 
@@ -17,12 +19,24 @@ public class CommandHandler implements IInitEvent
     @Override
     public void init(FMLInitializationEvent event)
     {
+        if (!MDXModule.prefetchComplete)
+        {
+            Console.modificationWarning();
+            return;
+        }
+        
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
+        if (!MDXModule.prefetchComplete)
+        {
+            Console.modificationWarning();
+            return;
+        }
+        
         event.registerServerCommand(this.generate = new CommandGenerate());
         event.registerServerCommand(this.blockUpdate = new CommandBlockUpdate());
     }

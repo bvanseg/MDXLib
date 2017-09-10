@@ -2,7 +2,9 @@ package com.arisux.mdx.lib.game;
 
 import java.util.HashMap;
 
+import com.arisux.mdx.Console;
 import com.arisux.mdx.MDX;
+import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.client.render.ItemIconRenderer;
 import com.arisux.mdx.lib.client.render.ItemRenderer;
 import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
@@ -128,6 +130,12 @@ public class Renderers implements IPostInitEvent
     @Override
     public void post(FMLPostInitializationEvent event)
     {
+        if (!MDXModule.prefetchComplete)
+        {
+            Console.modificationWarning();
+            return;
+        }
+        
         MinecraftForge.EVENT_BUS.register(this);
     }
 

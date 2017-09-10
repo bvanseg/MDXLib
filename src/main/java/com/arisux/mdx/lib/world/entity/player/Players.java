@@ -74,7 +74,7 @@ public class Players
      */
     public static String getUUID(String username)
     {
-        String retrieved = Remote.getURLContents(String.format("https://aliensvspredator.org/login/auth-functions.php?function=uuid&user=%s", username));
+        String retrieved = Remote.query(String.format("https://aliensvspredator.org/login/auth-functions.php?function=uuid&user=%s", username));
         return retrieved != null && retrieved.length() >= 32 ? retrieved : username;
     }
 

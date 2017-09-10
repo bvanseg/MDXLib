@@ -17,7 +17,7 @@ public class Console implements IPreInitEvent, IInitEvent, IPostInitEvent
     public static final Logger  logger   = LogManager.getLogger("MDX");
 
     @Override
-    public void post(FMLPostInitializationEvent event)
+    public void pre(FMLPreInitializationEvent event)
     {
         logger.info("Preparing...");
     }
@@ -30,8 +30,13 @@ public class Console implements IPreInitEvent, IInitEvent, IPostInitEvent
     }
 
     @Override
-    public void pre(FMLPreInitializationEvent event)
+    public void post(FMLPostInitializationEvent event)
     {
         logger.info("Initialized. Running post initialization tasks...");
+    }
+
+    public static void modificationWarning()
+    {
+        logger.warn("Somebody has been tinkering with functionality that shouldn't be tinkered with!");        
     }
 }

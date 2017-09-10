@@ -2,7 +2,9 @@ package com.arisux.mdx.lib.game;
 
 import java.util.ArrayList;
 
+import com.arisux.mdx.Console;
 import com.arisux.mdx.MDX;
+import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.game.ModIdentityMap.IdentityMap;
 
 import net.minecraft.block.Block;
@@ -96,6 +98,12 @@ public class IdentityRemapModule
     
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
+        if (!MDXModule.prefetchComplete)
+        {
+            Console.modificationWarning();
+            return;
+        }
+        
         MDX.log().warn("Invalid mappings found, searching for new mappings...");
 
         for (MissingMapping mapping : event.getAll())

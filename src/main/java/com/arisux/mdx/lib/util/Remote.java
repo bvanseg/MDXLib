@@ -19,31 +19,30 @@ import net.minecraft.util.ResourceLocation;
 
 public class Remote
 {
-    public static boolean authorized()
-    {
-        return Boolean.parseBoolean(Remote.getURLContents(String.format("http://aliensvspredator.org/api/auth/check.php?uuid=%s", Game.session().getPlayerID())));
-    }
     /**
-     * Retrieves the contents of a page with the specified URL.
-     * NOTE: Networking must be enabled for this method to function.
+     * Retrieves the contents of a page with the specified URL. NOTE: Networking
+     * must be enabled for this method to function.
      * 
-     * @param url - The URL to retrieve page contents from.
+     * @param url
+     *            - The URL to retrieve page contents from.
      * @return The contents of the remote page.
      */
-    public static String getURLContents(String url)
+    public static String query(String url)
     {
-        return Remote.getURLContents(url, false);
+        return query(url, false, true);
     }
 
     /**
-     * Retrieves the contents of a page with the specified URL.
-     * NOTE: Networking must be enabled for this method to function.
+     * Retrieves the contents of a page with the specified URL. NOTE: Networking
+     * must be enabled for this method to function.
      * 
-     * @param url - The URL to retrieve page contents from.
-     * @param insertNewLines - If set true, the method automatically inserts line breaks.
+     * @param url
+     *            - The URL to retrieve page contents from.
+     * @param insertNewLines
+     *            - If set true, the method automatically inserts line breaks.
      * @return The contents of the remote page.
      */
-    public static String getURLContents(String url, boolean insertNewLines)
+    public static String query(String url, boolean insertNewLines, boolean quiet)
     {
         HttpURLConnection connection = null;
 
@@ -78,7 +77,10 @@ public class Remote
         }
         catch (Exception e)
         {
-            MDX.log().warn(e.toString() + ": " + url);
+            if (!quiet)
+            {
+                MDX.log().warn(e.toString() + ": " + url);
+            }
 
             if (connection != null)
             {
@@ -96,11 +98,13 @@ public class Remote
     }
 
     /**
-     * Downloads a file from the specified URL and saves it to the specified location.
-     * NOTE: Networking must be enabled for this method to function.
+     * Downloads a file from the specified URL and saves it to the specified
+     * location. NOTE: Networking must be enabled for this method to function.
      * 
-     * @param fileUrl - The URL to download a file from.
-     * @param saveLocation - The location where the downloaded file will be saved.
+     * @param fileUrl
+     *            - The URL to download a file from.
+     * @param saveLocation
+     *            - The location where the downloaded file will be saved.
      * @throws IOException
      */
     public static void downloadFile(String fileUrl, String saveLocation) throws IOException
@@ -121,11 +125,14 @@ public class Remote
     }
 
     /**
-     * Download a resource from the specified URL and convert it to a ResourceLocation.
-     * Provide a fallback in case a network connection is not present.
+     * Download a resource from the specified URL and convert it to a
+     * ResourceLocation. Provide a fallback in case a network connection is not
+     * present.
      * 
-     * @param URL - URL of the resource to download
-     * @param fallback - Fallback resource in case the download fails
+     * @param URL
+     *            - URL of the resource to download
+     * @param fallback
+     *            - Fallback resource in case the download fails
      * @return Return the downloaded ResourceLocation
      */
     public static ResourceLocation downloadResource(String URL, ResourceLocation fallback)
@@ -134,12 +141,16 @@ public class Remote
     }
 
     /**
-     * Download a resource from the specified URL and convert it to a ResourceLocation.
-     * Provide a fallback in case a network connection is not present.
+     * Download a resource from the specified URL and convert it to a
+     * ResourceLocation. Provide a fallback in case a network connection is not
+     * present.
      * 
-     * @param URL - URL of the resource to download
-     * @param fallback - Fallback resource in case the download fails
-     * @param forceDownload - Force re-downloading of the specified resource.
+     * @param URL
+     *            - URL of the resource to download
+     * @param fallback
+     *            - Fallback resource in case the download fails
+     * @param forceDownload
+     *            - Force re-downloading of the specified resource.
      * @return Return the downloaded ResourceLocation
      */
     public static ResourceLocation downloadResource(String URL, ResourceLocation fallback, boolean forceDownload)
@@ -147,13 +158,13 @@ public class Remote
         ResourceLocation resource = new ResourceLocation(URL);
         TextureManager texturemanager = Game.minecraft().getTextureManager();
         Object object = forceDownload ? null : texturemanager.getTexture(resource);
-    
+
         if (object == null)
         {
             object = new ThreadDownloadImageData((File) null, URL, fallback, null);
             texturemanager.loadTexture(resource, (ITextureObject) object);
         }
-    
+
         return resource;
     }
 }

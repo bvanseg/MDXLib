@@ -1,9 +1,19 @@
 package com.arisux.mdx.lib.game;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class RegistrationHandler<MOD extends IMod> implements IPreInitEvent, IInitEvent, IPostInitEvent
 {
@@ -33,5 +43,40 @@ public abstract class RegistrationHandler<MOD extends IMod> implements IPreInitE
     public void post(FMLPostInitializationEvent event)
     {
         ;
+    }
+
+    public <T extends IForgeRegistryEntry<T>> T register(RegistryEvent.Register<T> registryEvent, String registryName, T registryObject)
+    {
+        ResourceLocation resource = new ResourceLocation(mod.container().getModId(), registryName);
+
+        if (registryObject instanceof Block)
+        {
+            Block block = (Block) registryObject;
+            block.setRegistryName(registryName);
+            block.setUnlocalizedName(resource.toString());
+        }
+
+        if (registryObject instanceof Item)
+        {
+            Item item = (Item) registryObject;
+            item.setRegistryName(registryName);
+            item.setUnlocalizedName(resource.toString());
+
+            if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+            {
+                if (item instanceof ItemBlock)
+                {
+                    ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+                }
+                else if (item instanceof Item)
+                {
+                    Renderers.registerIcon(item);
+                }
+            }
+        }
+
+        registryEvent.getRegistry().register(registryObject);
+
+        return registryObject;
     }
 }

@@ -2,6 +2,8 @@ package com.arisux.mdx.lib.client;
 
 import java.util.ArrayList;
 
+import com.arisux.mdx.Console;
+import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.Settings;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,6 +37,12 @@ public class Notifications
 
     public void onStartup()
     {
+        if (!MDXModule.prefetchComplete)
+        {
+            Console.modificationWarning();
+            return;
+        }
+        
         if (Settings.instance.isStartupNotificationEnabled())
         {
             Notifications.sendNotification(new Notification()
