@@ -138,7 +138,15 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
     @Override
     public void renderInWorld(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
     {
-        
+        OpenGL.pushMatrix();
+        OpenGL.scale(-0.75F, -0.75F, 1F);
+        OpenGL.translate(0.5F, -0.75F, 0F);
+        OpenGL.rotate(180F, 0, 1, 0);
+        OpenGL.disableStandardItemLighting();
+        Draw.bindTexture(this.icon);
+        Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
+        OpenGL.enableStandardItemLighting();
+        OpenGL.popMatrix();
     }
 
     @Override
