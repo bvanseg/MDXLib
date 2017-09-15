@@ -66,25 +66,59 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
     @Override
     public void renderThirdPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
     {
-
+        OpenGL.pushMatrix();
+        OpenGL.scale(-0.75F, -0.75F, 1F);
+        OpenGL.translate(0.5F, -0.75F, 0F);
+        OpenGL.rotate(180F, 0, 1, 0);
+        OpenGL.disableStandardItemLighting();
+        Draw.bindTexture(this.icon);
+        Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
+        OpenGL.enableStandardItemLighting();
+        OpenGL.popMatrix();
     }
 
     @Override
     public void renderThirdPersonRight(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
     {
-
+        OpenGL.pushMatrix();
+        OpenGL.scale(-0.75F, -0.75F, 1F);
+        OpenGL.translate(0.5F, -0.75F, 0F);
+        OpenGL.rotate(180F, 0, 1, 0);
+        OpenGL.disableStandardItemLighting();
+        Draw.bindTexture(this.icon);
+        Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
+        OpenGL.enableStandardItemLighting();
+        OpenGL.popMatrix();
     }
 
     @Override
     public void renderFirstPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
     {
-
+        OpenGL.pushMatrix();
+        OpenGL.scale(-0.75F, -0.75F, 1F);
+        OpenGL.translate(0.5F, -0.75F, 0F);
+        OpenGL.rotate(120F, 0, 1, 0);
+        OpenGL.rotate(20F, 0, 0, 1);
+        OpenGL.disableStandardItemLighting();
+        Draw.bindTexture(this.icon);
+        Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
+        OpenGL.enableStandardItemLighting();
+        OpenGL.popMatrix();
     }
 
     @Override
     public void renderFirstPersonRight(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
     {
-
+        OpenGL.pushMatrix();
+        OpenGL.scale(-0.75F, -0.75F, 1F);
+        OpenGL.translate(0.15F, -0.5F, -0.7F);
+        OpenGL.rotate(240F, 0, 1, 0);
+        OpenGL.rotate(-20F, 0, 0, 1);
+        OpenGL.disableStandardItemLighting();
+        Draw.bindTexture(this.icon);
+        Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
+        OpenGL.enableStandardItemLighting();
+        OpenGL.popMatrix();
     }
 
     @Override
@@ -104,7 +138,7 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
     @Override
     public void renderInWorld(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
     {
-
+        
     }
 
     @Override
