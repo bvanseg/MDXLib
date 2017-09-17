@@ -132,11 +132,19 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
         ;
     }
 
-    public abstract void renderThirdPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+    public void renderThirdPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
+    {
+        OpenGL.scale(-1F, 1F, 1F);
+        renderThirdPersonRight(itemstack, entity, cameraTransformType);
+    }
 
     public abstract void renderThirdPersonRight(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
 
-    public abstract void renderFirstPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
+    public void renderFirstPersonLeft(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
+    {
+        OpenGL.scale(-1F, 1F, 1F);
+        this.renderFirstPersonRight(itemstack, entity, cameraTransformType);
+    }
 
     public abstract void renderFirstPersonRight(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType);
 
