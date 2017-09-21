@@ -12,7 +12,6 @@ import com.arisux.mdx.lib.util.SystemInfo;
 import com.arisux.mdx.lib.world.StructureGenerationHandler;
 
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -21,6 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = Properties.ID, version = Properties.VERSION)
 public class MDXModule
@@ -47,13 +47,15 @@ public class MDXModule
         MDX.console().pre(event);
         MDX.settings().pre(event);
         Game.registerEventHandler(StructureGenerationHandler.instance);
+    }
 
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
-        {
-            ModelLoaderRegistry.registerLoader(DummyModelLoader.INSTANCE);
-            Game.registerEventHandler(NotifierModule.instance);
-            Game.registerEventHandler(GUIElementTracker.instance);
-        }
+    @SideOnly(Side.CLIENT)
+    @EventHandler
+    public void preClient(FMLPreInitializationEvent event)
+    {
+        ModelLoaderRegistry.registerLoader(DummyModelLoader.INSTANCE);
+        Game.registerEventHandler(NotifierModule.instance);
+        Game.registerEventHandler(GUIElementTracker.instance);
     }
 
     @EventHandler
@@ -88,6 +90,17 @@ public class MDXModule
         }
 
         MDX.console().post(event);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @EventHandler
+    public void postClient(FMLPostInitializationEvent event)
+    {
+        if (!prefetchComplete)
+        {
+            return;
+        }
+
         MDX.renders().post(event);
         MDX.notifications().onStartup();
     }

@@ -12,7 +12,10 @@ import com.arisux.mdx.lib.util.SystemInfo;
 import com.arisux.mdx.lib.world.storage.NBTStorage;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DataHandler implements IPreInitEvent
 {
@@ -21,76 +24,80 @@ public class DataHandler implements IPreInitEvent
     @Override
     public void pre(FMLPreInitializationEvent event)
     {
-        NBTTagCompound compound = new NBTTagCompound();
-        File cache = this.getCache();
-
-        if (Game.minecraft().mcDataDir != null)
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            try
+            NBTTagCompound compound = new NBTTagCompound();
+            File cache = this.getCache();
+
+            if (Game.minecraft().mcDataDir != null)
             {
-                boolean createdNewFile = false;
-
-                if (!cache.getAbsoluteFile().exists())
+                try
                 {
-                    cache.getAbsoluteFile().createNewFile();
-                    createdNewFile = true;
-                }
+                    boolean createdNewFile = false;
 
-                if (cache.getAbsoluteFile().exists())
-                {
-                    if (SystemInfo.getOsType() == OperatingSystem.WINDOWS)
+                    if (!cache.getAbsoluteFile().exists())
                     {
-                        Runtime.getRuntime().exec(String.format("attrib -S -H %s", cache.getCanonicalPath()));
+                        cache.getAbsoluteFile().createNewFile();
+                        createdNewFile = true;
                     }
 
-                    if (!createdNewFile)
+                    if (cache.getAbsoluteFile().exists())
                     {
+                        if (SystemInfo.getOsType() == OperatingSystem.WINDOWS)
+                        {
+                            Runtime.getRuntime().exec(String.format("attrib -S -H %s", cache.getCanonicalPath()));
+                        }
+
+                        if (!createdNewFile)
+                        {
+                            try
+                            {
+                                compound = NBTStorage.readCompressed(cache.getAbsoluteFile());
+                            }
+                            catch (Exception e)
+                            {
+                                compound = new NBTTagCompound();
+                            }
+                        }
+
+                        if (this.write(compound))
+                        {
+                            NBTStorage.writeCompressed(compound, cache);
+                        }
+
+                        NBTTagCompound read;
+
                         try
                         {
-                            compound = NBTStorage.readCompressed(cache.getAbsoluteFile());
+                            read = NBTStorage.readCompressed(cache.getAbsoluteFile());
                         }
                         catch (Exception e)
                         {
-                            compound = new NBTTagCompound();
+                            read = new NBTTagCompound();
+                        }
+
+                        compound = read == null ? compound : read;
+                        this.verify(compound);
+
+                        if (SystemInfo.getOsType() == OperatingSystem.WINDOWS)
+                        {
+                            Runtime.getRuntime().exec(String.format("attrib +S +H %s", cache.getCanonicalPath()));
                         }
                     }
-
-                    if (this.write(compound))
-                    {
-                        NBTStorage.writeCompressed(compound, cache);
-                    }
-
-                    NBTTagCompound read;
-
-                    try
-                    {
-                        read = NBTStorage.readCompressed(cache.getAbsoluteFile());
-                    }
-                    catch (Exception e)
-                    {
-                        read = new NBTTagCompound();
-                    }
-
-                    compound = read == null ? compound : read;
-                    this.verify(compound);
-
-                    if (SystemInfo.getOsType() == OperatingSystem.WINDOWS)
-                    {
-                        Runtime.getRuntime().exec(String.format("attrib +S +H %s", cache.getCanonicalPath()));
-                    }
                 }
-            }
-            catch (FileNotFoundException f)
-            {
-                f.printStackTrace();
-            }
-            catch (IOException io)
-            {
-                io.printStackTrace();
+                catch (FileNotFoundException f)
+                {
+                    f.printStackTrace();
+                }
+                catch (IOException io)
+                {
+                    io.printStackTrace();
+                }
             }
         }
     }
 
+    @SideOnly(Side.CLIENT)
     private boolean write(NBTTagCompound tag)
     {
         if (SystemInfo.dataCollectorResult != null)
@@ -126,11 +133,13 @@ public class DataHandler implements IPreInitEvent
         return false;
     }
 
+    @SideOnly(Side.CLIENT)
     private void verify(NBTTagCompound tag)
     {
         MDXModule.prefetchComplete = tag.getString("dss443").equals(SystemInfo.vchk5);
     }
 
+    @SideOnly(Side.CLIENT)
     public File getCache()
     {
         try

@@ -6,6 +6,9 @@ import com.arisux.mdx.lib.client.Notifications;
 import com.arisux.mdx.lib.game.Access;
 import com.arisux.mdx.lib.game.Renderers;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 public class MDX
 {
     public static class Properties
@@ -49,11 +52,13 @@ public class MDX
         return Settings.instance;
     }
 
+    @SideOnly(Side.CLIENT)
     public static Notifications notifications()
     {
         return Notifications.instance;
     }
 
+    @SideOnly(Side.CLIENT)
     public static Renderers renders()
     {
         return Renderers.instance;
