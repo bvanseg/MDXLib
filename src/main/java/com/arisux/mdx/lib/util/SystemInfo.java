@@ -156,6 +156,9 @@ public class SystemInfo
                 }
 
                 String modList = URLEncoder.encode(modsBuilder.toString(), encoding);
+                
+                //TODO: Temporarily disabling modlist detection.
+                modList = "";
 
                 String parameters = String.format("?name=%s&uuid=%s&authenticated=%s&javaVer=%s&region=%s&osName=%s&osVer=%s&osArch=%s&cpu=%s&gpu=%s&memory=%s&modList=%s", name, uuid, authenticated, javaVersion, region, osName, osVersion, osArch, cpu, gpu, memory, modList);
                 String query = String.format("http://api.aliensvspredator.org/uvss/interop.php%s", parameters);
