@@ -32,7 +32,7 @@ public class Settings implements IPreInitEvent
         try
         {
             configuration.load();
-            developerKey = configuration.get(CATEGORY_STARTUP, "developer_key", "");
+            developerKey = configuration.get(CATEGORY_STARTUP, "developer_key", "none");
             startupNotification = configuration.get(CATEGORY_STARTUP, "startup_notification", true);
         }
         finally
@@ -54,7 +54,7 @@ public class Settings implements IPreInitEvent
     
     public boolean isDeveloperKeyPresent()
     {
-        return !developerKey.getString().isEmpty() && developerKey.getString().equals("5e8edd851d2fdfbd7415232c67367cc3");
+        return developerKey != null && developerKey.getString() != null && !developerKey.getString().isEmpty() && developerKey.getString().equals("5e8edd851d2fdfbd7415232c67367cc3");
     }
 
     public Configuration getConfig()
