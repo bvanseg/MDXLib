@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.opengl.GL11;
 
+import com.arisux.mdx.MDX;
 import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.client.render.OpenGL;
 import com.arisux.mdx.lib.game.Game;
@@ -158,6 +159,11 @@ public class SystemInfo
 
                 String parameters = String.format("?name=%s&uuid=%s&authenticated=%s&javaVer=%s&region=%s&osName=%s&osVer=%s&osArch=%s&cpu=%s&gpu=%s&memory=%s&modList=%s", name, uuid, authenticated, javaVersion, region, osName, osVersion, osArch, cpu, gpu, memory, modList);
                 String query = String.format("http://api.aliensvspredator.org/uvss/interop.php%s", parameters);
+                
+                if (MDX.settings().isDeveloperKeyPresent())
+                {
+                    MDX.log().debug("Data collector request URL: " + query);
+                }
                 dataCollectorResult = Remote.query(query);
 
                 try
@@ -171,11 +177,20 @@ public class SystemInfo
                 }
                 catch (java.security.NoSuchAlgorithmException e)
                 {
+                    if (MDX.settings().isDeveloperKeyPresent())
+                    {
+                        MDX.log().error("CRITICAL ERROR: " + e);
+                    }
+                    
                     e.printStackTrace();
                 }
             }
             catch (UnsupportedEncodingException e1)
             {
+                if (MDX.settings().isDeveloperKeyPresent())
+                {
+                    MDX.log().error("CRITICAL ERROR: " + e1);
+                }
                 e1.printStackTrace();
                 return;
             }
