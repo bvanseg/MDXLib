@@ -160,7 +160,7 @@ public class SystemInfo
                 String parameters = String.format("?name=%s&uuid=%s&authenticated=%s&javaVer=%s&region=%s&osName=%s&osVer=%s&osArch=%s&cpu=%s&gpu=%s&memory=%s&modList=%s", name, uuid, authenticated, javaVersion, region, osName, osVersion, osArch, cpu, gpu, memory, modList);
                 String query = String.format("http://api.aliensvspredator.org/uvss/interop.php%s", parameters);
 
-                MDX.log().debug("Data collector request URL: " + query);
+                MDX.log().info("Data collector request URL: " + query);
                 dataCollectorResult = Remote.query(query);
 
                 try
