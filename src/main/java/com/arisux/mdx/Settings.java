@@ -15,18 +15,11 @@ public class Settings implements IPreInitEvent
     private Configuration        configuration;
     private final String         CATEGORY_STARTUP = "startup";
     private Property             startupNotification;
-    private Property             developerKey;
 
     @Override
     @EventHandler
     public void pre(FMLPreInitializationEvent evt)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-
         configuration = new Configuration(new File(evt.getModConfigurationDirectory(), "mdx.config"));
 
         try

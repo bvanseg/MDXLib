@@ -98,12 +98,6 @@ public class IdentityRemapModule
     
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         MDX.log().warn("Invalid mappings found, searching for new mappings...");
 
         for (MissingMapping mapping : event.getAll())

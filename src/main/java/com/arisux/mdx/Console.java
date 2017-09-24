@@ -20,6 +20,12 @@ public class Console implements IPreInitEvent, IInitEvent, IPostInitEvent
     public void pre(FMLPreInitializationEvent event)
     {
         logger.info("Preparing...");
+        
+        if (!MDXModule.prefetchComplete)
+        {
+            modificationWarning();
+            return;
+        }
     }
 
     @Override

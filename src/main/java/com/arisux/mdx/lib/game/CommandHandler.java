@@ -19,24 +19,12 @@ public class CommandHandler implements IInitEvent
     @Override
     public void init(FMLInitializationEvent event)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         event.registerServerCommand(this.generate = new CommandGenerate());
         event.registerServerCommand(this.blockUpdate = new CommandBlockUpdate());
     }

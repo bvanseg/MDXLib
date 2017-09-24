@@ -130,12 +130,6 @@ public class Renderers implements IPostInitEvent
     @Override
     public void post(FMLPostInitializationEvent event)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         MinecraftForge.EVENT_BUS.register(this);
     }
 

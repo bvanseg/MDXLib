@@ -1,8 +1,6 @@
 package com.arisux.mdx.lib.client;
 
-import com.arisux.mdx.Console;
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.MDXModule;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -18,12 +16,6 @@ public class NotifierModule
     @SubscribeEvent
     public void tick(TickEvent.ClientTickEvent event)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         if (currentNotification == null && MDX.notifications().queue().size() > 0)
         {
             currentNotification = MDX.notifications().queue().get(0);

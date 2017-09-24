@@ -37,12 +37,6 @@ public class Notifications
 
     public void onStartup()
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         if (Settings.instance.isStartupNotificationEnabled())
         {
             Notifications.sendNotification(new Notification()

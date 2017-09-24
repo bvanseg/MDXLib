@@ -26,12 +26,6 @@ public class GUIElementTracker
     @SubscribeEvent
     public void tick(ClientTickEvent event)
     {
-        if (!MDXModule.prefetchComplete)
-        {
-            Console.modificationWarning();
-            return;
-        }
-        
         if (event.phase == Phase.START)
         {
             Vector2d mousePosition = Screen.scaledMousePosition();
