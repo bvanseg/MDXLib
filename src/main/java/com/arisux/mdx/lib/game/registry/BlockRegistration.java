@@ -55,4 +55,19 @@ public abstract class BlockRegistration
 
         return itemblock;
     }
+    
+    public String getRegistryName()
+    {
+        return registryName;
+    }
+    
+    public Block getBlock()
+    {
+        return block;
+    }
+    
+    public void setBlock(Block block)
+    {
+        this.block = block;
+    }
 }
