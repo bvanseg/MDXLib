@@ -179,7 +179,7 @@ public class Inventories
      */
     public static ItemStack getHelmSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorItemInSlot(3);
+        return player.inventory.armorInventory[3];
     }
 
     /**
@@ -190,7 +190,7 @@ public class Inventories
      */
     public static ItemStack getChestSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorItemInSlot(2);
+        return player.inventory.armorInventory[2];
     }
 
     /**
@@ -201,7 +201,7 @@ public class Inventories
      */
     public static ItemStack getLegsSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorItemInSlot(1);
+        return player.inventory.armorInventory[1];
     }
 
     /**
@@ -212,7 +212,7 @@ public class Inventories
      */
     public static ItemStack getBootSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorItemInSlot(0);
+        return player.inventory.armorInventory[0];
     }
     
     public static boolean playerHas(Item item, Entity entity)
