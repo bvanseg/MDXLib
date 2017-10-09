@@ -215,9 +215,9 @@ public class Inventories
         return player.inventory.armorInventory[0];
     }
     
-    public static boolean playerHas(Item item, Entity entity)
+    public static boolean entityHas(Item item, Entity entity)
     {
-        return getAmountOfItemPlayerHas(item, entity) > 0;
+        return getAmountOfItemEntityHas(item, entity) > 0;
     }
     
     public static boolean playerHas(Item item, EntityPlayer player)
@@ -225,7 +225,7 @@ public class Inventories
         return getAmountOfItemPlayerHas(item, player) > 0;
     }
 
-    public static int getAmountOfItemPlayerHas(Item item, Entity entity)
+    public static int getAmountOfItemEntityHas(Item item, Entity entity)
     {
         if (entity instanceof EntityPlayer)
         {
