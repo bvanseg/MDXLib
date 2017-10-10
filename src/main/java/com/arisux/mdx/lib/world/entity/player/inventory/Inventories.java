@@ -37,6 +37,17 @@ public class Inventories
             }
         }
     }
+    
+    /**
+     * Gets the proper remaining uses of an item
+     * 
+     * @param itemstack - the itemstack we are figuring out the remaining usage of
+     * @return
+     */
+    public static int getRemainingUses(ItemStack itemstack) {
+    	int uses = itemstack.getMaxDamage() - itemstack.getItemDamage();
+    	return uses;
+    }
 
     /**
      * Get the slot id of the specified item in the specified inventory.
