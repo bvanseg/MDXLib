@@ -2,9 +2,9 @@ package com.arisux.mdx.lib.client.entityfx;
 
 import java.util.Random;
 
-import org.avp.AliensVsPredator;
 import org.lwjgl.opengl.GL11;
 
+import com.arisux.mdx.lib.client.Resources;
 import com.arisux.mdx.lib.client.render.OpenGL;
 
 import net.minecraft.client.particle.Particle;
@@ -62,7 +62,7 @@ public class EntityFXElectricArc extends Particle
     @Override
     public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
     {
-        AliensVsPredator.resources().BLANK.bind();
+        Resources.BLANK.bind();
         this.drawArc(buffer, posX, posY, posZ, targetX, targetY, targetZ, displacement, complexity, density);
     }
 
