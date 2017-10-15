@@ -37,6 +37,17 @@ public class Inventories
             }
         }
     }
+    
+    /**
+     * Gets the proper remaining uses of an item
+     * 
+     * @param itemstack - the itemstack we are figuring out the remaining usage of
+     * @return
+     */
+    public static int getRemainingUses(ItemStack itemstack) {
+    	int uses = itemstack.getMaxDamage() - itemstack.getItemDamage();
+    	return uses;
+    }
 
     /**
      * Get the slot id of the specified item in the specified inventory.
@@ -215,9 +226,9 @@ public class Inventories
         return player.inventory.armorInventory[0];
     }
     
-    public static boolean playerHas(Item item, Entity entity)
+    public static boolean entityHas(Item item, Entity entity)
     {
-        return getAmountOfItemPlayerHas(item, entity) > 0;
+        return getAmountOfItemEntityHas(item, entity) > 0;
     }
     
     public static boolean playerHas(Item item, EntityPlayer player)
@@ -225,7 +236,7 @@ public class Inventories
         return getAmountOfItemPlayerHas(item, player) > 0;
     }
 
-    public static int getAmountOfItemPlayerHas(Item item, Entity entity)
+    public static int getAmountOfItemEntityHas(Item item, Entity entity)
     {
         if (entity instanceof EntityPlayer)
         {
