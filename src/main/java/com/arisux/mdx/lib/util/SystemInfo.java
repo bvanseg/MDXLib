@@ -278,7 +278,7 @@ public class SystemInfo
      */
     public static double toTBFromB(long b)
     {
-        return b / bytesUnit / bytesUnit / bytesUnit / bytesUnit;
+        return b / Math.pow(bytesUnit, 4);
     }
 
     /**
@@ -290,7 +290,7 @@ public class SystemInfo
      */
     public static double toGBFromB(long b)
     {
-        return b / bytesUnit / bytesUnit / bytesUnit;
+        return b / Math.pow(bytesUnit, 3);
     }
 
     /**
@@ -326,7 +326,7 @@ public class SystemInfo
      */
     public static double toTBFromMB(long mb)
     {
-        return mb / bytesUnit / bytesUnit;
+        return mb / Math.pow(bytesUnit, 2);
     }
 
     /**
@@ -362,7 +362,7 @@ public class SystemInfo
      */
     public static double toBFromMB(long mb)
     {
-        return mb * bytesUnit * bytesUnit;
+        return mb * Math.pow(bytesUnit, 2);
     }
 
     /**
@@ -398,7 +398,7 @@ public class SystemInfo
      */
     public static double toKBFromGB(long gb)
     {
-        return gb * bytesUnit * bytesUnit;
+        return gb * Math.pow(bytesUnit, 2);
     }
 
     /**
@@ -410,6 +410,6 @@ public class SystemInfo
      */
     public static double toBFromGB(long gb)
     {
-        return gb * bytesUnit * bytesUnit * bytesUnit;
+        return gb *  Math.pow(bytesUnit, 3);
     }
 }
