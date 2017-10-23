@@ -98,6 +98,7 @@ public class EntityFXElectricArc extends Particle
             OpenGL.rotate(180.0F + this.rotYaw, 0.0F, 0.0F, -1.0F);
             OpenGL.rotate(this.rotPitch, 1.0F, 0.0F, 0.0F);
             OpenGL.disableLightMapping();
+            OpenGL.disableLight();
 
             double vX1 = density * -0.15;
             double vX2 = density * -0.15 * 1.0;
@@ -121,6 +122,7 @@ public class EntityFXElectricArc extends Particle
                 Tessellator.getInstance().draw();
             }
 
+            OpenGL.enableLight();
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
             OpenGL.enableCullFace();
             OpenGL.disableBlend();
