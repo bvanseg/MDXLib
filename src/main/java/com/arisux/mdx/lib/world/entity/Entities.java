@@ -975,7 +975,7 @@ public class Entities
         case 1:
             return EnumFacing.DOWN;
         default:
-            return EnumFacing.DOWN;
+            return EnumFacing.NORTH;
         }
     }
 }
