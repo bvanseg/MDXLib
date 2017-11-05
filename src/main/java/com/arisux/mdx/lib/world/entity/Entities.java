@@ -944,7 +944,7 @@ public class Entities
         return box != null && !world.checkNoEntityCollision(box, entity) ? false : (blockstate.getMaterial() == Material.CIRCUITS && block == Blocks.ANVIL ? true : blockstate.getBlock().isReplaceable(world, pos) && block.canReplace(world, pos, side, stack));
     }
 
-    public static EnumFacing getDirectionFacing(Entity entity)
+    public static EnumFacing getEntityFacingRotY(Entity entity)
     {
         int dir = MathHelper.floor((entity.rotationYaw / 90) + 0.5) & 3;
 
@@ -960,6 +960,22 @@ public class Entities
             return EnumFacing.EAST;
         default:
             return EnumFacing.NORTH;
+        }
+    }
+
+    public static EnumFacing getEntityFacingRotX(Entity entity)
+    {
+        int dir = MathHelper.floor((entity.rotationPitch / 90) + 0.5) & 3;
+        System.out.println(dir);
+
+        switch (dir)
+        {
+        case 3:
+            return EnumFacing.UP;
+        case 1:
+            return EnumFacing.DOWN;
+        default:
+            return EnumFacing.DOWN;
         }
     }
 }

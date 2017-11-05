@@ -21,7 +21,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.arisux.mdx.lib.game.Game;
-import com.arisux.mdx.lib.world.tile.IRotatable;
+import com.arisux.mdx.lib.world.tile.IRotatableYAxis;
+import com.arisux.mdx.lib.world.tile.IRotatableXAxis;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -451,29 +452,41 @@ public class OpenGL
     @SideOnly(Side.CLIENT)
     public static void rotate(TileEntity tile)
     {
-        if (tile instanceof IRotatable)
+        if (tile instanceof IRotatableYAxis)
         {
-            IRotatable rotatable = (IRotatable) tile;
+            IRotatableYAxis rotatable = (IRotatableYAxis) tile;
     
-            if (rotatable != null && rotatable.getDirection() != null)
+            if (rotatable != null && rotatable.getRotationYAxis() != null)
             {
-                if (rotatable.getDirection() != null)
+                if (rotatable.getRotationYAxis() != null)
                 {
-                    if (rotatable.getDirection() == EnumFacing.NORTH)
+                    if (rotatable.getRotationYAxis() == EnumFacing.NORTH)
                     {
                         rotate(180F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == EnumFacing.SOUTH)
-                    {
-                        rotate(0F, 0F, 0F, 0F);
-                    }
-                    else if (rotatable.getDirection() == EnumFacing.WEST)
+                    if (rotatable.getRotationYAxis() == EnumFacing.WEST)
                     {
                         rotate(-90F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == EnumFacing.EAST)
+                    else if (rotatable.getRotationYAxis() == EnumFacing.EAST)
                     {
                         rotate(90F, 0F, 1F, 0F);
+                    }
+                }
+            }
+        }
+        
+        if (tile instanceof IRotatableXAxis)
+        {
+            IRotatableXAxis rotatable = (IRotatableXAxis) tile;
+    
+            if (rotatable != null && rotatable.getRotationXAxis() != null)
+            {
+                if (rotatable.getRotationXAxis() != null)
+                {
+                    if (rotatable.getRotationXAxis() == EnumFacing.DOWN)
+                    {
+                        rotate(-180F, 1F, 0F, 0F);
                     }
                 }
             }
@@ -483,27 +496,27 @@ public class OpenGL
     @SideOnly(Side.CLIENT)
     public static void rotateOpposite(TileEntity tile)
     {
-        if (tile instanceof IRotatable)
+        if (tile instanceof IRotatableYAxis)
         {
-            IRotatable rotatable = (IRotatable) tile;
+            IRotatableYAxis rotatable = (IRotatableYAxis) tile;
     
-            if (rotatable != null && rotatable.getDirection() != null)
+            if (rotatable != null && rotatable.getRotationYAxis() != null)
             {
-                if (rotatable.getDirection() != null)
+                if (rotatable.getRotationYAxis() != null)
                 {
-                    if (rotatable.getDirection() == EnumFacing.SOUTH)
+                    if (rotatable.getRotationYAxis() == EnumFacing.SOUTH)
                     {
                         rotate(180F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == EnumFacing.NORTH)
+                    else if (rotatable.getRotationYAxis() == EnumFacing.NORTH)
                     {
                         rotate(0F, 0F, 0F, 0F);
                     }
-                    else if (rotatable.getDirection() == EnumFacing.EAST)
+                    else if (rotatable.getRotationYAxis() == EnumFacing.EAST)
                     {
                         rotate(-90F, 0F, 1F, 0F);
                     }
-                    else if (rotatable.getDirection() == EnumFacing.WEST)
+                    else if (rotatable.getRotationYAxis() == EnumFacing.WEST)
                     {
                         rotate(90F, 0F, 1F, 0F);
                     }
