@@ -105,13 +105,6 @@ public class Access
     {
         Game.minecraft().entityRenderer.torchFlickerX = value;
     }
-
-    @Deprecated
-    @SideOnly(Side.CLIENT)
-    public void setTorchFlickerYX(float value)
-    {
-        Game.minecraft().entityRenderer.torchFlickerDX = value;
-    }
     
     @SideOnly(Side.CLIENT)
     public void setTorchFlickerDX(float value)

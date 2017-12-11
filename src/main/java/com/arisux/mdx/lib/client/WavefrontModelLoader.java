@@ -9,7 +9,6 @@ import org.apache.commons.io.FileUtils;
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.client.render.wavefront.TriangulatedWavefrontModel;
 
-@Deprecated
 public class WavefrontModelLoader
 {
     public static final WavefrontModelLoader            instance = new WavefrontModelLoader();
