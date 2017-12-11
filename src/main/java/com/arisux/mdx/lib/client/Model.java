@@ -31,6 +31,11 @@ public abstract class Model extends ModelBase
 
     /**
      * Set the rotation angles of the specified ModelRenderer instance.
+     * 
+     * @param model - The model rotations are being set for.
+     * @param rotateAngleX - Angle by which model will rotate in the X direction.
+     * @param rotateAngleY - Angle by which the model will rotate in the Y direction.
+     * @param rotateAngleZ - Angle by which the model will rotate in the Z direction.
      */
     public void setRotation(ModelRenderer model, float rotateAngleX, float rotateAngleY, float rotateAngleZ)
     {
@@ -39,11 +44,21 @@ public abstract class Model extends ModelBase
         model.rotateAngleZ = rotateAngleZ;
     }
 
+    /**
+     * Renders a model.
+     * 
+     * @param modelRenderer - The ModelRenderer being used.
+     */
     public static void draw(ModelRenderer modelRenderer)
     {
         modelRenderer.render(DEFAULT_SCALE);
     }
 
+    /**
+     * Renders a group of models.
+     * 
+     * @param group - A group of models for which to be rendered.
+     */
     public static void draw(ModelRenderer[] group)
     {
         for (ModelRenderer child : group)
@@ -52,6 +67,9 @@ public abstract class Model extends ModelBase
         }
     }
 
+    /**
+     * TODO: Figure out what this is, and why.
+     */
     public void render()
     {
         this.render(null);
@@ -174,26 +192,58 @@ public abstract class Model extends ModelBase
         return null;
     }
 
+    /**
+     * Gets the main model of a rendering class.
+     * 
+     * @param renderer - The render class of the model.
+     * @return The model for the renderer.
+     */
     public static ModelBase getMainModel(RenderLivingBase<EntityLivingBase> renderer)
     {
         return MDX.access().getMainModel(renderer);
     }
 
+    /**
+     * Gets the number of ticks the entity has existed for, plus the time since the game last ticked.
+     * This allows for precise timing and smooth movement.
+     * 
+     * @param base - The EntityLivingBase class for which to check the ticks existed.
+     * @return TicksExisted + partialTicks of the entity.
+     */
     public static float getIdleProgress(EntityLivingBase base)
     {
         return base.ticksExisted + Game.partialTicks();
     }
 
+    /**
+     * Gets the limb swing progress of an entity. Includes partial ticks for precision.
+     * 
+     * @param base - The EntityLivingBase class for which to get the limb swing progress from.
+     * @return How far along the entity is from completing its swing.
+     */
     public static float getSwingProgress(EntityLivingBase base)
     {
         return base.limbSwing - base.limbSwingAmount * (1.0F - Game.partialTicks());
     }
 
+    /**
+     * Gets the previous limb swing progress of an entity. Includes partial ticks for precision.
+     * Basically float-precise timing of ticksExisted, instead of an integer value.
+     * 
+     * @param base - The EntityLivingBase class for which to get the previous limb swing progress from.
+     * @return The time since the last limb swing of the entity was completed.
+     */
     public static float getSwingProgressPrev(EntityLivingBase base)
     {
         return base.prevLimbSwingAmount + (base.limbSwingAmount - base.prevLimbSwingAmount) * Game.partialTicks();
     }
 
+    /**
+     * Gets the yaw rotation of the entity's head. Includes partial ticks for precision.
+     * 
+     * @param base - The entity from which to get the head yaw rotation from.
+     * @return The value of the yaw rotation the head is at.
+     */
     public static float getHeadYaw(EntityLivingBase base)
     {
         float yawOffset = MDXMath.interpolateRotation(base.prevRenderYawOffset, base.renderYawOffset, Game.partialTicks());
@@ -201,11 +251,24 @@ public abstract class Model extends ModelBase
         return yawHead - yawOffset;
     }
 
+    /**
+     * Gets the pitch rotation of the entity's head. Includes partial ticks for precision.
+     * 
+     * @param base - The entity from which to get the head pitch rotation from.
+     * @return The value of the pitch rotation the head is at.
+     */
     public static float getHeadPitch(EntityLivingBase base)
     {
         return (base.prevRotationPitch + (base.rotationPitch - base.prevRotationPitch) * Game.partialTicks());
     }
 
+    /**
+     * Gets the idle progress of a generic Object. Uses partial ticks for precision.
+     * Basically float-precise timing of ticksExisted, instead of an integer value.
+     * 
+     * @param o - The object for which to get the idle progress from. Should be an instance of EntityLivingBase.
+     * @return ticksExisted + partialTicks of the object.
+     */
     public static float idleProgress(Object o)
     {
         if (o != null && o instanceof EntityLivingBase)
@@ -216,6 +279,12 @@ public abstract class Model extends ModelBase
         return 0F;
     }
 
+    /**
+     * Gets the swing process of a generic Object. Uses partial ticks for precision.
+     * 
+     * @param o - The object to get the swing progress of. Should be an instance of EntityLivingBase.
+     * @return How far along the object is from completing its swing.
+     */
     public static float swingProgress(Object o)
     {
         if (o != null && o instanceof EntityLivingBase)
@@ -226,6 +295,12 @@ public abstract class Model extends ModelBase
         return 0F;
     }
 
+    /**
+     * Gets the previous swing progress of a generic Object. 
+     * 
+     * @param o - The object to get the previous swing progress of. Should be an instance of EntityLivingBase.
+     * @return The time since the object's last swing was completed.
+     */
     public static float swingProgressPrev(Object o)
     {
         if (o != null && o instanceof EntityLivingBase)
@@ -236,6 +311,12 @@ public abstract class Model extends ModelBase
         return 0F;
     }
 
+    /**
+     * Gets the yaw rotation of a generic Object.
+     * 
+     * @param o - The object from which to get the yaw of. Should be an instance of EntityLivingBase.
+     * @return The yaw rotation of the object.
+     */
     public static float headYaw(Object o)
     {
         if (o != null && o instanceof EntityLivingBase)
@@ -246,6 +327,12 @@ public abstract class Model extends ModelBase
         return 0F;
     }
 
+    /**
+     * Gets the pitch rotation of a generic Object.
+     * 
+     * @param o - The object from which to get the pitch of. Should be an instance of EntityLivingBase.
+     * @return The pitch rotation of the object.
+     */
     public static float headPitch(Object o)
     {
         if (o != null && o instanceof EntityLivingBase)

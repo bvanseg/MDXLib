@@ -2,9 +2,7 @@ package com.arisux.mdx.lib.game;
 
 import java.util.ArrayList;
 
-import com.arisux.mdx.Console;
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.game.ModIdentityMap.IdentityMap;
 
 import net.minecraft.block.Block;

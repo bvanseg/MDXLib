@@ -6,8 +6,6 @@ import javax.vecmath.Vector2d;
 
 import org.lwjgl.input.Mouse;
 
-import com.arisux.mdx.Console;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.client.gui.GuiCustomTextbox;
 import com.arisux.mdx.lib.client.gui.IGuiElement;
 import com.arisux.mdx.lib.client.render.Screen;
