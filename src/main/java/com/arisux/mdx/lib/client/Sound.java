@@ -47,7 +47,7 @@ public class Sound
     {
         return event;
     }
-    
+
     public ResourceLocation getLocation()
     {
         return location;
@@ -145,6 +145,9 @@ public class Sound
 
     public void playSound(World world, int x, int y, int z, float volume, float pitch, boolean distanceDelay)
     {
-        world.playSound(x, y, z, this.event, SoundCategory.NEUTRAL, volume, pitch, distanceDelay);
+        if (world != null)
+        {
+            world.playSound(x, y, z, this.event, SoundCategory.NEUTRAL, volume, pitch, distanceDelay);
+        }
     }
 }

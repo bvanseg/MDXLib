@@ -6,7 +6,6 @@ import java.util.List;
 import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
 
 import com.arisux.mdx.lib.client.Model;
 import com.arisux.mdx.lib.client.TexturedModel;
@@ -17,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -80,7 +80,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type)
     {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         this.renderPre(this.stack, this.entity, type);
         
         switch (type)
@@ -94,7 +94,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
             }
                 break;
             case GUI: {
-                OpenGL.color(1F, 1F, 1F, 1F);
+                GlStateManager.resetColor();
                 OpenGL.enableStandardItemLighting();
                 this.renderInInventory(this.stack, this.entity, type);
             }
@@ -117,7 +117,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
         }
 
         this.renderPost(this.stack, this.entity, type);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
         return selfPair;
     }

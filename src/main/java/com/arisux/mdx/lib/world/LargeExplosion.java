@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.arisux.mdx.lib.world.entity.Entities;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -128,13 +132,18 @@ public class LargeExplosion
         this.process();
 
         // TODO: FIX SOUND
-        // world.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+        // world.playSoundEffect(x, y, z, "random.old_explode", 4.0F, (1.0F +
+        // (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB((double) x - rX, (double) y - rY, (double) z - rY, (double) x + rY, (double) y + rY, (double) z + rY));
-
+        List<Entity> entities = Entities.getEntitiesInCoordsRange(world, Entity.class, new Pos(x, y, z), this.rX, this.rY);
+        
         for (int idx = 0; idx < entities.size(); ++idx)
         {
-            entities.get(idx).attackEntityFrom(DamageSource.generic.setExplosion(), this.damage);
+            if (entities.get(idx) instanceof EntityLivingBase)
+            {
+                EntityLivingBase living = (EntityLivingBase) entities.get(idx);
+                living.attackEntityFrom(DamageSource.causeExplosionDamage(living), this.damage);
+            }
         }
     }
 
