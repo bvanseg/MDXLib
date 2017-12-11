@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public class Inventories
 {
-	public static int maxStackSize = 64;
+	public static final int MAX_STACK_SIZE = 64;
 	/**
 	 * Drops items at the specified position.
 	 * 
