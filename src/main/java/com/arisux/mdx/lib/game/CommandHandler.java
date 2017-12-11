@@ -1,7 +1,5 @@
 package com.arisux.mdx.lib.game;
 
-import com.arisux.mdx.Console;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.commands.CommandBlockUpdate;
 import com.arisux.mdx.commands.CommandGenerate;
 
