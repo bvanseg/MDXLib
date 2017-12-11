@@ -22,6 +22,7 @@ public class EntityBloodFX extends Particle
     private int     color;
     private boolean glow;
 
+    //TODO: Figure out what is causing the blood color bug. Suggested to check bit math and/or GL code.
     public EntityBloodFX(World worldIn, double posX, double posY, double posZ, int color, boolean glow)
     {
         super(worldIn, posX, posY, posZ);
