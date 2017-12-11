@@ -21,6 +21,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -124,6 +125,7 @@ public class Draw
         GL11.glLineWidth(width);
         OpenGL.color4i(color);
         OpenGL.translate(0F, 0F, depth);
+        //TODO: Find a replacement for this, doesn't seem to have an existing replacement in GLStateManager.
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex2d(x1, y1);
@@ -806,7 +808,7 @@ public class Draw
      */
     public static void drawEntity(int x, int y, int scale, float yaw, float pitch, Entity entity)
     {
-        OpenGL.enable(GL11.GL_COLOR_MATERIAL);
+        GlStateManager.enableColorMaterial();
         OpenGL.pushMatrix();
         {
             OpenGL.translate(x, y, 100.0F);

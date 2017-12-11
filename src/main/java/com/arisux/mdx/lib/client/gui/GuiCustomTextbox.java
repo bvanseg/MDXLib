@@ -14,6 +14,7 @@ import com.arisux.mdx.lib.game.Game;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -678,7 +679,7 @@ public class GuiCustomTextbox implements IGuiElement
 
         OpenGL.color(0.0F, 0.0F, 255.0F, 255.0F);
         OpenGL.disableTexture2d();
-        GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
+        GlStateManager.enableColorLogic();
         GL11.glLogicOp(GL11.GL_OR_REVERSE);
         Draw.startQuads();
         Draw.vertex(x, h, 0).endVertex();
@@ -686,7 +687,7 @@ public class GuiCustomTextbox implements IGuiElement
         Draw.vertex(w, y, 0).endVertex();
         Draw.vertex(x, y, 0).endVertex();
         Draw.tessellate();
-        GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
+        GlStateManager.disableColorLogic();
         OpenGL.enableTexture2d();
     }
 
