@@ -67,6 +67,7 @@ public enum OperatingSystem
 		return UNKNOWN;
 	}
 
+	//TODO: Should add handling for applications such as MultiMC or other launchers. 
 	public File getMinecraftWorkingDirectory()
 	{
 		String userHome = System.getProperty("user.home", ".");
