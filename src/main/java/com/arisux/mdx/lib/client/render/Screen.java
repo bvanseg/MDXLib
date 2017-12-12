@@ -40,11 +40,11 @@ public class Screen
      */
     public static Vector2d scaledMousePosition()
     {
-        final int scaledWidth = scaledDisplayResolution().getScaledWidth();
-        final int scaledHeight = scaledDisplayResolution().getScaledHeight();
-        final int mouseX = Mouse.getX() * scaledWidth / Game.minecraft().displayWidth;
-        final int mouseY = scaledHeight - Mouse.getY() * scaledHeight / Game.minecraft().displayHeight - 1;
-        return new Vector2d(mouseX, mouseY);
+        final int SCALED_WIDTH = scaledDisplayResolution().getScaledWidth();
+        final int SCALED_HEIGHT = scaledDisplayResolution().getScaledHeight();
+        final int MOUSE_X = Mouse.getX() * SCALED_WIDTH / Game.minecraft().displayWidth;
+        final int MOUSE_Y = SCALED_HEIGHT - Mouse.getY() * SCALED_HEIGHT / Game.minecraft().displayHeight - 1;
+        return new Vector2d(MOUSE_X, MOUSE_Y);
     }
 
     /**

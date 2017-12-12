@@ -32,7 +32,7 @@ public class CommandGenerate extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        final EntityPlayer player = Players.getPlayerForCommandSender(sender);
+        final EntityPlayer PLAYER = Players.getPlayerForCommandSender(sender);
 
         if (args.length == 1 || args.length == 4)
         {
@@ -41,15 +41,15 @@ public class CommandGenerate extends CommandBase
             for (Schematic schematic : SchematicLoader.getSchematicRegistry())
             {
                 String schematicFileName = schematic.getFile().getName();
-                final String schematicName = schematicFileName.replace(".schematic", "");
+                final String SCHEMATIC_NAME = schematicFileName.replace(".schematic", "");
 
-                if (schematicTargetName.equals(schematicName))
+                if (schematicTargetName.equals(SCHEMATIC_NAME))
                 {
                     Pos data = null;
 
                     if (args.length == 1)
                     {
-                        data = new Pos(player.posX, player.posY, player.posZ);
+                        data = new Pos(PLAYER.posX, PLAYER.posY, PLAYER.posZ);
                     }
                     else if (args.length == 4)
                     {
@@ -59,12 +59,12 @@ public class CommandGenerate extends CommandBase
                         data = new Pos(posX, posY, posZ);
                     }
 
-                    WorldServer worldServer = server.worldServerForDimension(player.dimension);
+                    WorldServer worldServer = server.worldServerForDimension(PLAYER.dimension);
                     Structure structure = new Structure(schematic, worldServer, data) {
                         @Override
                         public String getName()
                         {
-                            return schematicName;
+                            return SCHEMATIC_NAME;
                         }
 
                         @Override
@@ -76,12 +76,12 @@ public class CommandGenerate extends CommandBase
                         @Override
                         public void onProcessingComplete()
                         {
-                            player.sendMessage(Chat.component("Generation of " + this.getName() + " completed."));
+                            PLAYER.sendMessage(Chat.component("Generation of " + this.getName() + " completed."));
                         }
                     };
 
                     StructureGenerationHandler.addStructureToQueue(structure);
-                    sender.sendMessage(Chat.component("Started generation of " + schematicName));
+                    sender.sendMessage(Chat.component("Started generation of " + SCHEMATIC_NAME));
                 }
             }
         }

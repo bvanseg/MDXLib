@@ -16,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 
 public interface IMaterialRenderer
 {
+	//TODO: adjust the DEFAULT_RL
 	public static final ResourceLocation DEFAULT_RL = new ResourceLocation(null);
 	
     public default void renderMaterialOverlay(Material material)

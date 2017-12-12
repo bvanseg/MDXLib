@@ -276,8 +276,8 @@ public class Access
         return renderLiving.mainModel;
     }
 
-    private static final MethodHandle CompressedStreamTools_writeTag;
-    private static final MethodHandle CompressedStreamTools_readTag;
+    private static final MethodHandle COMPRESSED_STREAM_TOOLS_WRITE_TAG;
+    private static final MethodHandle COMPRESSED_STREAM_TOOLS_READ_TAG;
 
     static
     {
@@ -287,11 +287,11 @@ public class Access
             
             method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "writeTag" : "func_150663_a", NBTBase.class, DataOutput.class);
             method.setAccessible(true);
-            CompressedStreamTools_writeTag = MethodHandles.publicLookup().unreflect(method);
+            COMPRESSED_STREAM_TOOLS_WRITE_TAG = MethodHandles.publicLookup().unreflect(method);
 
             method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "read" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
             method.setAccessible(true);
-            CompressedStreamTools_readTag = MethodHandles.publicLookup().unreflect(method);
+            COMPRESSED_STREAM_TOOLS_READ_TAG = MethodHandles.publicLookup().unreflect(method);
         }
         catch (Exception exception)
         {
@@ -307,7 +307,7 @@ public class Access
     {
         try
         {
-            Access.CompressedStreamTools_writeTag.invokeExact(base, dataoutput);
+            Access.COMPRESSED_STREAM_TOOLS_WRITE_TAG.invokeExact(base, dataoutput);
         }
         catch (Throwable e)
         {
@@ -322,7 +322,7 @@ public class Access
     {
         try
         {
-            return (NBTBase) Access.CompressedStreamTools_readTag.invokeExact(datainput, depth, sizeTracker);
+            return (NBTBase) Access.COMPRESSED_STREAM_TOOLS_READ_TAG.invokeExact(datainput, depth, sizeTracker);
         }
         catch (Throwable e)
         {
@@ -335,7 +335,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public static class ClientAccess
     {
-        private static final MethodHandle getEntityTexture;
+        private static final MethodHandle GET_ENTITY_TEXTURE;
 
         static
         {
@@ -343,7 +343,7 @@ public class Access
             {
                 Method method = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
                 method.setAccessible(true);
-                getEntityTexture = MethodHandles.publicLookup().unreflect(method);
+                GET_ENTITY_TEXTURE = MethodHandles.publicLookup().unreflect(method);
             }
             catch (Exception exception)
             {
@@ -358,7 +358,7 @@ public class Access
     {
         try
         {
-            return ((ResourceLocation) ClientAccess.getEntityTexture.invokeExact(render, (Entity) entity));
+            return ((ResourceLocation) ClientAccess.GET_ENTITY_TEXTURE.invokeExact(render, (Entity) entity));
         }
         catch (Throwable e)
         {

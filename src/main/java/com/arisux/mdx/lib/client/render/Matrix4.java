@@ -3,17 +3,17 @@ package com.arisux.mdx.lib.client.render;
 public class Matrix4
 {
     private float[] matrix;
-    public static final int size = 4;
+    public static final int SIZE = 4;
 
     public Matrix4()
     {
-        this.matrix = new float[size * size];
+        this.matrix = new float[SIZE * SIZE];
         this.setIdentity();
     }
 
     public Matrix4(float[] arr)
     {
-        int n = size * size;
+        int n = SIZE * SIZE;
 
         if (arr.length != n)
         {
@@ -25,7 +25,7 @@ public class Matrix4
 
     public void clone(Matrix4 other)
     {
-        matrix = new float[size * size];
+        matrix = new float[SIZE * SIZE];
 
         for (int i = 0; i < matrix.length; i++)
         {
@@ -40,9 +40,9 @@ public class Matrix4
             matrix[i] = 0;
         }
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < SIZE; i++)
         {
-            matrix[i * size + i] = 1;
+            matrix[i * SIZE + i] = 1;
         }
     }
 
@@ -52,15 +52,15 @@ public class Matrix4
         int idx = 0;
         float r;
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < SIZE; i++)
         {
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < SIZE; j++)
             {
                 r = 0;
 
-                for (int k = 0; k < size; k++)
+                for (int k = 0; k < SIZE; k++)
                 {
-                    r += this.matrix[i * size + k] * right.matrix[k * size + j];
+                    r += this.matrix[i * SIZE + k] * right.matrix[k * SIZE + j];
                 }
 
                 result.matrix[idx] = r;
@@ -85,7 +85,7 @@ public class Matrix4
         for (int i = 0; i < r.length; ++i)
         {
             r[i] = m[idx] * x + m[idx + 1] * y + m[idx + 2] * z + m[idx + 3] * w;
-            idx += size;
+            idx += SIZE;
         }
 
         return r;
@@ -96,9 +96,9 @@ public class Matrix4
         String r = "[Matrix4]\n";
         int idx = 0;
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < SIZE; i++)
         {
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < SIZE; j++)
             {
                 r += " " + matrix[idx++];
             }

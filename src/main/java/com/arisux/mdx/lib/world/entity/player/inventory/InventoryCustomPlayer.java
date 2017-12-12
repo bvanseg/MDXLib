@@ -11,8 +11,8 @@ import net.minecraft.util.text.TextComponentString;
 
 public class InventoryCustomPlayer implements IInventory
 {
-    private final String name = "Inventory";
-    private final String tagName = "InventoryNBTTagName";
+    private final String NAME = "Inventory";
+    private final String TAG_NAME = "InventoryNBTTagName";
     public static final int INV_SIZE = 2;
     private ItemStack[] inventory = new ItemStack[INV_SIZE];
 
@@ -127,14 +127,14 @@ public class InventoryCustomPlayer implements IInventory
             }
         }
 
-        nbt.setTag(tagName, items);
+        nbt.setTag(TAG_NAME, items);
         
         return nbt;
     }
 
     public void readFromNBT(NBTTagCompound compound)
     {
-        NBTTagList items = compound.getTagList(tagName, 0);
+        NBTTagList items = compound.getTagList(TAG_NAME, 0);
 
         for (int i = 0; i < items.tagCount(); ++i)
         {
@@ -151,7 +151,7 @@ public class InventoryCustomPlayer implements IInventory
     @Override
     public String getName()
     {
-        return this.name;
+        return this.NAME;
     }
 
     @Override
@@ -169,7 +169,7 @@ public class InventoryCustomPlayer implements IInventory
     @Override
     public ITextComponent getDisplayName()
     {
-        return new TextComponentString(this.name);
+        return new TextComponentString(this.NAME);
     }
     
     //TODO: Implement Unused Features

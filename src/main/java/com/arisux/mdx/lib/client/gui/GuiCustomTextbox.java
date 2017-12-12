@@ -923,13 +923,13 @@ public class GuiCustomTextbox implements IGuiElement
     @Override
     public void trackElement()
     {
-        GUIElementTracker.instance.track(this);
+        GUIElementTracker.INSTANCE.track(this);
     }
 
     @Override
     public void stopTracking()
     {
-        GUIElementTracker.instance.stopTracking(this);
+        GUIElementTracker.INSTANCE.stopTracking(this);
     }
 
     @Override

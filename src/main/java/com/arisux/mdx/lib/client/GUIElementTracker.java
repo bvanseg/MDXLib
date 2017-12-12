@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class GUIElementTracker
 {
-    public static final GUIElementTracker instance    = new GUIElementTracker();
+    public static final GUIElementTracker INSTANCE    = new GUIElementTracker();
 
     private ArrayList<IGuiElement>               guiElements = new ArrayList<IGuiElement>();
     private boolean                              canRelease;

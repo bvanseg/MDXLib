@@ -32,26 +32,26 @@ public class LargeExplosion
     private Random                        random;
     private ArrayList<Block>              excludedBlocks;
     private ArrayList<Material>           excludedMaterials;
-    private static final ArrayList<Block> excludeDefault = new ArrayList<Block>();
+    private static final ArrayList<Block> EXCLUDE_DEFAULT = new ArrayList<Block>();
 
     static
     {
-        excludeDefault.add(Blocks.BEDROCK);
+        EXCLUDE_DEFAULT.add(Blocks.BEDROCK);
     }
 
     public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, long seed)
     {
-        this(world, rX, rY, rZ, x, y, z, 1000F, seed, excludeDefault);
+        this(world, rX, rY, rZ, x, y, z, 1000F, seed, EXCLUDE_DEFAULT);
     }
 
     public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed)
     {
-        this(world, rX, rY, rZ, x, y, z, damage, seed, excludeDefault);
+        this(world, rX, rY, rZ, x, y, z, damage, seed, EXCLUDE_DEFAULT);
     }
 
     public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> exclude)
     {
-        this(world, rX, rY, rZ, x, y, z, damage, seed, excludeDefault, null, 0, 0);
+        this(world, rX, rY, rZ, x, y, z, damage, seed, EXCLUDE_DEFAULT, null, 0, 0);
     }
 
     public LargeExplosion(World world, double rX, double rY, double rZ, int x, int y, int z, float damage, long seed, ArrayList<Block> excludedBlocks, ArrayList<Material> excludedMaterials, int erb, int erm)

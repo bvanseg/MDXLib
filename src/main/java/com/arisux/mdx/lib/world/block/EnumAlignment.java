@@ -7,20 +7,20 @@ public enum EnumAlignment implements IStringSerializable
 {
     TOP("top"), BOTTOM("bottom"), SIDE("side");
 
-    private final String name;
+    private final String NAME;
 
     private EnumAlignment(String name)
     {
-        this.name = name;
+        this.NAME = name;
     }
 
     public String toString()
     {
-        return this.name;
+        return this.NAME;
     }
 
     public String getName()
     {
-        return this.name;
+        return this.NAME;
     }
 }

@@ -506,7 +506,7 @@ public class Draw
         }
         y = (int) MDXMath.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
 
-        Draw.guiHook.incZLevel(300);
+        Draw.GUI_HOOK.incZLevel(300);
         Draw.drawTooltipBox(x - 4, y - 4, w + 7, h + 7);
 
         for (String s : list)
@@ -525,7 +525,7 @@ public class Draw
         }
 
         tipLineHandlers.clear();
-        Draw.guiHook.incZLevel(-300);
+        Draw.GUI_HOOK.incZLevel(-300);
 
         OpenGL.enableDepthTest();
         OpenGL.enableRescaleNormal();
@@ -970,7 +970,7 @@ public class Draw
         float v = (float) (index / 16) / 16.0F;
         float mV = v + tS;
 
-        Draw.bindTexture(GameResources.particleTexture);
+        Draw.bindTexture(GameResources.PARTICLES);
         drawQuad(x, y, width, height, 0, u, mU, v, mV);
     }
 
@@ -1143,7 +1143,7 @@ public class Draw
         return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
     }
 
-    public static final GuiCustomScreen guiHook = new GuiCustomScreen();
+    public static final GuiCustomScreen GUI_HOOK = new GuiCustomScreen();
 
     public static void lightingHelper(Entity entity, float offset)
     {
