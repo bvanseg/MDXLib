@@ -6,6 +6,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
+import com.arisux.mdx.lib.util.Reflect;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
@@ -48,7 +50,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public Session getSession()
     {
-        return Game.minecraft().session;
+        return (Session) Reflect.get(Game.minecraft(), "session", "field_71449_j");
     }
 
     @SideOnly(Side.CLIENT)
