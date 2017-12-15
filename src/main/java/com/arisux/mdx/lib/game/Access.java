@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
+import net.minecraft.util.Timer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,7 +33,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public float getRenderPartialTicks()
     {
-        return Game.minecraft().timer.renderPartialTicks;
+        return ((Timer) Reflect.get(Game.minecraft(), "timer", "field_71428_T")).renderPartialTicks;
     }
 
     @SideOnly(Side.CLIENT)
