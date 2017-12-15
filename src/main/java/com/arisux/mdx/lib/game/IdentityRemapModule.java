@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class IdentityRemapModule
 {
-    public static final IdentityRemapModule instance = new IdentityRemapModule();
+    public static final IdentityRemapModule INSTANCE = new IdentityRemapModule();
 
     /** Entire mods that will be remapped **/
     private static ArrayList<ModIdentityMap> remappedMods;

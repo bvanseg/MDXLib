@@ -12,23 +12,23 @@ public enum OperatingSystem
 	OSX("osx", new String[] { "mac" }), 
 	UNKNOWN("unknown", new String[0]);
 
-	private final String name;
-	private final String[] aliases;
+	private final String NAME;
+	private final String[] ALIASES;
 
 	private OperatingSystem(String name, String[] aliases)
 	{
-		this.name = name;
-		this.aliases = (aliases == null ? new String[0] : aliases);
+		this.NAME = name;
+		this.ALIASES = (aliases == null ? new String[0] : aliases);
 	}
 
 	public String getName()
 	{
-		return this.name;
+		return this.NAME;
 	}
 
 	public String[] getAliases()
 	{
-		return this.aliases;
+		return this.ALIASES;
 	}
 
 	public boolean isSupported()
@@ -67,6 +67,7 @@ public enum OperatingSystem
 		return UNKNOWN;
 	}
 
+	//TODO: Should add handling for applications such as MultiMC or other launchers. 
 	public File getMinecraftWorkingDirectory()
 	{
 		String userHome = System.getProperty("user.home", ".");

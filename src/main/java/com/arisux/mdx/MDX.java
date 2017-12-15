@@ -39,28 +39,28 @@ public class MDX
 
     public static Console console()
     {
-        return Console.instance;
+        return Console.INSTANCE;
     }
 
     public static Logger log()
     {
-        return Console.logger;
+        return Console.LOGGER;
     }
 
     public static Settings settings()
     {
-        return Settings.instance;
+        return Settings.INSTANCE;
     }
 
     @SideOnly(Side.CLIENT)
     public static Notifications notifications()
     {
-        return Notifications.instance;
+        return Notifications.INSTANCE;
     }
 
     @SideOnly(Side.CLIENT)
     public static Renderers renders()
     {
-        return Renderers.instance;
+        return Renderers.INSTANCE;
     }
 }

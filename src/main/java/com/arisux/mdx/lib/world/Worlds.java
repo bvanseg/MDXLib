@@ -94,12 +94,6 @@ public class Worlds
         return Math.max(block, sky);
     }
 
-    @Deprecated
-    public static int getLightAtCoord(World world, Pos pos)
-    {
-        return getLightAtCoord(world, pos.blockPos());
-    }
-
     /**
      * Gets the next safe position below the specified position
      * 

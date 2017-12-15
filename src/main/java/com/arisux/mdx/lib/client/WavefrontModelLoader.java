@@ -11,7 +11,7 @@ import com.arisux.mdx.lib.client.render.wavefront.TriangulatedWavefrontModel;
 
 public class WavefrontModelLoader
 {
-    public static final WavefrontModelLoader            instance = new WavefrontModelLoader();
+    public static final WavefrontModelLoader            INSTANCE = new WavefrontModelLoader();
 
     /** The registry that contains all of the triangulated wavefront models currently registered **/
     private HashMap<String, TriangulatedWavefrontModel> modelRegistry;
@@ -26,7 +26,7 @@ public class WavefrontModelLoader
      */
     public static HashMap<String, TriangulatedWavefrontModel> getModelRegistry()
     {
-        return WavefrontModelLoader.instance.modelRegistry;
+        return WavefrontModelLoader.INSTANCE.modelRegistry;
     }
 
     /**

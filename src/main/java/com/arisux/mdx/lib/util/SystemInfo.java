@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class SystemInfo
 {
-    public static final SystemInfo              instance  = new SystemInfo();
+    public static final SystemInfo              INSTANCE  = new SystemInfo();
     public static int                           bytesUnit = 1024;
     public static Enumeration<NetworkInterface> networkAdapters;
     private static String                       processorName;

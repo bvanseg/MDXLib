@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class StructureGenerationHandler
 {
-    public static final StructureGenerationHandler instance = new StructureGenerationHandler();
+    public static final StructureGenerationHandler INSTANCE = new StructureGenerationHandler();
     private ArrayList<Structure> structuresInQueue = new ArrayList<Structure>();
 
     @SuppressWarnings("unchecked")
@@ -33,6 +33,6 @@ public class StructureGenerationHandler
 
     public static ArrayList<Structure> getStructuresInQueue()
     {
-        return instance.structuresInQueue;
+        return INSTANCE.structuresInQueue;
     }
 }

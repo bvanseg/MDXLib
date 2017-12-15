@@ -53,56 +53,15 @@ public class Sound
         return location;
     }
 
-    @Deprecated
-    public float getVolume()
-    {
-        return 1F;
-    }
-
-    @Deprecated
-    private void setReflectedVolume(Float volume)
-    {
-    }
-
-    @Deprecated
-    public Sound setVolume(float volume)
-    {
-        return this;
-    }
-
-    @Deprecated
-    public float getPitch()
-    {
-        return 1F;
-    }
-
-    @Deprecated
-    public Sound setPitch(float pitch)
-    {
-        return this;
-    }
-
     @Override
     public String toString()
     {
         return this.event.getRegistryName().toString();
     }
-
-    @Deprecated
-    public void playSound(Entity entity)
-    {
-        playSound(entity, 1F, 1F);
-    }
-
+    
     public void playSound(Entity entity, float volume, float pitch)
     {
         entity.playSound(event, volume, pitch);
-    }
-
-    @Deprecated
-    public void playSound(World world, BlockPos pos)
-    {
-        playSound(world, (int) pos.getX(), (int) pos.getY(), (int) pos.getZ(), 1F, 1F);
     }
 
     public void playSound(World world, BlockPos pos, float volume, float pitch)
@@ -110,27 +69,9 @@ public class Sound
         playSound(world, (int) pos.getX(), (int) pos.getY(), (int) pos.getZ(), volume, pitch);
     }
 
-    @Deprecated
-    public void playSound(World world, Pos pos)
-    {
-        playSound(world, (int) pos.x, (int) pos.y, (int) pos.z, 1F, 1F);
-    }
-
     public void playSound(World world, Pos pos, float volume, float pitch)
     {
         playSound(world, (int) pos.x, (int) pos.y, (int) pos.z, volume, pitch);
-    }
-
-    @Deprecated
-    public void playSound(World world, double x, double y, double z)
-    {
-        playSound(world, (int) x, (int) y, (int) z, 1F, 1F);
-    }
-
-    @Deprecated
-    public void playSound(World world, int x, int y, int z)
-    {
-        playSound(world, x, y, z, 1F, 1F);
     }
 
     public void playSound(World world, double x, double y, double z, float volume, float pitch)

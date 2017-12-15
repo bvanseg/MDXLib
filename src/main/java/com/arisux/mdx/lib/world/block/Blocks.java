@@ -8,11 +8,8 @@ import com.arisux.mdx.lib.world.Pos;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Blocks
 {
@@ -128,19 +125,5 @@ public class Blocks
     public static float getBlockHardness(Block blockParent)
     {
         return MDX.access().getBlockResistance(blockParent);
-    }
-
-    /**
-     * @param block - Block to get the ResourceLocation from
-     * @param side - Side to get the ResourceLocation from
-     * @return The ResourceLocation of the side of the specified Block
-     */
-    @Deprecated
-    @SideOnly(Side.CLIENT)
-    public static ResourceLocation getBlockTexture(Block block, int side)
-    {
-        // IIcon icon = block.getBlockTextureFromSide(side);
-        // return new ResourceLocation(getDomain(block).replace(":", ""), "textures/blocks/" + icon.getIconName().replace(getDomain(block), "") + ".png");
-        return new ResourceLocation(getDomain(block).replace(":", ""), "textures/blocks/" + block.getUnlocalizedName().replace(getDomain(block), "") + ".png");
     }
 }

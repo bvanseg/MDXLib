@@ -21,6 +21,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -124,6 +125,7 @@ public class Draw
         GL11.glLineWidth(width);
         OpenGL.color4i(color);
         OpenGL.translate(0F, 0F, depth);
+        //TODO: Find a replacement for this, doesn't seem to have an existing replacement in GLStateManager.
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex2d(x1, y1);
@@ -504,7 +506,7 @@ public class Draw
         }
         y = (int) MDXMath.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
 
-        Draw.guiHook.incZLevel(300);
+        Draw.GUI_HOOK.incZLevel(300);
         Draw.drawTooltipBox(x - 4, y - 4, w + 7, h + 7);
 
         for (String s : list)
@@ -523,7 +525,7 @@ public class Draw
         }
 
         tipLineHandlers.clear();
-        Draw.guiHook.incZLevel(-300);
+        Draw.GUI_HOOK.incZLevel(-300);
 
         OpenGL.enableDepthTest();
         OpenGL.enableRescaleNormal();
@@ -806,7 +808,7 @@ public class Draw
      */
     public static void drawEntity(int x, int y, int scale, float yaw, float pitch, Entity entity)
     {
-        OpenGL.enable(GL11.GL_COLOR_MATERIAL);
+        GlStateManager.enableColorMaterial();
         OpenGL.pushMatrix();
         {
             OpenGL.translate(x, y, 100.0F);
@@ -968,7 +970,7 @@ public class Draw
         float v = (float) (index / 16) / 16.0F;
         float mV = v + tS;
 
-        Draw.bindTexture(GameResources.particleTexture);
+        Draw.bindTexture(GameResources.PARTICLES);
         drawQuad(x, y, width, height, 0, u, mU, v, mV);
     }
 
@@ -1141,7 +1143,7 @@ public class Draw
         return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
     }
 
-    public static final GuiCustomScreen guiHook = new GuiCustomScreen();
+    public static final GuiCustomScreen GUI_HOOK = new GuiCustomScreen();
 
     public static void lightingHelper(Entity entity, float offset)
     {

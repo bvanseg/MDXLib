@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 
 public class EntityFXElectricArc extends Particle
 {
-    private static final ResourceLocation particleTextures = new ResourceLocation("textures/particle/particles.png");
+    private static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
     private Random                        rand;
     private int                           color;

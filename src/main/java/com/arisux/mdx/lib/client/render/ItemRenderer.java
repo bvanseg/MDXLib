@@ -34,9 +34,9 @@ import net.minecraftforge.client.model.IPerspectiveAwareModel;
 public abstract class ItemRenderer<M extends Model> implements IPerspectiveAwareModel, IBakedModel
 {
     protected TexturedModel<M>                          model;
-    protected static final Minecraft                    mc    = Minecraft.getMinecraft();
+    protected static final Minecraft                    MC    = Minecraft.getMinecraft();
     private ItemRenderList<M>                           overrides;
-    private final Pair<? extends IBakedModel, Matrix4f> selfPair;
+    private final Pair<? extends IBakedModel, Matrix4f> SELF_PAIR;
     private static List<BakedQuad>                      quads = Collections.emptyList();
     // protected ResourceLocation resource;
     // protected ModelBase model;
@@ -68,7 +68,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
     public ItemRenderer(TexturedModel<M> model)
     {
         this.overrides = new ItemRenderList();
-        this.selfPair = Pair.of(this, null);
+        this.SELF_PAIR = Pair.of(this, null);
 
         if (model != null)
         {
@@ -119,7 +119,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
         this.renderPost(this.stack, this.entity, type);
         GlStateManager.popMatrix();
 
-        return selfPair;
+        return SELF_PAIR;
     }
 
     public void renderPre(ItemStack itemstack, EntityLivingBase entity, TransformType cameraTransformType)
