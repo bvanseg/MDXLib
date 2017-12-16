@@ -59,6 +59,11 @@ public class Sound
         return this.event.getRegistryName().toString();
     }
     
+    public void playSound(Entity entity)
+    {
+        playSound(entity, 1F, 1F);
+    }
+    
     public void playSound(Entity entity, float volume, float pitch)
     {
         entity.playSound(event, volume, pitch);
