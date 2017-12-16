@@ -41,7 +41,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @EventBusSubscriber
 public abstract class StormProvider extends IRenderHandler implements Predicate<Entity>, IStormProvider
 {
-    protected final Random random       = new Random();
+    protected Random random       = new Random();
 
     protected float[]      stormX       = null;
     protected float[]      stormZ       = null;
@@ -53,7 +53,7 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent event)
     {
-        if (Game.minecraft().world != null && Game.minecraft().world.provider.getWeatherRenderer() instanceof StormProvider)
+        if (Game.minecraft().world != null && Game.minecraft().world.provider.getWeatherRenderer() instanceof StormProvider && !Game.minecraft().isGamePaused())
         {
             StormProvider weather = (StormProvider) Game.minecraft().world.provider.getWeatherRenderer();
 
@@ -131,6 +131,8 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
                             passes = 0;
                         }
 
+                        weather.random = new Random();
+
                         for (int i = 0; i < passes; ++i)
                         {
                             BlockPos pos1 = world.getPrecipitationHeight(blockpos.add(weather.random.nextInt(10) - weather.random.nextInt(10), 0, weather.random.nextInt(10) - weather.random.nextInt(10)));
@@ -138,7 +140,7 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
                             BlockPos pos2 = pos1.down();
                             IBlockState state = world.getBlockState(pos2);
 
-                            if (pos1.getY() <= blockpos.getY() + 10 && pos1.getY() >= blockpos.getY() - 10 && biome.canRain() && biome.getFloatTemperature(pos1) >= 0.15F)
+                            if (pos1.getY() <= blockpos.getY() + 10 && pos1.getY() >= blockpos.getY() - 10 && weather.isStormVisibleInBiome(biome))
                             {
                                 double xOffset = weather.random.nextDouble();
                                 double zOffset = weather.random.nextDouble();
@@ -160,7 +162,7 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
                                         double pX = (double) pos2.getX() + xOffset;
                                         double pY = (double) ((float) pos2.getY() + 0.1F) + box.maxY;
                                         double pZ = (double) pos2.getZ() + zOffset;
-
+                                        
                                         weather.spawnParticleOnGround(world, pX, pY, pZ);
                                     }
                                 }
