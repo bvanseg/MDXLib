@@ -5,10 +5,21 @@ import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.util.MDXMath;
 
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 
 public interface ICloudProvider
 {
     public float getCloudMovementSpeed(World world);
+    
+    public default float getMaxCloudSpeedDuringStorm()
+    {
+        return 24F;
+    }
+    
+    public default float getMaxNormalCloudSpeed()
+    {
+        return 8F;
+    }
     
     public Texture getCloudTexture();
     
@@ -21,4 +32,6 @@ public interface ICloudProvider
     {
         return 0;
     }
+    
+    public boolean areCloudsApplicableTo(WorldProvider provider);
 }
