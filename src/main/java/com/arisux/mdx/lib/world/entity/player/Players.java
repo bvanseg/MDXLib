@@ -1,11 +1,16 @@
 package com.arisux.mdx.lib.world.entity.player;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 import com.arisux.mdx.lib.util.Remote;
+import com.mojang.authlib.GameProfile;
 
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
@@ -74,10 +79,24 @@ public class Players
      */
     public static String getUUID(String username)
     {
-        String retrieved = Remote.query(String.format("https://aliensvspredator.org/login/auth-functions.php?function=uuid&user=%s", username));
+        String retrieved = Remote.query(String.format("http://aliensvspredator.org/login/api.mojang.php?function=uuid&user=%s", username));
         return retrieved != null && retrieved.length() >= 32 ? retrieved : username;
     }
-
+    
+    public static UUID toUUID(String uuid)
+    {
+        BigInteger bigInteger = new BigInteger(uuid, 16);
+        return new UUID(bigInteger.shiftRight(64).longValue(), bigInteger.longValue());
+    }
+    
+    public static ResourceLocation getPlayerSkin(String username)
+    {
+        UUID id = toUUID(Players.getUUID(username));
+        NetworkPlayerInfo playerInfo = new NetworkPlayerInfo(new GameProfile(id, username));
+        
+        return playerInfo.getLocationSkin();
+    }
+    
     /**
      * Returns an instance of EntityPlayer for the first player found with the specified username.
      * 
