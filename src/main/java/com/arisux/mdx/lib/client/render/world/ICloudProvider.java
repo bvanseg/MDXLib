@@ -13,12 +13,12 @@ public interface ICloudProvider
     
     public default float getMaxCloudSpeedDuringStorm()
     {
-        return 24F;
+        return 12F;
     }
     
     public default float getMaxNormalCloudSpeed()
     {
-        return 8F;
+        return 2F;
     }
     
     public Texture getCloudTexture();
@@ -34,4 +34,7 @@ public interface ICloudProvider
     }
     
     public boolean areCloudsApplicableTo(WorldProvider provider);
+    
+    /** Use this instead of vanilla's WorldProvider.getWeatherRenderer() due to incorrect render order **/
+    public IStormProvider getStormProvider();
 }

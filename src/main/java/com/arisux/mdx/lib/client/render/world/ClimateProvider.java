@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @EventBusSubscriber
-public abstract class CloudProvider extends IRenderHandler implements ICloudProvider
+public abstract class ClimateProvider extends IRenderHandler implements ICloudProvider
 {
     protected float cloudSpeed = getMaxNormalCloudSpeed();
     protected long  cloudTicks;
@@ -33,26 +33,26 @@ public abstract class CloudProvider extends IRenderHandler implements ICloudProv
 
         if (world != null && !Game.minecraft().isGamePaused())
         {
-            if (world.provider.getCloudRenderer() instanceof CloudProvider)
+            if (world.provider.getCloudRenderer() instanceof ClimateProvider)
             {
-                CloudProvider clouds = (CloudProvider) world.provider.getCloudRenderer();
+                ClimateProvider clouds = (ClimateProvider) world.provider.getCloudRenderer();
 
-                if (clouds.areCloudsApplicableTo(world.provider) && world.provider.getWeatherRenderer() instanceof StormProvider)
+                if (clouds.areCloudsApplicableTo(world.provider) && clouds.getStormProvider() instanceof StormProvider)
                 {
-                    StormProvider stormProvider = (StormProvider) world.provider.getWeatherRenderer();
+                    StormProvider stormProvider = (StormProvider) clouds.getStormProvider();
 
                     if (stormProvider.isStormActive(world))
                     {
                         if (clouds.cloudSpeed < clouds.getMaxCloudSpeedDuringStorm())
                         {
-                            clouds.cloudSpeed += 0.125F;
+                            clouds.cloudSpeed += 0.0125F;
                         }
                     }
                     else
                     {
                         if (clouds.cloudSpeed > clouds.getMaxNormalCloudSpeed())
                         {
-                            clouds.cloudSpeed -= 0.125F;
+                            clouds.cloudSpeed -= 0.0125F;
                         }
                     }
 
@@ -66,9 +66,9 @@ public abstract class CloudProvider extends IRenderHandler implements ICloudProv
     @Override
     public void render(float partialTicks, WorldClient world, Minecraft mc)
     {
-        if (world.provider.getCloudRenderer() instanceof CloudProvider)
+        if (world.provider.getCloudRenderer() instanceof ClimateProvider)
         {
-            CloudProvider clouds = (CloudProvider) world.provider.getCloudRenderer();
+            ClimateProvider clouds = (ClimateProvider) world.provider.getCloudRenderer();
 
             if (clouds.areCloudsApplicableTo(world.provider))
             {
@@ -211,5 +211,11 @@ public abstract class CloudProvider extends IRenderHandler implements ICloudProv
     public float getCloudMovementSpeed(World world)
     {
         return cloudSpeed;
+    }
+    
+    @Override
+    public IStormProvider getStormProvider()
+    {
+        return null;
     }
 }

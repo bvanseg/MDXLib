@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -39,147 +39,152 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Provider will not work without it.
  **/
 @EventBusSubscriber
-public abstract class StormProvider extends IRenderHandler implements Predicate<Entity>, IStormProvider
+public abstract class StormProvider implements Predicate<Entity>, IStormProvider
 {
-    protected Random random       = new Random();
+    protected Random  random       = new Random();
 
-    protected float[]      stormX       = null;
-    protected float[]      stormZ       = null;
-    protected float        stormDensity = 0.0F;
-    protected int          rainSoundCounter;
-    protected boolean      renderStorm;
-    
+    protected float[] stormX       = null;
+    protected float[] stormZ       = null;
+    protected float   stormDensity = 0.0F;
+    protected int     rainSoundCounter;
+    protected boolean renderStorm;
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent event)
     {
-        if (Game.minecraft().world != null && Game.minecraft().world.provider.getWeatherRenderer() instanceof StormProvider && !Game.minecraft().isGamePaused())
+        if (Game.minecraft().world != null && Game.minecraft().world.provider.getCloudRenderer() instanceof ClimateProvider && !Game.minecraft().isGamePaused())
         {
-            StormProvider weather = (StormProvider) Game.minecraft().world.provider.getWeatherRenderer();
+            ClimateProvider climate = (ClimateProvider) Game.minecraft().world.provider.getCloudRenderer();
 
-            if (weather.isStormApplicableTo(Game.minecraft().world.provider))
+            if (climate.getStormProvider() instanceof StormProvider)
             {
-                int s = weather.getStormSize();
-                weather.updateStorm(Game.minecraft().world);
+                StormProvider weather = (StormProvider) climate.getStormProvider();
 
-                if (weather.stormX == null || weather.stormZ == null)
+                if (weather.isStormApplicableTo(Game.minecraft().world.provider))
                 {
-                    weather.stormX = new float[s * s];
-                    weather.stormZ = new float[s * s];
+                    int s = weather.getStormSize();
+                    weather.updateStorm(Game.minecraft().world);
 
-                    for (int zCoord = 0; zCoord < s; ++zCoord)
+                    if (weather.stormX == null || weather.stormZ == null)
                     {
-                        for (int xCoord = 0; xCoord < s; ++xCoord)
+                        weather.stormX = new float[s * s];
+                        weather.stormZ = new float[s * s];
+
+                        for (int zCoord = 0; zCoord < s; ++zCoord)
                         {
-                            float x = xCoord - 16;
-                            float z = zCoord - 16;
-                            float sq = MathHelper.sqrt(x * x + z * z);
-                            weather.stormX[zCoord << 5 | xCoord] = -z / sq;
-                            weather.stormZ[zCoord << 5 | xCoord] = x / sq;
+                            for (int xCoord = 0; xCoord < s; ++xCoord)
+                            {
+                                float x = xCoord - 16;
+                                float z = zCoord - 16;
+                                float sq = MathHelper.sqrt(x * x + z * z);
+                                weather.stormX[zCoord << 5 | xCoord] = -z / sq;
+                                weather.stormZ[zCoord << 5 | xCoord] = x / sq;
+                            }
                         }
                     }
-                }
 
-                if (weather.isStormActive(Game.minecraft().world))
-                {
-                    weather.renderStorm = true;
+                    if (weather.isStormActive(Game.minecraft().world))
+                    {
+                        weather.renderStorm = true;
 
-                    if (weather.stormDensity < 1.0F)
-                    {
-                        weather.stormDensity += 0.0025F;
-                    }
-                }
-                else
-                {
-                    if (weather.stormDensity >= 0.0F)
-                    {
-                        weather.stormDensity -= 0.0025F;
+                        if (weather.stormDensity < 1.0F)
+                        {
+                            weather.stormDensity += 0.0025F;
+                        }
                     }
                     else
                     {
-                        weather.renderStorm = false;
-                        weather.stormDensity = 0.0F;
-                    }
-                }
-
-                if (weather.isStormActive(Game.minecraft().world))
-                {
-                    float strength = weather.getStormStrength();
-
-                    if (!Game.minecraft().gameSettings.fancyGraphics)
-                    {
-                        strength /= 2.0F;
+                        if (weather.stormDensity >= 0.0F)
+                        {
+                            weather.stormDensity -= 0.0025F;
+                        }
+                        else
+                        {
+                            weather.renderStorm = false;
+                            weather.stormDensity = 0.0F;
+                        }
                     }
 
-                    if (strength != 0.0F)
+                    if (weather.isStormActive(Game.minecraft().world))
                     {
-                        Entity entity = Game.minecraft().getRenderViewEntity();
-                        World world = entity.world;
-                        BlockPos blockpos = new BlockPos(entity);
-                        double x = 0.0D;
-                        double y = 0.0D;
-                        double z = 0.0D;
-                        int particleCount = 0;
-                        int passes = (int) (100.0F * strength * strength);
+                        float strength = weather.getStormStrength();
 
-                        if (Game.minecraft().gameSettings.particleSetting == 1)
+                        if (!Game.minecraft().gameSettings.fancyGraphics)
                         {
-                            passes >>= 1;
-                        }
-                        else if (Game.minecraft().gameSettings.particleSetting == 2)
-                        {
-                            passes = 0;
+                            strength /= 2.0F;
                         }
 
-                        weather.random = new Random();
-
-                        for (int i = 0; i < passes; ++i)
+                        if (strength != 0.0F)
                         {
-                            BlockPos pos1 = world.getPrecipitationHeight(blockpos.add(weather.random.nextInt(10) - weather.random.nextInt(10), 0, weather.random.nextInt(10) - weather.random.nextInt(10)));
-                            Biome biome = world.getBiome(pos1);
-                            BlockPos pos2 = pos1.down();
-                            IBlockState state = world.getBlockState(pos2);
+                            Entity entity = Game.minecraft().getRenderViewEntity();
+                            World world = entity.world;
+                            BlockPos blockpos = new BlockPos(entity);
+                            double x = 0.0D;
+                            double y = 0.0D;
+                            double z = 0.0D;
+                            int particleCount = 0;
+                            int passes = (int) (100.0F * strength * strength);
 
-                            if (pos1.getY() <= blockpos.getY() + 10 && pos1.getY() >= blockpos.getY() - 10 && weather.isStormVisibleInBiome(biome))
+                            if (Game.minecraft().gameSettings.particleSetting == 1)
                             {
-                                double xOffset = weather.random.nextDouble();
-                                double zOffset = weather.random.nextDouble();
-                                AxisAlignedBB box = state.getBoundingBox(world, pos2);
+                                passes >>= 1;
+                            }
+                            else if (Game.minecraft().gameSettings.particleSetting == 2)
+                            {
+                                passes = 0;
+                            }
 
-                                if (state.getMaterial() != Material.LAVA && state.getBlock() != Blocks.MAGMA)
+                            weather.random = new Random();
+
+                            for (int i = 0; i < passes; ++i)
+                            {
+                                BlockPos pos1 = world.getPrecipitationHeight(blockpos.add(weather.random.nextInt(10) - weather.random.nextInt(10), 0, weather.random.nextInt(10) - weather.random.nextInt(10)));
+                                Biome biome = world.getBiome(pos1);
+                                BlockPos pos2 = pos1.down();
+                                IBlockState state = world.getBlockState(pos2);
+
+                                if (pos1.getY() <= blockpos.getY() + 10 && pos1.getY() >= blockpos.getY() - 10 && weather.isStormVisibleInBiome(biome))
                                 {
-                                    if (state.getMaterial() != Material.AIR)
+                                    double xOffset = weather.random.nextDouble();
+                                    double zOffset = weather.random.nextDouble();
+                                    AxisAlignedBB box = state.getBoundingBox(world, pos2);
+
+                                    if (state.getMaterial() != Material.LAVA && state.getBlock() != Blocks.MAGMA)
                                     {
-                                        ++particleCount;
-
-                                        if (weather.random.nextInt(particleCount) == 0)
+                                        if (state.getMaterial() != Material.AIR)
                                         {
-                                            x = (double) pos2.getX() + xOffset;
-                                            y = (double) ((float) pos2.getY() + 0.1F) + box.maxY - 1.0D;
-                                            z = (double) pos2.getZ() + zOffset;
-                                        }
+                                            ++particleCount;
 
-                                        double pX = (double) pos2.getX() + xOffset;
-                                        double pY = (double) ((float) pos2.getY() + 0.1F) + box.maxY;
-                                        double pZ = (double) pos2.getZ() + zOffset;
-                                        
-                                        weather.spawnParticleOnGround(world, pX, pY, pZ);
+                                            if (weather.random.nextInt(particleCount) == 0)
+                                            {
+                                                x = (double) pos2.getX() + xOffset;
+                                                y = (double) ((float) pos2.getY() + 0.1F) + box.maxY - 1.0D;
+                                                z = (double) pos2.getZ() + zOffset;
+                                            }
+
+                                            double pX = (double) pos2.getX() + xOffset;
+                                            double pY = (double) ((float) pos2.getY() + 0.1F) + box.maxY;
+                                            double pZ = (double) pos2.getZ() + zOffset;
+
+                                            weather.spawnParticleOnGround(world, pX, pY, pZ);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (particleCount > 0 && weather.random.nextInt(3) < weather.rainSoundCounter++)
-                        {
-                            weather.rainSoundCounter = 0;
+                            if (particleCount > 0 && weather.random.nextInt(3) < weather.rainSoundCounter++)
+                            {
+                                weather.rainSoundCounter = 0;
 
-                            if (y > (double) (blockpos.getY() + 1) && world.getPrecipitationHeight(blockpos).getY() > MathHelper.floor((float) blockpos.getY()))
-                            {
-                                weather.playStormSoundAbove(world, x, y, z);
-                            }
-                            else
-                            {
-                                weather.playStormSound(world, x, y, z);
+                                if (y > (double) (blockpos.getY() + 1) && world.getPrecipitationHeight(blockpos).getY() > MathHelper.floor((float) blockpos.getY()))
+                                {
+                                    weather.playStormSoundAbove(world, x, y, z);
+                                }
+                                else
+                                {
+                                    weather.playStormSound(world, x, y, z);
+                                }
                             }
                         }
                     }
@@ -191,10 +196,15 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
     @SubscribeEvent
     public static void worldTickEvent(WorldTickEvent event)
     {
-        if (event.world != null && event.world.provider.getWeatherRenderer() instanceof StormProvider)
+        if (event.world != null && event.world.provider.getCloudRenderer() instanceof ClimateProvider)
         {
-            StormProvider weather = (StormProvider) event.world.provider.getWeatherRenderer();
-            weather.updateStorm(event.world);
+            ClimateProvider climate = (ClimateProvider) event.world.provider.getCloudRenderer();
+
+            if (climate.getStormProvider() instanceof StormProvider)
+            {
+                StormProvider storm = (StormProvider) climate.getStormProvider();
+                storm.updateStorm(event.world);
+            }
         }
     }
 
@@ -220,8 +230,25 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
         }
     }
 
-    @Override
-    public void render(float partialTicks, WorldClient world, Minecraft mc)
+    @SubscribeEvent
+    public static void renderLast(RenderWorldLastEvent event)
+    {
+        if (Game.minecraft().world != null)
+        {
+            if (Game.minecraft().world.provider.getCloudRenderer() instanceof ClimateProvider)
+            {
+                ClimateProvider clouds = (ClimateProvider) Game.minecraft().world.provider.getCloudRenderer();
+
+                if (clouds.getStormProvider() instanceof StormProvider)
+                {
+                    StormProvider storm = (StormProvider) clouds.getStormProvider();
+                    storm.renderStorm(event.getPartialTicks(), Game.minecraft().world, Minecraft.getMinecraft());
+                }
+            }
+        }
+    }
+
+    public void renderStorm(float partialTicks, WorldClient world, Minecraft mc)
     {
         if (!isStormActive(world) && !renderStorm)
         {
@@ -256,6 +283,7 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
         double renderPartialZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
         int renderYFloor = MathHelper.floor(renderPartialY);
         int stormDepth = 5;
+        int stormHeight = 6 + stormDepth;
 
         if (Game.minecraft().gameSettings.fancyGraphics)
         {
@@ -263,48 +291,47 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
         }
 
         int lastPass = -1;
-        GlStateManager.rotate(getStormDirection(), 0F, 1F, 0F);
         buffer.setTranslation(-renderPartialX, -renderPartialY, -renderPartialZ);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-        for (int vZ = posZ - stormDepth; vZ <= posZ + stormDepth; ++vZ)
+        for (int z = posZ - stormDepth; z <= posZ + stormDepth; ++z)
         {
-            for (int vX = posX - stormDepth; vX <= posX + stormDepth; ++vX)
+            for (int x = posX - stormDepth; x <= posX + stormDepth; ++x)
             {
-                int idx = (vZ - posZ + 16) * 32 + vX - posX + 16;
+                int idx = (z - posZ + 16) * 32 + x - posX + 16;
                 double rX = (double) this.stormX[idx] * 0.5D;
                 double rZ = (double) this.stormZ[idx] * 0.5D;
-                pos.setPos(vX, 0, vZ);
+                pos.setPos(x, 0, z);
                 Biome biome = world.getBiome(pos);
 
                 if (isStormVisibleInBiome(biome) && renderStorm)
                 {
-                    int stormHeight = world.getPrecipitationHeight(pos).getY();
-                    int minY = posY - stormDepth;
-                    int maxY = posY + stormDepth;
+                    int startHeight = world.getPrecipitationHeight(pos).getY();
+                    int minY = posY - stormHeight;
+                    int maxY = posY + stormHeight;
 
-                    if (minY < stormHeight)
+                    if (minY < startHeight)
                     {
-                        minY = stormHeight;
+                        minY = startHeight;
                     }
 
-                    if (maxY < stormHeight)
+                    if (maxY < startHeight)
                     {
-                        maxY = stormHeight;
+                        maxY = startHeight;
                     }
 
-                    int vY = stormHeight;
+                    int vY = startHeight;
 
-                    if (stormHeight < renderYFloor)
+                    if (startHeight < renderYFloor)
                     {
                         vY = renderYFloor;
                     }
 
                     if (minY != maxY)
                     {
-                        this.random.setSeed((long) (vX * vX * 3121 + vX * 45238971 ^ vZ * vZ * 418711 + vZ * 13761));
-                        pos.setPos(vX, minY, vZ);
+                        this.random.setSeed((long) (x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761));
+                        pos.setPos(x, minY, z);
                         OpenGL.enableCullFace();
 
                         if (lastPass != 0)
@@ -319,20 +346,21 @@ public abstract class StormProvider extends IRenderHandler implements Predicate<
                             buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
                         }
 
-                        float vTravel = -(((Game.minecraft().world.getWorldTime() + (vX * vX) + vX + (vZ * vZ) + vZ) & 31) + partialTicks) / getStormDownfallSpeed();
-                        float hTravel = (((Game.minecraft().world.getWorldTime() + (vX * vX) + vX + (vZ * vZ) + vZ) & 31) + partialTicks) / getStormWindSpeed();
-                        double offsetX = (double) ((float) vX + 0.5F) - entity.posX;
-                        double offsetZ = (double) ((float) vZ + 0.5F) - entity.posZ;
+                        float vTravel = -(((Game.minecraft().world.getWorldTime() + (x * x) + x + (z * z) + z) & 31) + partialTicks) / getStormDownfallSpeed();
+                        float hTravel = (((Game.minecraft().world.getWorldTime() + (x * x) + x + (z * z) + z) & 31) + partialTicks) / getStormWindSpeed();
+                        
+                        double offsetX = (double) ((float) x + 0.5F) - entity.posX;
+                        double offsetZ = (double) ((float) z + 0.5F) - entity.posZ;
                         float strength = MathHelper.sqrt(offsetX * offsetX + offsetZ * offsetZ) / (float) stormDepth;
                         float alpha = ((1.0F - strength * strength) * 0.5F + 0.5F) * getStormDensity();
-                        pos.setPos(vX, vY, vZ);
+                        pos.setPos(x, vY, z);
                         int light = world.getCombinedLight(pos, 0);
                         int lightmapX = light >> 16 & 65535;
                         int lightmapY = light & 65535;
-                        buffer.pos((double) vX - rX + 0.5D, (double) minY, (double) vZ - rZ + 0.5D + hTravel).tex(0.0D, (double) maxY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
-                        buffer.pos((double) vX + rX + 0.5D, (double) minY, (double) vZ + rZ + 0.5D + hTravel).tex(1.0D, (double) maxY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
-                        buffer.pos((double) vX + rX + 0.5D, (double) maxY, (double) vZ + rZ + 0.5D + hTravel).tex(1.0D, (double) minY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
-                        buffer.pos((double) vX - rX + 0.5D, (double) maxY, (double) vZ - rZ + 0.5D + hTravel).tex(0.0D, (double) minY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
+                        buffer.pos((double) x - rX + 0.5D, (double) minY, (double) z - rZ + 0.5D + hTravel).tex(0.0D, (double) maxY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
+                        buffer.pos((double) x + rX + 0.5D, (double) minY, (double) z + rZ + 0.5D + hTravel).tex(1.0D, (double) maxY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
+                        buffer.pos((double) x + rX + 0.5D, (double) maxY, (double) z + rZ + 0.5D + hTravel).tex(1.0D, (double) minY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
+                        buffer.pos((double) x - rX + 0.5D, (double) maxY, (double) z - rZ + 0.5D + hTravel).tex(0.0D, (double) minY * 0.25D + vTravel).color(1.0F, 1.0F, 1.0F, alpha).lightmap(lightmapX, lightmapY).endVertex();
                     }
                 }
             }
