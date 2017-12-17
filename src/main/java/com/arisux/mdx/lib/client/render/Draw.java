@@ -26,7 +26,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -994,45 +997,43 @@ public class Draw
 
     public static void renderItem(ItemStack stack, int x, int y)
     {
-        Game.minecraft().getRenderItem().renderItemIntoGUI(stack, x, y);
+        OpenGL.pushMatrix();
+        OpenGL.translate(0F, 0F, -100F);
+
+        GlStateManager.pushMatrix();
+        Game.minecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Game.minecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        
+        GlStateManager.translate((float)x, (float)y, 100F);
+        GlStateManager.translate(8.0F, 8.0F, 0.0F);
+        GlStateManager.scale(1.0F, -1.0F, 1.0F);
+        GlStateManager.scale(16.0F, 16.0F, 16.0F);
+        
+        IBakedModel ibakedmodel = Game.minecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
+        ibakedmodel = ibakedmodel.getOverrides().handleItemState(ibakedmodel, stack, Game.minecraft().world, Game.minecraft().player);
+        ibakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ibakedmodel, ItemCameraTransforms.TransformType.GUI, false);
+        
+        Game.minecraft().getRenderItem().renderItem(stack, ibakedmodel);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
+        Game.minecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Game.minecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        
+        OpenGL.popMatrix();
     }
 
     /**
-     * Draw the IIcon of the specified Item at the specified coordinates and dimensions
+     * Draw the specified itemstack in a GUI with a flat icon. No 3D rendering is done.
      * 
-     * @param item - Item to draw the iicon of.
-     * @param x - x coordinate
-     * @param y - y corodinate
-     * @param width - Width to render the icon at
-     * @param height - Height to render the icon at
-     */
-    @Deprecated
-    public static void drawItemIcon(Item item, int x, int y, int width, int height)
-    {
-        ;
-    }
-
-    /**
-     * Draw the IIcon of the specified Block side at the specified coordinates and dimensions
-     * 
-     * @param block - Block to draw the iicon of.
-     * @param side - ID of the side of the Block to draw.
-     * @param x - x coordinate
-     * @param y - y corodinate
-     * @param width - Width to render the icon at
-     * @param height - Height to render the icon at
-     */
-    @Deprecated
-    public static void drawBlockSide(Block block, int side, int x, int y, int width, int height)
-    {
-        Draw.drawBlockSide(block, side, x, y, width, height, 1, 1);
-    }
-
-    /**
-     * Draw the IIcon of the specified Block side at the specified coordinates and dimensions
-     * 
-     * @param block - Block to draw the iicon of.
-     * @param side - ID of the side of the Block to draw.
+     * @param stack - The itemstack to draw
      * @param x - x coordinate
      * @param y - y corodinate
      * @param width - Width to render the icon at
@@ -1040,10 +1041,25 @@ public class Draw
      * @param u - x coordinate of the texture offset
      * @param v - y coordinate of the texture offset
      */
-    @Deprecated
-    public static void drawBlockSide(Block block, int side, int x, int y, int width, int height, float u, float v)
+    public static void drawItem(ItemStack stack, int x, int y, int width, int height)
     {
-        ;
+        IBakedModel ibakedmodel = Game.minecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
+        ibakedmodel = ibakedmodel.getOverrides().handleItemState(ibakedmodel, stack, Game.minecraft().world, Game.minecraft().player);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.disableLighting();
+        Draw.bindTexture(getResourceLocationFullPath(ibakedmodel.getParticleTexture()));
+        Draw.drawQuad(x, y, width, height);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -1077,7 +1093,7 @@ public class Draw
 
                     if (slotStack != null)
                     {
-                        drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                        drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                     }
                 }
 
@@ -1098,7 +1114,7 @@ public class Draw
 
                                 if (item != null)
                                 {
-                                    drawItemIcon(item, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                    drawItem(new ItemStack(item, 1), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                 }
                             }
                             else if ((gX + gY * 3) < recipe.getInput().length)
@@ -1109,7 +1125,7 @@ public class Draw
 
                                     if (slotStack != null)
                                     {
-                                        drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                        drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                     }
                                 }
                             }
@@ -1150,15 +1166,25 @@ public class Draw
 
     public static ResourceLocation getResourceLocationFullPath(TextureAtlasSprite sprite)
     {
-        Minecraft mc = Game.minecraft();
-        ResourceLocation r = new ResourceLocation(sprite.getIconName());
-        return new ResourceLocation(r.getResourceDomain(), String.format("%s/%s%s", new Object[] { mc.getTextureMapBlocks().getBasePath(), r.getResourcePath(), ".png" }));
+        if (sprite != null)
+        {
+            Minecraft mc = Game.minecraft();
+            ResourceLocation r = new ResourceLocation(sprite.getIconName());
+            return new ResourceLocation(r.getResourceDomain(), String.format("%s/%s%s", new Object[] { mc.getTextureMapBlocks().getBasePath(), r.getResourcePath(), ".png" }));
+        }
+
+        return getMissingTexture();
     }
 
     public static ResourceLocation getResourceLocationPartialPath(TextureAtlasSprite sprite)
     {
-        ResourceLocation r = new ResourceLocation(sprite.getIconName());
-        return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
+        if (sprite != null)
+        {
+            ResourceLocation r = new ResourceLocation(sprite.getIconName());
+            return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
+        }
+
+        return getMissingTexture();
     }
 
     public static final GuiCustomScreen GUI_HOOK = new GuiCustomScreen();
