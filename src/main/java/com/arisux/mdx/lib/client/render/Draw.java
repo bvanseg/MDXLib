@@ -14,11 +14,12 @@ import com.arisux.mdx.lib.client.gui.GuiCustomScreen;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.GameResources;
 import com.arisux.mdx.lib.util.MDXMath;
-import com.arisux.mdx.lib.util.Remote;
 import com.arisux.mdx.lib.world.Worlds;
+import com.arisux.mdx.lib.world.entity.player.Players;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +28,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -834,11 +834,29 @@ public class Draw
      */
     public static void drawPlayerFace(String username, int x, int y, int width, int height)
     {
-        ResourceLocation resource = Remote.downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), DefaultPlayerSkin.getDefaultSkin(EntityPlayer.getOfflineUUID(username)), false);
+        Draw.bindTexture(Players.getPlayerSkin(username));
+        drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.125F, 0.25F);
+        drawQuad(x, y, width, height, 90, 0.625F, 0.75F, 0.125F, 0.25F);
+    }
 
-        Draw.bindTexture(resource);
-        drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.25F, 0.5F);
-        drawQuad(x, y, width, height, 90, 0.75F, 0.625F, 0.25F, 0.5F);
+    /**
+     * Draw the client player's face. Will default to a Steve face if one is not present.
+     * 
+     * @param player - The client player
+     * @param x - x coordinate
+     * @param y - y coordinate
+     * @param width - Width to render the face at.
+     * @param height - Height to render the face at.
+     */
+    public static void drawPlayerFace(EntityPlayer player, int x, int y, int width, int height)
+    {
+        if (player instanceof AbstractClientPlayer)
+        {
+            AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
+            Draw.bindTexture(clientPlayer.getLocationSkin());
+            drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.125F, 0.25F);
+            drawQuad(x, y, width, height, 90, 0.625F, 0.75F, 0.125F, 0.25F);
+        }
     }
 
     /**
