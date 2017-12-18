@@ -271,6 +271,7 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
         GlStateManager.glNormal3f(0.0F, 1.0F, 0.0F);
         GlStateManager.enableBlend();
         OpenGL.blendClear();
+        GlStateManager.enableColorMaterial();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         if (!doesLightingApply())
