@@ -6,8 +6,6 @@ import javax.vecmath.Vector2d;
 
 import org.lwjgl.input.Mouse;
 
-import com.arisux.mdx.Console;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.client.gui.GuiCustomTextbox;
 import com.arisux.mdx.lib.client.gui.IGuiElement;
 import com.arisux.mdx.lib.client.render.Screen;
@@ -18,7 +16,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class GUIElementTracker
 {
-    public static final GUIElementTracker instance    = new GUIElementTracker();
+    public static final GUIElementTracker INSTANCE    = new GUIElementTracker();
 
     private ArrayList<IGuiElement>               guiElements = new ArrayList<IGuiElement>();
     private boolean                              canRelease;

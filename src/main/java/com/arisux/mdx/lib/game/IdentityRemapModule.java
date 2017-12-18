@@ -2,9 +2,7 @@ package com.arisux.mdx.lib.game;
 
 import java.util.ArrayList;
 
-import com.arisux.mdx.Console;
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.game.ModIdentityMap.IdentityMap;
 
 import net.minecraft.block.Block;
@@ -18,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class IdentityRemapModule
 {
-    public static final IdentityRemapModule instance = new IdentityRemapModule();
+    public static final IdentityRemapModule INSTANCE = new IdentityRemapModule();
 
     /** Entire mods that will be remapped **/
     private static ArrayList<ModIdentityMap> remappedMods;

@@ -14,19 +14,23 @@ import com.arisux.mdx.lib.client.gui.GuiCustomScreen;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.GameResources;
 import com.arisux.mdx.lib.util.MDXMath;
-import com.arisux.mdx.lib.util.Remote;
 import com.arisux.mdx.lib.world.Worlds;
+import com.arisux.mdx.lib.world.entity.player.Players;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -124,6 +128,7 @@ public class Draw
         GL11.glLineWidth(width);
         OpenGL.color4i(color);
         OpenGL.translate(0F, 0F, depth);
+        //TODO: Find a replacement for this, doesn't seem to have an existing replacement in GLStateManager.
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex2d(x1, y1);
@@ -504,7 +509,7 @@ public class Draw
         }
         y = (int) MDXMath.clip(y, 8, Screen.scaledDisplayResolution().getScaledHeight() - 8 - h);
 
-        Draw.guiHook.incZLevel(300);
+        Draw.GUI_HOOK.incZLevel(300);
         Draw.drawTooltipBox(x - 4, y - 4, w + 7, h + 7);
 
         for (String s : list)
@@ -523,7 +528,7 @@ public class Draw
         }
 
         tipLineHandlers.clear();
-        Draw.guiHook.incZLevel(-300);
+        Draw.GUI_HOOK.incZLevel(-300);
 
         OpenGL.enableDepthTest();
         OpenGL.enableRescaleNormal();
@@ -806,7 +811,7 @@ public class Draw
      */
     public static void drawEntity(int x, int y, int scale, float yaw, float pitch, Entity entity)
     {
-        OpenGL.enable(GL11.GL_COLOR_MATERIAL);
+        GlStateManager.enableColorMaterial();
         OpenGL.pushMatrix();
         {
             OpenGL.translate(x, y, 100.0F);
@@ -832,11 +837,29 @@ public class Draw
      */
     public static void drawPlayerFace(String username, int x, int y, int width, int height)
     {
-        ResourceLocation resource = Remote.downloadResource(String.format("http://s3.amazonaws.com/MinecraftSkins/%s.png", username), DefaultPlayerSkin.getDefaultSkin(EntityPlayer.getOfflineUUID(username)), false);
+        Draw.bindTexture(Players.getPlayerSkin(username));
+        drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.125F, 0.25F);
+        drawQuad(x, y, width, height, 90, 0.625F, 0.75F, 0.125F, 0.25F);
+    }
 
-        Draw.bindTexture(resource);
-        drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.25F, 0.5F);
-        drawQuad(x, y, width, height, 90, 0.75F, 0.625F, 0.25F, 0.5F);
+    /**
+     * Draw the client player's face. Will default to a Steve face if one is not present.
+     * 
+     * @param player - The client player
+     * @param x - x coordinate
+     * @param y - y coordinate
+     * @param width - Width to render the face at.
+     * @param height - Height to render the face at.
+     */
+    public static void drawPlayerFace(EntityPlayer player, int x, int y, int width, int height)
+    {
+        if (player instanceof AbstractClientPlayer)
+        {
+            AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
+            Draw.bindTexture(clientPlayer.getLocationSkin());
+            drawQuad(x, y, width, height, 90, 0.125F, 0.25F, 0.125F, 0.25F);
+            drawQuad(x, y, width, height, 90, 0.625F, 0.75F, 0.125F, 0.25F);
+        }
     }
 
     /**
@@ -968,51 +991,49 @@ public class Draw
         float v = (float) (index / 16) / 16.0F;
         float mV = v + tS;
 
-        Draw.bindTexture(GameResources.particleTexture);
+        Draw.bindTexture(GameResources.PARTICLES);
         drawQuad(x, y, width, height, 0, u, mU, v, mV);
     }
 
     public static void renderItem(ItemStack stack, int x, int y)
     {
-        Game.minecraft().getRenderItem().renderItemIntoGUI(stack, x, y);
+        OpenGL.pushMatrix();
+        OpenGL.translate(0F, 0F, -100F);
+
+        GlStateManager.pushMatrix();
+        Game.minecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Game.minecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        
+        GlStateManager.translate((float)x, (float)y, 100F);
+        GlStateManager.translate(8.0F, 8.0F, 0.0F);
+        GlStateManager.scale(1.0F, -1.0F, 1.0F);
+        GlStateManager.scale(16.0F, 16.0F, 16.0F);
+        
+        IBakedModel ibakedmodel = Game.minecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
+        ibakedmodel = ibakedmodel.getOverrides().handleItemState(ibakedmodel, stack, Game.minecraft().world, Game.minecraft().player);
+        ibakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ibakedmodel, ItemCameraTransforms.TransformType.GUI, false);
+        
+        Game.minecraft().getRenderItem().renderItem(stack, ibakedmodel);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
+        Game.minecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Game.minecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        
+        OpenGL.popMatrix();
     }
 
     /**
-     * Draw the IIcon of the specified Item at the specified coordinates and dimensions
+     * Draw the specified itemstack in a GUI with a flat icon. No 3D rendering is done.
      * 
-     * @param item - Item to draw the iicon of.
-     * @param x - x coordinate
-     * @param y - y corodinate
-     * @param width - Width to render the icon at
-     * @param height - Height to render the icon at
-     */
-    @Deprecated
-    public static void drawItemIcon(Item item, int x, int y, int width, int height)
-    {
-        ;
-    }
-
-    /**
-     * Draw the IIcon of the specified Block side at the specified coordinates and dimensions
-     * 
-     * @param block - Block to draw the iicon of.
-     * @param side - ID of the side of the Block to draw.
-     * @param x - x coordinate
-     * @param y - y corodinate
-     * @param width - Width to render the icon at
-     * @param height - Height to render the icon at
-     */
-    @Deprecated
-    public static void drawBlockSide(Block block, int side, int x, int y, int width, int height)
-    {
-        Draw.drawBlockSide(block, side, x, y, width, height, 1, 1);
-    }
-
-    /**
-     * Draw the IIcon of the specified Block side at the specified coordinates and dimensions
-     * 
-     * @param block - Block to draw the iicon of.
-     * @param side - ID of the side of the Block to draw.
+     * @param stack - The itemstack to draw
      * @param x - x coordinate
      * @param y - y corodinate
      * @param width - Width to render the icon at
@@ -1020,10 +1041,25 @@ public class Draw
      * @param u - x coordinate of the texture offset
      * @param v - y coordinate of the texture offset
      */
-    @Deprecated
-    public static void drawBlockSide(Block block, int side, int x, int y, int width, int height, float u, float v)
+    public static void drawItem(ItemStack stack, int x, int y, int width, int height)
     {
-        ;
+        IBakedModel ibakedmodel = Game.minecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
+        ibakedmodel = ibakedmodel.getOverrides().handleItemState(ibakedmodel, stack, Game.minecraft().world, Game.minecraft().player);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.disableLighting();
+        Draw.bindTexture(getResourceLocationFullPath(ibakedmodel.getParticleTexture()));
+        Draw.drawQuad(x, y, width, height);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -1057,7 +1093,7 @@ public class Draw
 
                     if (slotStack != null)
                     {
-                        drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                        drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                     }
                 }
 
@@ -1078,7 +1114,7 @@ public class Draw
 
                                 if (item != null)
                                 {
-                                    drawItemIcon(item, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                    drawItem(new ItemStack(item, 1), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                 }
                             }
                             else if ((gX + gY * 3) < recipe.getInput().length)
@@ -1089,7 +1125,7 @@ public class Draw
 
                                     if (slotStack != null)
                                     {
-                                        drawItemIcon(slotStack.getItem(), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                        drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                     }
                                 }
                             }
@@ -1130,18 +1166,28 @@ public class Draw
 
     public static ResourceLocation getResourceLocationFullPath(TextureAtlasSprite sprite)
     {
-        Minecraft mc = Game.minecraft();
-        ResourceLocation r = new ResourceLocation(sprite.getIconName());
-        return new ResourceLocation(r.getResourceDomain(), String.format("%s/%s%s", new Object[] { mc.getTextureMapBlocks().getBasePath(), r.getResourcePath(), ".png" }));
+        if (sprite != null)
+        {
+            Minecraft mc = Game.minecraft();
+            ResourceLocation r = new ResourceLocation(sprite.getIconName());
+            return new ResourceLocation(r.getResourceDomain(), String.format("%s/%s%s", new Object[] { mc.getTextureMapBlocks().getBasePath(), r.getResourcePath(), ".png" }));
+        }
+
+        return getMissingTexture();
     }
 
     public static ResourceLocation getResourceLocationPartialPath(TextureAtlasSprite sprite)
     {
-        ResourceLocation r = new ResourceLocation(sprite.getIconName());
-        return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
+        if (sprite != null)
+        {
+            ResourceLocation r = new ResourceLocation(sprite.getIconName());
+            return new ResourceLocation(r.getResourceDomain(), String.format("%s", new Object[] { r.getResourcePath() }));
+        }
+
+        return getMissingTexture();
     }
 
-    public static final GuiCustomScreen guiHook = new GuiCustomScreen();
+    public static final GuiCustomScreen GUI_HOOK = new GuiCustomScreen();
 
     public static void lightingHelper(Entity entity, float offset)
     {

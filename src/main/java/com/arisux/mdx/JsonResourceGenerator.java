@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.IInitEvent;
-import com.arisux.mdx.lib.game.IMod;
 import com.arisux.mdx.lib.game.IPreInitEvent;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

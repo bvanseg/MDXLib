@@ -21,8 +21,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.arisux.mdx.lib.game.Game;
-import com.arisux.mdx.lib.world.tile.IRotatableYAxis;
 import com.arisux.mdx.lib.world.tile.IRotatableXAxis;
+import com.arisux.mdx.lib.world.tile.IRotatableYAxis;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -102,12 +102,12 @@ public class OpenGL
 
     public static void enableTexture2d()
     {
-        enable(GL11.GL_TEXTURE_2D);
+    	GlStateManager.enableTexture2D();
     }
 
     public static void disableTexture2d()
     {
-        disable(GL11.GL_TEXTURE_2D);
+    	GlStateManager.disableTexture2D();
     }
 
     public static void normal(float x, float y, float z)
@@ -183,12 +183,12 @@ public class OpenGL
 
     public static void enableDepthTest()
     {
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+    	GlStateManager.enableDepth();
     }
 
     public static void disableDepthTest()
     {
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+    	GlStateManager.disableDepth();
     }
 
     public static void enable(int cap)
@@ -223,12 +223,12 @@ public class OpenGL
 
     public static void enableLighting()
     {
-        enable(GL11.GL_LIGHTING);
+    	GlStateManager.enableLighting();
     }
 
     public static void disableLighting()
     {
-        disable(GL11.GL_LIGHTING);
+    	GlStateManager.disableLighting();
     }
 
     public static boolean getBoolean(int pname)
@@ -299,12 +299,12 @@ public class OpenGL
 
     public static void enableAlphaTest()
     {
-        enable(GL11.GL_ALPHA_TEST);
+    	GlStateManager.enableAlpha();
     }
 
     public static void disableAlphaTest()
     {
-        disable(GL11.GL_ALPHA_TEST);
+    	GlStateManager.disableAlpha();
     }
 
     public static void readBuffer(int mode)
@@ -319,12 +319,12 @@ public class OpenGL
 
     public static void enableCullFace()
     {
-        enable(GL11.GL_CULL_FACE);
+    	GlStateManager.enableCull();
     }
 
     public static void disableCullFace()
     {
-        disable(GL11.GL_CULL_FACE);
+    	GlStateManager.disableCull();
     }
 
     /**
@@ -398,12 +398,12 @@ public class OpenGL
 
     public static void enableFog()
     {
-        enable(GL11.GL_FOG);
+    	GlStateManager.enableFog();
     }
 
     public static void disableFog()
     {
-        disable(GL11.GL_FOG);
+    	GlStateManager.disableFog();
     }
 
     public static void bindTexture(int target, int texture)

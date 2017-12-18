@@ -2,9 +2,7 @@ package com.arisux.mdx.lib.game;
 
 import java.util.HashMap;
 
-import com.arisux.mdx.Console;
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.client.render.ItemIconRenderer;
 import com.arisux.mdx.lib.client.render.ItemRenderer;
 import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
@@ -30,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Renderers implements IPostInitEvent
 {
-    public static final Renderers                    instance       = new Renderers();
+    public static final Renderers                    INSTANCE       = new Renderers();
     private final HashMap<Item, ItemRenderer<?>>     ITEM_RENDERERS = new HashMap<Item, ItemRenderer<?>>();
     private final HashMap<Item, ItemIconRenderer<?>> ICON_RENDERERS = new HashMap<Item, ItemIconRenderer<?>>();
 
@@ -84,7 +82,7 @@ public class Renderers implements IPostInitEvent
 
         if (getItemRenderer(item) == null)
         {
-            instance.ITEM_RENDERERS.put(item, renderer);
+            INSTANCE.ITEM_RENDERERS.put(item, renderer);
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }
@@ -101,7 +99,7 @@ public class Renderers implements IPostInitEvent
 
         if (getItemRenderer(item) == null)
         {
-            instance.ICON_RENDERERS.put(item, renderer);
+            INSTANCE.ICON_RENDERERS.put(item, renderer);
             DummyModelLoader.INSTANCE.registerDummy(Type.ITEM, item.getRegistryName());
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
@@ -109,9 +107,9 @@ public class Renderers implements IPostInitEvent
 
     public static ItemRenderer<?> getItemRenderer(Item item)
     {
-        if (instance.ITEM_RENDERERS.containsKey(item))
+        if (INSTANCE.ITEM_RENDERERS.containsKey(item))
         {
-            return instance.ITEM_RENDERERS.get(item);
+            return INSTANCE.ITEM_RENDERERS.get(item);
         }
 
         return null;
@@ -119,9 +117,9 @@ public class Renderers implements IPostInitEvent
 
     public static ItemRenderer<?> getIconRenderer(Item item)
     {
-        if (instance.ICON_RENDERERS.containsKey(item))
+        if (INSTANCE.ICON_RENDERERS.containsKey(item))
         {
-            return instance.ICON_RENDERERS.get(item);
+            return INSTANCE.ICON_RENDERERS.get(item);
         }
 
         return null;

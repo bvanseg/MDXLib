@@ -16,7 +16,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 
 public class SchematicLoader
 {
-    public static final SchematicLoader instance = new SchematicLoader();
+    public static final SchematicLoader INSTANCE = new SchematicLoader();
 
     /** The registry that contains all currently registered schematics **/
     private ArrayList<Schematic>        schematicRegistry;
@@ -28,7 +28,7 @@ public class SchematicLoader
 
     public static ArrayList<Schematic> getSchematicRegistry()
     {
-        return SchematicLoader.instance.schematicRegistry;
+        return SchematicLoader.INSTANCE.schematicRegistry;
     }
 
     /**

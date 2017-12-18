@@ -3,7 +3,6 @@ package com.arisux.mdx.lib.world.entity.player.inventory;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,6 +14,14 @@ import net.minecraft.world.World;
 
 public class Inventories
 {
+	public static final int MAX_STACK_SIZE = 64;
+	/**
+	 * Drops items at the specified position.
+	 * 
+	 * @param inv - IInventory parameter.
+	 * @param world - The world of the entity.
+	 * @param pos - The position at which the entity will drop.
+	 */
     public static void dropItemsInAt(IInventory inv, World world, BlockPos pos)
     {
         if (inv != null)
@@ -39,12 +46,13 @@ public class Inventories
     }
     
     /**
-     * Gets the proper remaining uses of an item
+     * Gets the proper remaining uses of an item.
      * 
-     * @param itemstack - the itemstack we are figuring out the remaining usage of
-     * @return
+     * @param itemstack - the ItemStack we are figuring out the remaining usage of.
+     * @return the remaining uses the item has.
      */
-    public static int getRemainingUses(ItemStack itemstack) {
+    public static int getRemainingUses(ItemStack itemstack) 
+    {
     	int uses = itemstack.getMaxDamage() - itemstack.getItemDamage();
     	return uses;
     }
@@ -54,7 +62,7 @@ public class Inventories
      * 
      * @param item - The item we are getting the slot id of.
      * @param inventory - The inventory of which we are searching in.
-     * @return
+     * @return the slot id of where the item is located in.
      */
     public static int getSlotForItemIn(Item item, InventoryPlayer inventory)
     {
@@ -70,8 +78,10 @@ public class Inventories
     }
 
     /**
+     * Creates an itemStack instance from a random selection of Item objects in an array, with a stack amount of 1.
+     * 
      * @param items - List of Items to choose a random Item from.
-     * @return an ItemStack instance instantaniated from a random Item chosen from the provided Item Array.
+     * @return an ItemStack instance instantiated from a random Item chosen from the provided Item Array.
      */
     public static ItemStack randomItemStackFromArray(Item[] items)
     {
@@ -79,9 +89,11 @@ public class Inventories
     }
 
     /**
+     * Creates an itemStack instance from a random selection of Item objects in an array, with a stack amount of 1.
+     * 
      * @param items - List of Items to choose a random Item from.
      * @param rand - Random instance to use
-     * @return an ItemStack instance instantaniated from a random Item chosen from the provided Item Array.
+     * @return an ItemStack instance instantiated from a random Item chosen from the provided Item Array.
      */
     public static ItemStack randomItemStackFromArray(Item[] items, Random rand)
     {
@@ -89,8 +101,10 @@ public class Inventories
     }
 
     /** 
-     * @param obj - Item or Block instance 
-     * @return A new ItemStack instance of the specified Object
+     * Takes in either a Block or Item and creates a stack of it with an amount of 1.
+     * 
+     * @param obj - Item or Block instance.
+     * @return A new ItemStack instance of the specified Object.
      **/
     public static ItemStack newStack(Object obj)
     {
@@ -98,9 +112,11 @@ public class Inventories
     }
 
     /** 
-     * @param obj - Item or Block instance 
-     * @param amount - Amount of Items in this ItemStack
-     * @return A new ItemStack instance of the specified Object
+     * Takes in either a Block or Item and creates a stack of it with the specified amount.
+     * 
+     * @param obj - Item or Block instance.
+     * @param amount - Amount of Items in this ItemStack.
+     * @return A new ItemStack instance of the specified Object.
      **/
     public static ItemStack newStack(Object obj, int amount)
     {
@@ -108,8 +124,10 @@ public class Inventories
     }
 
     /** 
-     * @param stack - Instance of ItemStack 
-     * @return the Item instance of the specified ItemStack
+     * Returns an Item from an ItemStack.
+     * 
+     * @param stack - Instance of ItemStack.
+     * @return the Item instance of the specified ItemStack.
      **/
     public static Item getItem(ItemStack stack)
     {
@@ -117,8 +135,10 @@ public class Inventories
     }
 
     /**
-     * @param stack - Instance of ItemStack 
-     * @return the Block instance of the specified ItemStack
+     * Gets a Block from an ItemStack.
+     * 
+     * @param stack - Instance of ItemStack.
+     * @return the Block instance of the specified ItemStack.
      **/
     public static Block getBlock(ItemStack stack)
     {
@@ -169,11 +189,40 @@ public class Inventories
         return true;
     }
 
+    /**
+     * Returns the slot number of a given item in the player's inventory.
+     * 
+     * @param inventory - The inventory to loop through.
+     * @param item - The item to search for.
+     * @return The index of the slot.
+     */
     public static int getSlotFor(InventoryPlayer inventory, Item item)
     {
         for (int i = 0; i < inventory.mainInventory.length; ++i)
         {
             if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == item)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+    
+    /**
+     * Returns the slot number of a given item in the player's inventory.
+     * 
+     * @param inventory - The inventory to loop through.
+     * @param item - The item to search for.
+     * @param meta - The metadata to search for.
+     * @return The index of the slot.
+     */
+    public static int getSlotFor(InventoryPlayer inventory, Item item, int meta)
+    {
+        for (int i = 0; i < inventory.mainInventory.length; ++i)
+        {
+    		ItemStack stack = inventory.getStackInSlot(i);
+            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == item && stack.getMetadata() == meta)
             {
                 return i;
             }
@@ -226,26 +275,25 @@ public class Inventories
         return player.inventory.armorInventory[0];
     }
     
-    public static boolean entityHas(Item item, Entity entity)
-    {
-        return getAmountOfItemEntityHas(item, entity) > 0;
-    }
-    
+    /**
+     * Returns whether or not a player has a certain item.
+     * 
+     * @param item - The item to search for.
+     * @param player - The player to search.
+     * @return True if the player has the item, false otherwise.
+     */
     public static boolean playerHas(Item item, EntityPlayer player)
     {
         return getAmountOfItemPlayerHas(item, player) > 0;
     }
 
-    public static int getAmountOfItemEntityHas(Item item, Entity entity)
-    {
-        if (entity instanceof EntityPlayer)
-        {
-            return getAmountOfItemPlayerHas(item, (EntityPlayer) entity);
-        }
-
-        return 0;
-    }
-
+    /**
+     * Gets the amount of an item the player has.
+     * 
+     * @param item - The item to search for.
+     * @param player - The player to search.
+     * @return The amount the player has of the item.
+     */
     public static int getAmountOfItemPlayerHas(Item item, EntityPlayer player)
     {
         int amount = 0;
@@ -260,4 +308,164 @@ public class Inventories
 
         return amount;
     }
+    
+    /**
+     * Gets the amount of an item the player has.
+     * 
+     * @param item - The item to search for.
+     * @param player - The player to search.
+     * @return The amount the player has of the item.
+     */
+    public static int getAmountOfItemPlayerHas(Item item, EntityPlayer player, int meta)
+    {
+    	int amount = 0;
+
+        for (ItemStack stack : player.inventory.mainInventory)
+        {
+            if (stack != null && stack.getItem() == item && stack.getMetadata() == meta)
+            {
+                amount += stack.stackSize;
+            }
+        }
+
+        return amount;
+    }
+	
+	/**
+	 * Checks if a player has an item with a given amount.
+	 * 
+	 * @param player - The player to search.
+	 * @param item - The item to search for.
+	 * @param amount - The amount to search for.
+	 * @return If the amount of items is in the player's inventory
+	 */
+	public static boolean hasItemAndAmount(EntityPlayer player, Item item, int amount) 
+	{
+		int count = 0;
+		for (ItemStack stack : player.inventory.mainInventory) 
+		{
+			if (stack != null && stack.getItem() == item) 
+			{
+				count += stack.stackSize;
+			}
+		}
+		return amount <= count;
+	}
+
+	/**
+	 * Checks if a player has an item with the given amount. Searches for items with the specified metadata.
+	 * 
+	 * @param player - The player to search.
+	 * @param item - The item to search for.
+	 * @param amount - The amount to search for.
+	 * @param meta - The meta data of the item to search for.
+	 * @return If the amount of items is in the player's inventory.
+	 */
+	public static boolean hasItemAndAmount(EntityPlayer player, Item item, int amount, int meta) 
+	{
+		int count = 0;
+		for (ItemStack stack : player.inventory.mainInventory) 
+		{
+			if (stack != null && stack.getItem() == item && stack.getMetadata() == meta) 
+			{
+				count += stack.stackSize;
+			}
+		}
+		return amount <= count;
+	}
+	
+	/**
+	 * Decrements a given item anywhere in a player's inventory by 1.
+	 * 
+	 * @param player - The player to search.
+	 * @param item - The item to remove.
+	 * @return If the player has and removed the items specified.
+	 */
+	public static boolean removeItemWithAmount(EntityPlayer player, Item item) 
+	{
+		if (hasItemAndAmount(player, item, 1)) {
+			for (int i = 0; i < player.inventory.getSizeInventory(); i++) 
+			{
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if (stack != null && stack.getItem() == item) 
+				{
+					stack.stackSize--;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Removes a specified amount of an item.
+	 * 
+	 * @param player - The player to search.
+	 * @param item - The item to remove.
+	 * @param amount - The amount to remove.
+	 * @return If the player has and removed the items specified.
+	 */
+	public static boolean removeItemWithAmount(EntityPlayer player, Item item, int amount) 
+	{
+		if (hasItemAndAmount(player, item, amount)) 
+		{
+			for (int i = 0; i < player.inventory.getSizeInventory(); i++) 
+			{
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if (stack != null && stack.getItem() == item) 
+				{
+					if (amount - stack.stackSize < 0) 
+					{
+						stack.stackSize -= amount;
+						return true;
+					} 
+					
+					else 
+					{
+						amount = stack.stackSize;
+						player.inventory.mainInventory[i] = null;
+						if (amount == 0)
+							return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Removes a specified amount of an item. Can be used with metadata.
+	 * 
+	 * @param player - The player to search.
+	 * @param item - The item to remove.
+	 * @param amount - The amount to remove.
+	 * @param meta - The meta data of the item to remove.
+	 * @return If the player has and removed the items specified.
+	 */
+	public static boolean removeItemWithAmount(EntityPlayer player, Item item, int amount, int meta) 
+	{
+		if (hasItemAndAmount(player, item, amount, meta)) 
+		{
+			for (int i = 0; i < player.inventory.getSizeInventory(); i++) 
+			{
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if (stack != null && stack.getItem() == item && stack.getMetadata() == meta) 
+				{
+					if (amount - stack.stackSize < 0) 
+					{
+						stack.stackSize -= amount;
+						return true;
+					} 
+					
+					else 
+					{
+						amount = stack.stackSize;
+						player.inventory.mainInventory[i] = null;
+						if (amount == 0)
+							return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 }

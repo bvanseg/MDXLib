@@ -1,7 +1,5 @@
 package com.arisux.mdx.lib.game;
 
-import com.arisux.mdx.Console;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.commands.CommandBlockUpdate;
 import com.arisux.mdx.commands.CommandGenerate;
 
@@ -12,7 +10,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class CommandHandler implements IInitEvent
 {
-    public static final CommandHandler instance = new CommandHandler();
+    public static final CommandHandler INSTANCE = new CommandHandler();
     public CommandGenerate generate;
     public CommandBlockUpdate blockUpdate;
 

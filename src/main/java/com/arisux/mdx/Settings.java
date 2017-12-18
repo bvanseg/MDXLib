@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class Settings implements IPreInitEvent
 {
-    public static final Settings instance         = new Settings();
+    public static final Settings INSTANCE         = new Settings();
     private Configuration        configuration;
     private final String         CATEGORY_STARTUP = "startup";
     private Property             startupNotification;

@@ -6,6 +6,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
+import com.arisux.mdx.lib.util.Reflect;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
@@ -22,6 +24,7 @@ import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
+import net.minecraft.util.Timer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,7 +33,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public float getRenderPartialTicks()
     {
-        return Game.minecraft().timer.renderPartialTicks;
+        return ((Timer) Reflect.get(Game.minecraft(), "timer", "field_71428_T")).renderPartialTicks;
     }
 
     @SideOnly(Side.CLIENT)
@@ -48,7 +51,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public Session getSession()
     {
-        return Game.minecraft().session;
+        return (Session) Reflect.get(Game.minecraft(), "session", "field_71449_j");
     }
 
     @SideOnly(Side.CLIENT)
@@ -104,13 +107,6 @@ public class Access
     public void setTorchFlickerX(float value)
     {
         Game.minecraft().entityRenderer.torchFlickerX = value;
-    }
-
-    @Deprecated
-    @SideOnly(Side.CLIENT)
-    public void setTorchFlickerYX(float value)
-    {
-        Game.minecraft().entityRenderer.torchFlickerDX = value;
     }
     
     @SideOnly(Side.CLIENT)
@@ -283,8 +279,8 @@ public class Access
         return renderLiving.mainModel;
     }
 
-    private static final MethodHandle CompressedStreamTools_writeTag;
-    private static final MethodHandle CompressedStreamTools_readTag;
+    private static final MethodHandle COMPRESSED_STREAM_TOOLS_WRITE_TAG;
+    private static final MethodHandle COMPRESSED_STREAM_TOOLS_READ_TAG;
 
     static
     {
@@ -294,11 +290,11 @@ public class Access
             
             method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "writeTag" : "func_150663_a", NBTBase.class, DataOutput.class);
             method.setAccessible(true);
-            CompressedStreamTools_writeTag = MethodHandles.publicLookup().unreflect(method);
+            COMPRESSED_STREAM_TOOLS_WRITE_TAG = MethodHandles.publicLookup().unreflect(method);
 
             method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "read" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
             method.setAccessible(true);
-            CompressedStreamTools_readTag = MethodHandles.publicLookup().unreflect(method);
+            COMPRESSED_STREAM_TOOLS_READ_TAG = MethodHandles.publicLookup().unreflect(method);
         }
         catch (Exception exception)
         {
@@ -314,7 +310,7 @@ public class Access
     {
         try
         {
-            Access.CompressedStreamTools_writeTag.invokeExact(base, dataoutput);
+            Access.COMPRESSED_STREAM_TOOLS_WRITE_TAG.invokeExact(base, dataoutput);
         }
         catch (Throwable e)
         {
@@ -329,7 +325,7 @@ public class Access
     {
         try
         {
-            return (NBTBase) Access.CompressedStreamTools_readTag.invokeExact(datainput, depth, sizeTracker);
+            return (NBTBase) Access.COMPRESSED_STREAM_TOOLS_READ_TAG.invokeExact(datainput, depth, sizeTracker);
         }
         catch (Throwable e)
         {
@@ -342,7 +338,7 @@ public class Access
     @SideOnly(Side.CLIENT)
     public static class ClientAccess
     {
-        private static final MethodHandle getEntityTexture;
+        private static final MethodHandle GET_ENTITY_TEXTURE;
 
         static
         {
@@ -350,7 +346,7 @@ public class Access
             {
                 Method method = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
                 method.setAccessible(true);
-                getEntityTexture = MethodHandles.publicLookup().unreflect(method);
+                GET_ENTITY_TEXTURE = MethodHandles.publicLookup().unreflect(method);
             }
             catch (Exception exception)
             {
@@ -365,7 +361,7 @@ public class Access
     {
         try
         {
-            return ((ResourceLocation) ClientAccess.getEntityTexture.invokeExact(render, (Entity) entity));
+            return ((ResourceLocation) ClientAccess.GET_ENTITY_TEXTURE.invokeExact(render, (Entity) entity));
         }
         catch (Throwable e)
         {

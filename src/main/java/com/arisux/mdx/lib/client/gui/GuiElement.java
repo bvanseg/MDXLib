@@ -79,12 +79,12 @@ public abstract class GuiElement extends GuiButton implements IGuiElement
 
     public void trackElement()
     {
-        GUIElementTracker.instance.track(this);
+        GUIElementTracker.INSTANCE.track(this);
     }
 
     public void stopTracking()
     {
-        GUIElementTracker.instance.stopTracking(this);
+        GUIElementTracker.INSTANCE.stopTracking(this);
     }
 
     public boolean isMouseInElement(Vector2d mousePosition)

@@ -36,7 +36,7 @@ public class MDXModule
     @EventHandler
     public void pre(FMLPreInitializationEvent event)
     {
-        SystemInfo.instance.runtimeTasks();
+        SystemInfo.INSTANCE.runtimeTasks();
         DataHandler.instance.pre(event);
 
         if (!prefetchComplete)
@@ -46,7 +46,7 @@ public class MDXModule
 
         MDX.console().pre(event);
         MDX.settings().pre(event);
-        Game.registerEventHandler(StructureGenerationHandler.instance);
+        Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
     }
 
     @SideOnly(Side.CLIENT)
@@ -55,7 +55,7 @@ public class MDXModule
     {
         ModelLoaderRegistry.registerLoader(DummyModelLoader.INSTANCE);
         Game.registerEventHandler(NotifierModule.instance);
-        Game.registerEventHandler(GUIElementTracker.instance);
+        Game.registerEventHandler(GUIElementTracker.INSTANCE);
     }
 
     @EventHandler
@@ -67,7 +67,7 @@ public class MDXModule
         }
 
         MDX.console().init(event);
-        CommandHandler.instance.init(event);
+        CommandHandler.INSTANCE.init(event);
     }
 
     @EventHandler
@@ -78,7 +78,7 @@ public class MDXModule
             return;
         }
 
-        CommandHandler.instance.onServerStarting(event);
+        CommandHandler.INSTANCE.onServerStarting(event);
     }
 
     @EventHandler
@@ -113,7 +113,7 @@ public class MDXModule
             return;
         }
 
-        IdentityRemapModule.instance.onLoadMissingMapping(event);
+        IdentityRemapModule.INSTANCE.onLoadMissingMapping(event);
     }
 
     public static boolean prefetchComplete()

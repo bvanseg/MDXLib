@@ -8,9 +8,8 @@ import java.util.Map;
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.world.CoordSelection;
 import com.arisux.mdx.lib.world.Pos;
-import com.arisux.mdx.lib.world.Structure;
 import com.arisux.mdx.lib.world.Pos.BlockDataStore;
-import com.arisux.mdx.lib.world.tile.TileEntities;
+import com.arisux.mdx.lib.world.Structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
