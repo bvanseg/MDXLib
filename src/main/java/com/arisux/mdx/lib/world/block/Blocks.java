@@ -76,6 +76,29 @@ public class Blocks
         return data;
     }
 
+    public static ArrayList<BlockPos> getBlocksInRangeIncluding(int posX, int posY, int posZ, int range, World world, Block... types)
+    {
+        ArrayList<BlockPos> data = new ArrayList<BlockPos>();
+
+        for (int x = posX - range; x < posX + range * 2; x++)
+        {
+            for (int y = posY - range; y < posY + range * 2; y++)
+            {
+                for (int z = posZ - range; z < posZ + range * 2; z++)
+                {
+                    BlockPos position = new BlockPos(x, y, z);
+                    
+                    if (Arrays.asList(types).contains(world.getBlockState(position).getBlock()))
+                    {
+                        data.add(position);
+                    }
+                }
+            }
+        }
+
+        return data;
+    }
+
     public static ArrayList<Pos> getCoordDataInRangeExcluding(int posX, int posY, int posZ, int range, World world, Block... types)
     {
         ArrayList<Pos> data = new ArrayList<Pos>();
