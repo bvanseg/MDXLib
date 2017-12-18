@@ -67,6 +67,7 @@ public class MDXModule
         }
 
         MDX.console().init(event);
+        MDX.network().init(event);
         CommandHandler.INSTANCE.init(event);
     }
 

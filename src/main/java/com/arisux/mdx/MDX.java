@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.arisux.mdx.lib.client.Notifications;
 import com.arisux.mdx.lib.game.Access;
+import com.arisux.mdx.lib.game.Network;
 import com.arisux.mdx.lib.game.Renderers;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,6 +51,11 @@ public class MDX
     public static Settings settings()
     {
         return Settings.INSTANCE;
+    }
+
+    public static Network network()
+    {
+        return Network.instance;
     }
 
     @SideOnly(Side.CLIENT)

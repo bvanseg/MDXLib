@@ -1,5 +1,6 @@
 package com.arisux.mdx.lib.game;
 
+import com.arisux.mdx.commands.CommandBlockScanner;
 import com.arisux.mdx.commands.CommandBlockUpdate;
 import com.arisux.mdx.commands.CommandGenerate;
 
@@ -13,6 +14,8 @@ public class CommandHandler implements IInitEvent
     public static final CommandHandler INSTANCE = new CommandHandler();
     public CommandGenerate generate;
     public CommandBlockUpdate blockUpdate;
+    public CommandBlockScanner blockScanner;
+    
 
     @Override
     public void init(FMLInitializationEvent event)
@@ -25,5 +28,6 @@ public class CommandHandler implements IInitEvent
     {
         event.registerServerCommand(this.generate = new CommandGenerate());
         event.registerServerCommand(this.blockUpdate = new CommandBlockUpdate());
+        event.registerServerCommand(this.blockScanner = new CommandBlockScanner());
     }
 }
