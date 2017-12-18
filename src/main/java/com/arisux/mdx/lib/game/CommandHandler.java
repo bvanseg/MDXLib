@@ -2,6 +2,7 @@ package com.arisux.mdx.lib.game;
 
 import com.arisux.mdx.commands.CommandBlockScanner;
 import com.arisux.mdx.commands.CommandBlockUpdate;
+import com.arisux.mdx.commands.CommandChunkBorders;
 import com.arisux.mdx.commands.CommandGenerate;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -15,6 +16,7 @@ public class CommandHandler implements IInitEvent
     public CommandGenerate generate;
     public CommandBlockUpdate blockUpdate;
     public CommandBlockScanner blockScanner;
+    public CommandChunkBorders chunkBorders;
     
 
     @Override
@@ -29,5 +31,6 @@ public class CommandHandler implements IInitEvent
         event.registerServerCommand(this.generate = new CommandGenerate());
         event.registerServerCommand(this.blockUpdate = new CommandBlockUpdate());
         event.registerServerCommand(this.blockScanner = new CommandBlockScanner());
+        event.registerServerCommand(this.chunkBorders = new CommandChunkBorders());
     }
 }

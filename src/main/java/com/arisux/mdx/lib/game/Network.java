@@ -2,6 +2,7 @@ package com.arisux.mdx.lib.game;
 
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.game.network.server.PacketCommandBlockScanner;
+import com.arisux.mdx.lib.game.network.server.PacketCommandChunkBorders;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -23,6 +24,7 @@ public class Network extends SimpleNetworkWrapper implements IInitEvent
     public void init(FMLInitializationEvent event)
     {
         this.registerMessage(Side.CLIENT, PacketCommandBlockScanner.class);
+        this.registerMessage(Side.CLIENT, PacketCommandChunkBorders.class);
     }
 
     /**
