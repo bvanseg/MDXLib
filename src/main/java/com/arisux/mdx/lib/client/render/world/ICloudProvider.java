@@ -6,6 +6,8 @@ import com.arisux.mdx.lib.util.MDXMath;
 
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface ICloudProvider
 {
@@ -21,6 +23,7 @@ public interface ICloudProvider
         return 2F;
     }
     
+    @SideOnly(Side.CLIENT)
     public Texture getCloudTexture();
     
     public default double getCloudMovementX(World world, float cloudTicksPrev, float cloudTicks)
@@ -34,7 +37,4 @@ public interface ICloudProvider
     }
     
     public boolean areCloudsApplicableTo(WorldProvider provider);
-    
-    /** Use this instead of vanilla's WorldProvider.getWeatherRenderer() due to incorrect render order **/
-    public IStormProvider getStormProvider();
 }

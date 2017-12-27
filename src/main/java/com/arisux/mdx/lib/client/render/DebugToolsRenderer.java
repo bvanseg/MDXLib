@@ -2,7 +2,6 @@ package com.arisux.mdx.lib.client.render;
 
 import java.util.ArrayList;
 
-import com.arisux.mdx.lib.client.render.OpenGL;
 import com.arisux.mdx.lib.game.Game;
 
 import net.minecraft.block.Block;
@@ -14,12 +13,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 
-@EventBusSubscriber
 public class DebugToolsRenderer
 {
     public static final DebugToolsRenderer instance = new DebugToolsRenderer();
@@ -118,12 +115,6 @@ public class DebugToolsRenderer
     {
         if (DebugToolsRenderer.instance.isBlockScannerEnabled())
         {
-            // DebugToolsRenderer.destroyBlockScanners();
-            // DebugToolsRenderer.scanForBlock(new BlockScanner(Blocks.COAL_ORE, 32, 0F, 0F, 0F, 0.4F));
-            // DebugToolsRenderer.scanForBlock(new BlockScanner(Blocks.IRON_ORE, 32, 0.6F, 0.4F, 0.2F, 0.4F));
-            // DebugToolsRenderer.scanForBlock(new BlockScanner(Blocks.GOLD_ORE, 32, 1F, 0.8F, 0F, 0.4F));
-            // DebugToolsRenderer.scanForBlock(new BlockScanner(Blocks.DIAMOND_ORE, 32, 0, 0.6F, 1F, 0.4F));
-
             if (event.type == Type.CLIENT)
             {
                 if (Game.minecraft().world != null && Game.minecraft().world.getWorldTime() % 40 == 0)

@@ -6,7 +6,6 @@ import com.arisux.mdx.lib.game.network.IClientCommand;
 import com.arisux.mdx.lib.game.network.server.PacketCommandChunkBorders;
 import com.arisux.mdx.lib.world.entity.player.Players;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -51,7 +50,7 @@ public class CommandChunkBorders extends CommandBase implements IClientCommand
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void executeClient(Minecraft minecraft, EntityPlayer player, String[] args)
+    public void executeClient(EntityPlayer player, String[] args)
     {
         if (args.length >= 1)
         {

@@ -35,8 +35,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * EventBusSubscriber annotation must apply to each individual storm provider.
- * Provider will not work without it.
+ * EventBusSubscriber annotation must apply to each individual storm provider. Provider will not
+ * work without it.
  **/
 @EventBusSubscriber
 public abstract class StormProvider implements Predicate<Entity>, IStormProvider
@@ -53,23 +53,23 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent event)
     {
-        if (Game.minecraft().world != null && Game.minecraft().world.provider.getCloudRenderer() instanceof ClimateProvider && !Game.minecraft().isGamePaused())
+        if (Game.minecraft().world != null && Game.minecraft().world.provider instanceof IClimateProvider && !Game.minecraft().isGamePaused())
         {
-            ClimateProvider climate = (ClimateProvider) Game.minecraft().world.provider.getCloudRenderer();
+            IClimateProvider climate = (IClimateProvider) Game.minecraft().world.provider;
 
             if (climate.getStormProvider() instanceof StormProvider)
             {
-                StormProvider weather = (StormProvider) climate.getStormProvider();
+                StormProvider storm = (StormProvider) climate.getStormProvider();
 
-                if (weather.isStormApplicableTo(Game.minecraft().world.provider))
+                if (storm.isStormApplicableTo(Game.minecraft().world.provider))
                 {
-                    int s = weather.getStormSize();
-                    weather.updateStorm(Game.minecraft().world);
+                    int s = storm.getStormSize();
+                    storm.updateStorm(Game.minecraft().world);
 
-                    if (weather.stormX == null || weather.stormZ == null)
+                    if (storm.stormX == null || storm.stormZ == null)
                     {
-                        weather.stormX = new float[s * s];
-                        weather.stormZ = new float[s * s];
+                        storm.stormX = new float[s * s];
+                        storm.stormZ = new float[s * s];
 
                         for (int zCoord = 0; zCoord < s; ++zCoord)
                         {
@@ -78,37 +78,37 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
                                 float x = xCoord - 16;
                                 float z = zCoord - 16;
                                 float sq = MathHelper.sqrt(x * x + z * z);
-                                weather.stormX[zCoord << 5 | xCoord] = -z / sq;
-                                weather.stormZ[zCoord << 5 | xCoord] = x / sq;
+                                storm.stormX[zCoord << 5 | xCoord] = -z / sq;
+                                storm.stormZ[zCoord << 5 | xCoord] = x / sq;
                             }
                         }
                     }
 
-                    if (weather.isStormActive(Game.minecraft().world))
+                    if (storm.isStormActive(Game.minecraft().world))
                     {
-                        weather.renderStorm = true;
+                        storm.renderStorm = true;
 
-                        if (weather.stormDensity < 1.0F)
+                        if (storm.stormDensity < 1.0F)
                         {
-                            weather.stormDensity += 0.0025F;
+                            storm.stormDensity += 0.0025F;
                         }
                     }
                     else
                     {
-                        if (weather.stormDensity >= 0.0F)
+                        if (storm.stormDensity >= 0.0F)
                         {
-                            weather.stormDensity -= 0.0025F;
+                            storm.stormDensity -= 0.0025F;
                         }
                         else
                         {
-                            weather.renderStorm = false;
-                            weather.stormDensity = 0.0F;
+                            storm.renderStorm = false;
+                            storm.stormDensity = 0.0F;
                         }
                     }
 
-                    if (weather.isStormActive(Game.minecraft().world))
+                    if (storm.isStormActive(Game.minecraft().world))
                     {
-                        float strength = weather.getStormStrength();
+                        float strength = storm.getStormStrength();
 
                         if (!Game.minecraft().gameSettings.fancyGraphics)
                         {
@@ -135,19 +135,19 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
                                 passes = 0;
                             }
 
-                            weather.random = new Random();
+                            storm.random = new Random();
 
                             for (int i = 0; i < passes; ++i)
                             {
-                                BlockPos pos1 = world.getPrecipitationHeight(blockpos.add(weather.random.nextInt(10) - weather.random.nextInt(10), 0, weather.random.nextInt(10) - weather.random.nextInt(10)));
+                                BlockPos pos1 = world.getPrecipitationHeight(blockpos.add(storm.random.nextInt(10) - storm.random.nextInt(10), 0, storm.random.nextInt(10) - storm.random.nextInt(10)));
                                 Biome biome = world.getBiome(pos1);
                                 BlockPos pos2 = pos1.down();
                                 IBlockState state = world.getBlockState(pos2);
 
-                                if (pos1.getY() <= blockpos.getY() + 10 && pos1.getY() >= blockpos.getY() - 10 && weather.isStormVisibleInBiome(biome))
+                                if (pos1.getY() <= blockpos.getY() + 10 && pos1.getY() >= blockpos.getY() - 10 && storm.isStormVisibleInBiome(biome))
                                 {
-                                    double xOffset = weather.random.nextDouble();
-                                    double zOffset = weather.random.nextDouble();
+                                    double xOffset = storm.random.nextDouble();
+                                    double zOffset = storm.random.nextDouble();
                                     AxisAlignedBB box = state.getBoundingBox(world, pos2);
 
                                     if (state.getMaterial() != Material.LAVA && state.getBlock() != Blocks.MAGMA)
@@ -156,7 +156,7 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
                                         {
                                             ++particleCount;
 
-                                            if (weather.random.nextInt(particleCount) == 0)
+                                            if (storm.random.nextInt(particleCount) == 0)
                                             {
                                                 x = (double) pos2.getX() + xOffset;
                                                 y = (double) ((float) pos2.getY() + 0.1F) + box.maxY - 1.0D;
@@ -167,23 +167,23 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
                                             double pY = (double) ((float) pos2.getY() + 0.1F) + box.maxY;
                                             double pZ = (double) pos2.getZ() + zOffset;
 
-                                            weather.spawnParticleOnGround(world, pX, pY, pZ);
+                                            storm.spawnParticleOnGround(world, pX, pY, pZ);
                                         }
                                     }
                                 }
                             }
 
-                            if (particleCount > 0 && weather.random.nextInt(3) < weather.rainSoundCounter++)
+                            if (particleCount > 0 && storm.random.nextInt(3) < storm.rainSoundCounter++)
                             {
-                                weather.rainSoundCounter = 0;
+                                storm.rainSoundCounter = 0;
 
                                 if (y > (double) (blockpos.getY() + 1) && world.getPrecipitationHeight(blockpos).getY() > MathHelper.floor((float) blockpos.getY()))
                                 {
-                                    weather.playStormSoundAbove(world, x, y, z);
+                                    storm.playStormSoundAbove(world, x, y, z);
                                 }
                                 else
                                 {
-                                    weather.playStormSound(world, x, y, z);
+                                    storm.playStormSound(world, x, y, z);
                                 }
                             }
                         }
@@ -196,15 +196,10 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
     @SubscribeEvent
     public static void worldTickEvent(WorldTickEvent event)
     {
-        if (event.world != null && event.world.provider.getCloudRenderer() instanceof ClimateProvider)
+        if (event.world != null && event.world.provider instanceof IClimateProvider)
         {
-            ClimateProvider climate = (ClimateProvider) event.world.provider.getCloudRenderer();
-
-            if (climate.getStormProvider() instanceof StormProvider)
-            {
-                StormProvider storm = (StormProvider) climate.getStormProvider();
-                storm.updateStorm(event.world);
-            }
+            IClimateProvider climate = (IClimateProvider) event.world.provider;
+            climate.getStormProvider().updateStorm(event.world);
         }
     }
 
@@ -230,24 +225,21 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void renderLast(RenderWorldLastEvent event)
     {
         if (Game.minecraft().world != null)
         {
-            if (Game.minecraft().world.provider.getCloudRenderer() instanceof ClimateProvider)
+            if (Game.minecraft().world.provider instanceof IClimateProvider)
             {
-                ClimateProvider clouds = (ClimateProvider) Game.minecraft().world.provider.getCloudRenderer();
-
-                if (clouds.getStormProvider() instanceof StormProvider)
-                {
-                    StormProvider storm = (StormProvider) clouds.getStormProvider();
-                    storm.renderStorm(event.getPartialTicks(), Game.minecraft().world, Minecraft.getMinecraft());
-                }
+                IClimateProvider climate = (IClimateProvider) Game.minecraft().world.provider;
+                climate.getStormProvider().renderStorm(event.getPartialTicks(), Game.minecraft().world, Minecraft.getMinecraft());
             }
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public void renderStorm(float partialTicks, WorldClient world, Minecraft mc)
     {
         if (!isStormActive(world) && !renderStorm)
@@ -349,7 +341,7 @@ public abstract class StormProvider implements Predicate<Entity>, IStormProvider
 
                         float vTravel = -(((Game.minecraft().world.getWorldTime() + (x * x) + x + (z * z) + z) & 31) + partialTicks) / getStormDownfallSpeed();
                         float hTravel = (((Game.minecraft().world.getWorldTime() + (x * x) + x + (z * z) + z) & 31) + partialTicks) / getStormWindSpeed();
-                        
+
                         double offsetX = (double) ((float) x + 0.5F) - entity.posX;
                         double offsetZ = (double) ((float) z + 0.5F) - entity.posZ;
                         float strength = MathHelper.sqrt(offsetX * offsetX + offsetZ * offsetZ) / (float) stormDepth;

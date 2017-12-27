@@ -3,6 +3,7 @@ package com.arisux.mdx;
 import com.arisux.mdx.MDX.Properties;
 import com.arisux.mdx.lib.client.GUIElementTracker;
 import com.arisux.mdx.lib.client.NotifierModule;
+import com.arisux.mdx.lib.client.render.DebugToolsRenderer;
 import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
 import com.arisux.mdx.lib.game.CommandHandler;
 import com.arisux.mdx.lib.game.DataHandler;
@@ -56,6 +57,7 @@ public class MDXModule
         ModelLoaderRegistry.registerLoader(DummyModelLoader.INSTANCE);
         Game.registerEventHandler(NotifierModule.instance);
         Game.registerEventHandler(GUIElementTracker.INSTANCE);
+        Game.registerEventHandler(DebugToolsRenderer.instance);
     }
 
     @EventHandler

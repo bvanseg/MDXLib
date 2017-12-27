@@ -59,7 +59,7 @@ public class PacketCommandBlockScanner implements IMessage, IMessageHandler<Pack
             @Override
             public void run()
             {
-                CommandHandler.INSTANCE.blockScanner.executeClient(Game.minecraft(), Game.minecraft().player, packet.args);
+                CommandHandler.INSTANCE.blockScanner.executeClient(Game.minecraft().player, packet.args);
             }
         });
         return null;

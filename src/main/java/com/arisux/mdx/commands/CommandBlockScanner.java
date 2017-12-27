@@ -8,7 +8,6 @@ import com.arisux.mdx.lib.game.network.server.PacketCommandBlockScanner;
 import com.arisux.mdx.lib.world.entity.player.Players;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -54,7 +53,7 @@ public class CommandBlockScanner extends CommandBase implements IClientCommand
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void executeClient(Minecraft minecraft, EntityPlayer player, String[] args)
+    public void executeClient(EntityPlayer player, String[] args)
     {
         if (args.length >= 1)
         {

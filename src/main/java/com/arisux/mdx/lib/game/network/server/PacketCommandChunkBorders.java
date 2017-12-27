@@ -59,7 +59,7 @@ public class PacketCommandChunkBorders implements IMessage, IMessageHandler<Pack
             @Override
             public void run()
             {
-                CommandHandler.INSTANCE.chunkBorders.executeClient(Game.minecraft(), Game.minecraft().player, packet.args);
+                CommandHandler.INSTANCE.chunkBorders.executeClient(Game.minecraft().player, packet.args);
             }
         });
         return null;
