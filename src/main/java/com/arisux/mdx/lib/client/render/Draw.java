@@ -336,6 +336,7 @@ public class Draw
         }
 
         OpenGL.color3i(0xFFFFFF);
+        GlStateManager.resetColor();
     }
 
     /**
