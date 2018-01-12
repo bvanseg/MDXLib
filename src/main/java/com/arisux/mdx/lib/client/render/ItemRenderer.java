@@ -7,8 +7,8 @@ import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.arisux.mdx.lib.client.Model;
-import com.arisux.mdx.lib.client.TexturedModel;
+import com.arisux.mdx.lib.client.render.model.Model;
+import com.arisux.mdx.lib.client.render.model.MapModelTexture;
 import com.arisux.mdx.lib.game.Game;
 import com.google.common.collect.Lists;
 
@@ -33,7 +33,7 @@ import net.minecraftforge.client.model.IPerspectiveAwareModel;
 
 public abstract class ItemRenderer<M extends Model> implements IPerspectiveAwareModel, IBakedModel
 {
-    protected TexturedModel<M>                          model;
+    protected MapModelTexture<M>                          model;
     protected static final Minecraft                    MC    = Minecraft.getMinecraft();
     private ItemRenderList<M>                           overrides;
     private final Pair<? extends IBakedModel, Matrix4f> SELF_PAIR;
@@ -65,7 +65,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
         }
     }
 
-    public ItemRenderer(TexturedModel<M> model)
+    public ItemRenderer(MapModelTexture<M> model)
     {
         this.overrides = new ItemRenderList();
         this.SELF_PAIR = Pair.of(this, null);
@@ -194,7 +194,7 @@ public abstract class ItemRenderer<M extends Model> implements IPerspectiveAware
         return this.overrides;
     }
 
-    public TexturedModel<M> getModel()
+    public MapModelTexture<M> getModel()
     {
         return this.model;
     }
