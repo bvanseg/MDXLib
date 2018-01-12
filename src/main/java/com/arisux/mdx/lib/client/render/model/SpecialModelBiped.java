@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client;
+package com.arisux.mdx.lib.client.render.model;
 
 import com.arisux.mdx.lib.client.render.OpenGL;
 

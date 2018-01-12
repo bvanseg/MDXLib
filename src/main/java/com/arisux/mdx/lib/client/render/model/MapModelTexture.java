@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client;
+package com.arisux.mdx.lib.client.render.model;
 
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.client.render.Texture;
@@ -7,12 +7,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TexturedModel<MODEL extends Model>
+public class MapModelTexture<MODEL extends Model>
 {
     private Texture texture;
     private MODEL model;
     
-    public TexturedModel(MODEL model, Texture texture)
+    public MapModelTexture(MODEL model, Texture texture)
     {
         this.model = model;
         this.texture = texture;
@@ -57,12 +57,12 @@ public class TexturedModel<MODEL extends Model>
         }
     }
     
-    public TexturedModel<MODEL> clone()
+    public MapModelTexture<MODEL> clone()
     {
         try
         {
             Model newModel = this.model.getClass().getConstructor().newInstance(new Object[] {});
-            TexturedModel<MODEL> texturedModel = new TexturedModel<MODEL>((MODEL) newModel, this.texture);
+            MapModelTexture<MODEL> texturedModel = new MapModelTexture<MODEL>((MODEL) newModel, this.texture);
             //MDX.log().info(String.format("[%s->%s] [%s->%s]", this.model, newModel, this, texturedModel));
             return texturedModel;
         }

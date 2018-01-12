@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.lib.client.WavefrontModelLoader;
 import com.arisux.mdx.lib.client.render.Color;
 import com.arisux.mdx.lib.client.render.Normal;
 import com.arisux.mdx.lib.client.render.UV;
 import com.arisux.mdx.lib.client.render.Vertex;
+import com.arisux.mdx.lib.client.render.model.WavefrontModelLoader;
 
 import net.minecraft.util.ResourceLocation;
 
