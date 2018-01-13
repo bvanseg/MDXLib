@@ -5,7 +5,7 @@ import com.arisux.mdx.lib.util.MDXMath;
 
 import net.minecraft.util.math.MathHelper;
 
-public class Animations
+public class AnimationHelper
 {
     /**
      * Rotates the given parts to face a given target
