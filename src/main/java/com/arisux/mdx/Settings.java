@@ -43,7 +43,7 @@ public class Settings implements IPreInitEvent
     {
         return startupNotification.getBoolean();
     }
-    
+
     public Configuration getConfig()
     {
         return configuration;

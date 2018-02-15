@@ -6,7 +6,6 @@ import com.arisux.mdx.lib.client.NotifierModule;
 import com.arisux.mdx.lib.client.render.DebugToolsRenderer;
 import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
 import com.arisux.mdx.lib.game.CommandHandler;
-import com.arisux.mdx.lib.game.DataHandler;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.game.IdentityRemapModule;
 import com.arisux.mdx.lib.util.SystemInfo;
@@ -27,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MDXModule
 {
     private static MDX    instance         = new MDX();
-    public static boolean prefetchComplete = false;
 
     public static MDX instance()
     {
@@ -37,16 +35,9 @@ public class MDXModule
     @EventHandler
     public void pre(FMLPreInitializationEvent event)
     {
-        SystemInfo.INSTANCE.runtimeTasks();
-        DataHandler.instance.pre(event);
-
-        if (!prefetchComplete)
-        {
-            return;
-        }
-
         MDX.console().pre(event);
         MDX.settings().pre(event);
+        SystemInfo.INSTANCE.runtimeTasks();
         Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
     }
 
@@ -63,11 +54,6 @@ public class MDXModule
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        if (!prefetchComplete)
-        {
-            return;
-        }
-
         MDX.console().init(event);
         MDX.network().init(event);
         CommandHandler.INSTANCE.init(event);
@@ -76,22 +62,12 @@ public class MDXModule
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
-        if (!prefetchComplete)
-        {
-            return;
-        }
-
         CommandHandler.INSTANCE.onServerStarting(event);
     }
 
     @EventHandler
     public void post(FMLPostInitializationEvent event)
     {
-        if (!prefetchComplete)
-        {
-            return;
-        }
-
         MDX.console().post(event);
     }
 
@@ -99,11 +75,6 @@ public class MDXModule
     @EventHandler
     public void postClient(FMLPostInitializationEvent event)
     {
-        if (!prefetchComplete)
-        {
-            return;
-        }
-
         MDX.renders().post(event);
         MDX.notifications().onStartup();
     }
@@ -111,16 +82,6 @@ public class MDXModule
     @EventHandler
     public void onLoadMissingMapping(FMLMissingMappingsEvent event)
     {
-        if (!prefetchComplete)
-        {
-            return;
-        }
-
         IdentityRemapModule.INSTANCE.onLoadMissingMapping(event);
-    }
-
-    public static boolean prefetchComplete()
-    {
-        return prefetchComplete;
     }
 }

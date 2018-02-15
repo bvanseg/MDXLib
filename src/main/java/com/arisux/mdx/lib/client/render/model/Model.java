@@ -3,6 +3,7 @@ package com.arisux.mdx.lib.client.render.model;
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.util.MDXMath;
+import com.arisux.mdx.lib.world.entity.IAnimated;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
@@ -437,6 +438,17 @@ public abstract class Model<TYPE extends Object> extends ModelBase
 
     public static final float DEFAULT_SCALE = 1F / 16F;
     private float             movementScale = 1.0F;
+    protected Animator        animatior;
+
+    public Animator getAnimationHandler()
+    {
+        return this.animatior;
+    }
+    
+    public Model()
+    {
+        this.animatior = Animator.create();
+    }
 
     /**
      * Set the width and height of this ModelBaseExtension's texture.
@@ -463,6 +475,16 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         model.rotateAngleX = rotateAngleX;
         model.rotateAngleY = rotateAngleY;
         model.rotateAngleZ = rotateAngleZ;
+    }
+    
+    public void updateAnimations(TYPE t)
+    {
+        if (this.getAnimationHandler() != null && t instanceof IAnimated)
+        {
+            IAnimated animated = (IAnimated) t;
+            this.getAnimationHandler().update(animated);
+        }
+        resetPose();
     }
 
     /**
@@ -683,7 +705,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
     @Deprecated
     public void render(Entity entity, float swing, float swingPrev, float idle, float headYaw, float headPitch, float scale)
     {
-        ;
+        this.render((TYPE) entity);
     }
 
     /**

@@ -15,19 +15,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Animator
 {
-    private int                               tempTick;
-    private int                               prevTempTick;
-    private boolean                           correctAnimation;
     private IAnimated                         entity;
-    private HashMap<ModelRenderer, Transform> transformMap;
-    private HashMap<ModelRenderer, Transform> prevTransformMap;
+    private boolean                           correct;
+    private int                               tick;
+    private int                               tickPrev;
+    private HashMap<ModelRenderer, Transform> transforms;
+    private HashMap<ModelRenderer, Transform> transformsPrev;
 
     private Animator()
     {
-        this.tempTick = 0;
-        this.correctAnimation = false;
-        this.transformMap = new HashMap<>();
-        this.prevTransformMap = new HashMap<>();
+        this.tick = 0;
+        this.correct = false;
+        this.transforms = new HashMap<>();
+        this.transformsPrev = new HashMap<>();
     }
 
     public static Animator create()
@@ -42,30 +42,30 @@ public class Animator
 
     public void update(IAnimated entity)
     {
-        this.tempTick = this.prevTempTick = 0;
-        this.correctAnimation = false;
+        this.tick = this.tickPrev = 0;
+        this.correct = false;
         this.entity = entity;
-        this.transformMap.clear();
-        this.prevTransformMap.clear();
+        this.transforms.clear();
+        this.transformsPrev.clear();
     }
 
     public boolean setAnimation(Animation animation)
     {
-        this.tempTick = this.prevTempTick = 0;
-        this.correctAnimation = this.entity.getAnimation() == animation;
+        this.tick = this.tickPrev = 0;
+        this.correct = this.entity.getAnimation() == animation;
 
-        return this.correctAnimation;
+        return this.correct;
     }
 
     public void startKeyframe(int duration)
     {
-        if (!this.correctAnimation)
+        if (!this.correct)
         {
             return;
         }
 
-        this.prevTempTick = this.tempTick;
-        this.tempTick += duration;
+        this.tickPrev = this.tick;
+        this.tick += duration;
     }
 
     public void setStaticKeyframe(int duration)
@@ -82,7 +82,7 @@ public class Animator
 
     public void rotate(ModelRenderer box, float x, float y, float z)
     {
-        if (!this.correctAnimation)
+        if (!this.correct)
         {
             return;
         }
@@ -92,7 +92,7 @@ public class Animator
 
     public void move(ModelRenderer box, float x, float y, float z)
     {
-        if (!this.correctAnimation)
+        if (!this.correct)
         {
             return;
         }
@@ -102,15 +102,15 @@ public class Animator
 
     private Transform getTransform(ModelRenderer box)
     {
-        Transform transform = this.transformMap.get(box);
+        Transform t = this.transforms.get(box);
 
-        if (transform == null)
+        if (t == null)
         {
-            transform = new Transform();
-            this.transformMap.put(box, transform);
+            t = new Transform();
+            this.transforms.put(box, t);
         }
 
-        return transform;
+        return t;
     }
 
     public void endKeyframe()
@@ -120,65 +120,65 @@ public class Animator
 
     private void endKeyframe(boolean stationary)
     {
-        if (!this.correctAnimation)
+        if (!this.correct)
         {
             return;
         }
 
         int animationTick = this.entity.getAnimationTick();
 
-        if (animationTick >= this.prevTempTick && animationTick < this.tempTick)
+        if (animationTick >= this.tickPrev && animationTick < this.tick)
         {
             if (stationary)
             {
-                for (ModelRenderer box : this.prevTransformMap.keySet())
+                for (ModelRenderer box : this.transformsPrev.keySet())
                 {
-                    Transform transform = this.prevTransformMap.get(box);
+                    Transform t = this.transformsPrev.get(box);
 
-                    box.rotateAngleX += transform.getRotationX();
-                    box.rotateAngleY += transform.getRotationY();
-                    box.rotateAngleZ += transform.getRotationZ();
-                    box.rotationPointX += transform.getOffsetX();
-                    box.rotationPointY += transform.getOffsetY();
-                    box.rotationPointZ += transform.getOffsetZ();
+                    box.rotateAngleX += t.getRotationX();
+                    box.rotateAngleY += t.getRotationY();
+                    box.rotateAngleZ += t.getRotationZ();
+                    box.rotationPointX += t.getOffsetX();
+                    box.rotationPointY += t.getOffsetY();
+                    box.rotationPointZ += t.getOffsetZ();
                 }
             }
             else
             {
-                float tick = (animationTick - this.prevTempTick + Game.partialTicks()) / (this.tempTick - this.prevTempTick);
+                float tick = (animationTick - this.tickPrev + Game.partialTicks()) / (this.tick - this.tickPrev);
                 float inc = MathHelper.sin((float) (tick * Math.PI / 2.0F)), dec = 1.0F - inc;
 
-                for (ModelRenderer box : this.prevTransformMap.keySet())
+                for (ModelRenderer box : this.transformsPrev.keySet())
                 {
-                    Transform transform = this.prevTransformMap.get(box);
+                    Transform t = this.transformsPrev.get(box);
 
-                    box.rotateAngleX += dec * transform.getRotationX();
-                    box.rotateAngleY += dec * transform.getRotationY();
-                    box.rotateAngleZ += dec * transform.getRotationZ();
-                    box.rotationPointX += dec * transform.getOffsetX();
-                    box.rotationPointY += dec * transform.getOffsetY();
-                    box.rotationPointZ += dec * transform.getOffsetZ();
+                    box.rotateAngleX += dec * t.getRotationX();
+                    box.rotateAngleY += dec * t.getRotationY();
+                    box.rotateAngleZ += dec * t.getRotationZ();
+                    box.rotationPointX += dec * t.getOffsetX();
+                    box.rotationPointY += dec * t.getOffsetY();
+                    box.rotationPointZ += dec * t.getOffsetZ();
                 }
 
-                for (ModelRenderer box : this.transformMap.keySet())
+                for (ModelRenderer box : this.transforms.keySet())
                 {
-                    Transform transform = this.transformMap.get(box);
+                    Transform t = this.transforms.get(box);
 
-                    box.rotateAngleX += inc * transform.getRotationX();
-                    box.rotateAngleY += inc * transform.getRotationY();
-                    box.rotateAngleZ += inc * transform.getRotationZ();
-                    box.rotationPointX += inc * transform.getOffsetX();
-                    box.rotationPointY += inc * transform.getOffsetY();
-                    box.rotationPointZ += inc * transform.getOffsetZ();
+                    box.rotateAngleX += inc * t.getRotationX();
+                    box.rotateAngleY += inc * t.getRotationY();
+                    box.rotateAngleZ += inc * t.getRotationZ();
+                    box.rotationPointX += inc * t.getOffsetX();
+                    box.rotationPointY += inc * t.getOffsetY();
+                    box.rotationPointZ += inc * t.getOffsetZ();
                 }
             }
         }
 
         if (!stationary)
         {
-            this.prevTransformMap.clear();
-            this.prevTransformMap.putAll(this.transformMap);
-            this.transformMap.clear();
+            this.transformsPrev.clear();
+            this.transformsPrev.putAll(this.transforms);
+            this.transforms.clear();
         }
     }
 }

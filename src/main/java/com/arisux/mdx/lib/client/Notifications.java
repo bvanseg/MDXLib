@@ -35,8 +35,25 @@ public class Notifications
 
     public void onStartup()
     {
+        System.out.println("okkk");
         if (Settings.INSTANCE.isStartupNotificationEnabled())
         {
+            Notifications.sendNotification(new Notification()
+            {
+                @Override
+                public int displayTimeout()
+                {
+                    return 2000;
+                }
+                
+                @Override
+                public String getMessage()
+                {
+                    return "MDX collects data on startup, by continuing with the data collector enabled you agree to let us collect data that may help us diagnose problems you may have in the future. This is the first time you've used this mod, data will not be collected until the next time the game launches. Data collection can be disabled in the configuration, or by selecting 'Disable' below.";
+                }
+            });
+            Settings.INSTANCE.disableStartupNotification();
+            
             Notifications.sendNotification(new Notification()
             {
                 @Override

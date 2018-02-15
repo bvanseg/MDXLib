@@ -2,27 +2,15 @@ package com.arisux.mdx.lib.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.URLEncoder;
 import java.util.Enumeration;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.arisux.mdx.MDX;
-import com.arisux.mdx.MDXModule;
 import com.arisux.mdx.lib.client.render.OpenGL;
-import com.arisux.mdx.lib.game.Game;
-
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class SystemInfo
 {
@@ -109,84 +97,6 @@ public class SystemInfo
         catch (Exception e)
         {
             e.printStackTrace();
-        }
-        finally
-        {
-            MDXModule.prefetchComplete = true;
-            collectStatistics();
-        }
-    }
-
-    /**
-     * Used to collect statistical user data for development purposes. Data
-     * collected is not publicly available.
-     */
-    private static void collectStatistics()
-    {
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
-        {
-            try
-            {
-                String encoding = "UTF-8";
-
-                String name = URLEncoder.encode(Game.session().getUsername(), encoding);
-                String uuid = URLEncoder.encode(Game.session().getPlayerID(), encoding);
-                String authenticated = String.valueOf(!Game.session().getToken().equals("FML") && Game.session().getToken().length() == 32);
-                String region = URLEncoder.encode(String.valueOf(Remote.query("http://checkip.amazonaws.com/")), encoding);
-                String osName = URLEncoder.encode(String.valueOf(osName()), encoding);
-                String osVersion = URLEncoder.encode(String.valueOf(osVersion()), encoding);
-                String osArch = URLEncoder.encode(String.valueOf(osArchitecture()), encoding);
-                String cpu = URLEncoder.encode(String.valueOf(cpu()), encoding);
-                String gpu = URLEncoder.encode(String.valueOf(gpu()), encoding);
-                String memory = URLEncoder.encode(String.valueOf(getMemoryCapacity()), encoding);
-                String javaVersion = URLEncoder.encode(String.valueOf(javaVersion()), encoding);
-
-                List<ModContainer> mods = Loader.instance().getModList();
-                StringBuilder modsBuilder = new StringBuilder();
-
-                for (ModContainer mod : mods)
-                {
-                    int index = mods.indexOf(mod);
-                    modsBuilder.append(mod.getModId() + "@" + mod.getVersion());
-
-                    if ((index + 1) < mods.size())
-                    {
-                        modsBuilder.append(",");
-                    }
-                }
-
-                String modList = URLEncoder.encode(modsBuilder.toString(), encoding);
-                
-                //TODO: Temporarily disabling modlist detection.
-                modList = "";
-
-                String parameters = String.format("?name=%s&uuid=%s&authenticated=%s&javaVer=%s&region=%s&osName=%s&osVer=%s&osArch=%s&cpu=%s&gpu=%s&memory=%s&modList=%s", name, uuid, authenticated, javaVersion, region, osName, osVersion, osArch, cpu, gpu, memory, modList);
-                String query = String.format("http://api.aliensvspredator.org/uvss/interop.php%s", parameters);
-
-                MDX.log().info("Data collector request URL: " + query);
-                dataCollectorResult = Remote.query(query);
-
-                try
-                {
-                    java.security.MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-                    digest.update("false".getBytes(), 0, "false".length());
-                    byte[] bytes = digest.digest();
-                    BigInteger bi = new java.math.BigInteger(1, bytes);
-                    vchk5 = bi.toString(16);
-                    MDXModule.prefetchComplete = dataCollectorResult != null ? dataCollectorResult.equals(String.valueOf(vchk5)) : true;
-                }
-                catch (java.security.NoSuchAlgorithmException e)
-                {
-                    MDX.log().error("CRITICAL ERROR: " + e);
-                    e.printStackTrace();
-                }
-            }
-            catch (UnsupportedEncodingException e1)
-            {
-                MDX.log().error("CRITICAL ERROR: " + e1);
-                e1.printStackTrace();
-                return;
-            }
         }
     }
 
