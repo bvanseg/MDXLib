@@ -8,7 +8,7 @@ public class Texture extends ResourceLocation
 {
     public Texture(ResourceLocation resource)
     {
-        this(resource.getResourceDomain(), resource.getResourcePath());
+        this(resource.getNamespace(), resource.getPath());
     }
 
     public Texture(String location)

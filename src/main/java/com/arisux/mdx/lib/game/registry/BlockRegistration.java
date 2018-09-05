@@ -34,7 +34,7 @@ public abstract class BlockRegistration
     {
         this.block = this.applyModifiers(block);
         block.setRegistryName(registryName);
-        block.setUnlocalizedName(block.getRegistryName().toString());
+        block.setTranslationKey(block.getRegistryName().toString());
         event.getRegistry().register(this.block);
 
         return this.block;
@@ -44,7 +44,7 @@ public abstract class BlockRegistration
     {
         ItemBlock itemblock = this.applyModifiers(new ItemBlock(block));
         itemblock.setRegistryName(registryName);
-        itemblock.setUnlocalizedName(itemblock.getRegistryName().toString());
+        itemblock.setTranslationKey(itemblock.getRegistryName().toString());
         event.getRegistry().register(itemblock);
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)

@@ -20,10 +20,10 @@ public class BlockMaterial extends Block
         this.renderLayer = BlockRenderLayer.SOLID;
         this.setLightOpacity(255);
     }
-
+    
     @SideOnly(Side.CLIENT)
     @Override
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return this.renderLayer;
     }

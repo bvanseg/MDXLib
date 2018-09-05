@@ -12,9 +12,9 @@ public class CreativeTabMDX extends CreativeTabs
     {
         super("MDX");
     }
-
+    
     @Override
-    public ItemStack getTabIconItem()
+    public ItemStack createIcon()
     {
         return new ItemStack(Items.REPEATER);
     }

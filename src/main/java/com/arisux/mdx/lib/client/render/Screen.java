@@ -77,7 +77,7 @@ public class Screen
      */
     public static void saveScreenshot(String filename, int x, int y, int width, int height)
     {
-        File file = new File(Game.minecraft().mcDataDir.getPath());
+        File file = new File(Game.minecraft().gameDir.getPath());
         MDX.log().info("Saving screenshot to " + file.getPath());
     
         if (!file.exists())

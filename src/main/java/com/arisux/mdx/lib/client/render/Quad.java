@@ -35,7 +35,7 @@ public class Quad
     {
         for (int i = 0; i < this.vectors.length; ++i)
         {
-            this.vectors[i] = this.vectors[i].addVector(x, y, z);
+            this.vectors[i] = this.vectors[i].add(x, y, z);
         }
         
         return this;

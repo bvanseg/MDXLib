@@ -168,7 +168,7 @@ public class LargeExplosion
             return;
         }
 
-        state.getBlock().onBlockDestroyedByExplosion(this.world, pos, new Explosion(this.world, null, dX, dY, dZ, 1F, false, false));
+        state.getBlock().onExplosionDestroy(this.world, pos, new Explosion(this.world, null, dX, dY, dZ, 1F, false, false));
         this.world.setBlockToAir(pos);
     }
 }

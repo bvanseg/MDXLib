@@ -56,7 +56,7 @@ public class JsonResourceGenerator implements IPreInitEvent, IInitEvent
     public JsonResourceGenerator(String modid)
     {
         this.modid = modid;
-        this.baseDirectory = new File(Game.minecraft().mcDataDir, "jsongen");
+        this.baseDirectory = new File(Game.minecraft().gameDir, "jsongen");
         this.defaultsDirectory = new File(baseDirectory, "default");
         this.domainDir = new File(baseDirectory, modid);
     }

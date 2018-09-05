@@ -44,7 +44,7 @@ public class DummyModelLoader implements ICustomModelLoader
 
         public String location(ResourceLocation resource)
         {
-            return String.format("%s:" + location, resource.getResourceDomain(), resource.getResourcePath());
+            return String.format("%s:" + location, resource.getNamespace(), resource.getPath());
         }
     }
 
@@ -61,7 +61,7 @@ public class DummyModelLoader implements ICustomModelLoader
     
     public static String resourceNameFor(ResourceLocation r)
     {
-        return String.format("%s:%s", r.getResourceDomain(), r.getResourcePath());
+        return String.format("%s:%s", r.getNamespace(), r.getPath());
     }
 
     @Override

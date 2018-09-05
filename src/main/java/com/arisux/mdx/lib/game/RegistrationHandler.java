@@ -53,14 +53,14 @@ public abstract class RegistrationHandler<MOD extends IMod> implements IPreInitE
         {
             Block block = (Block) registryObject;
             block.setRegistryName(registryName);
-            block.setUnlocalizedName(resource.toString());
+            block.setTranslationKey(resource.toString());
         }
 
         if (registryObject instanceof Item)
         {
             Item item = (Item) registryObject;
             item.setRegistryName(registryName);
-            item.setUnlocalizedName(resource.toString());
+            item.setTranslationKey(resource.toString());
 
             if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
             {
