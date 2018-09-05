@@ -1,6 +1,7 @@
 package com.arisux.mdx.lib.client.render.model.block;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -9,6 +10,8 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -204,9 +207,10 @@ public enum ModelRotationXYZ implements net.minecraftforge.common.model.IModelSt
         }
     }
 
-    public com.google.common.base.Optional<net.minecraftforge.common.model.TRSRTransformation> apply(com.google.common.base.Optional<? extends net.minecraftforge.common.model.IModelPart> part) 
+    @Override
+    public Optional<TRSRTransformation> apply(Optional<? extends IModelPart> part)
     {
-    	return net.minecraftforge.client.ForgeHooksClient.applyTransform(getMatrix(), part);
+        return ForgeHooksClient.applyTransform(getMatrix(), part);
     }
     
     public javax.vecmath.Matrix4f getMatrix()

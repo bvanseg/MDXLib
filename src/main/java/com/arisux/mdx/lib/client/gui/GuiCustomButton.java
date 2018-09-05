@@ -25,17 +25,17 @@ public class GuiCustomButton extends GuiElement
     public boolean fontShadow;
     public ElementAlignment textAlignment;
 
-    public GuiCustomButton(int id, int xPosition, int yPosition, int width, int height, String displayString)
+    public GuiCustomButton(int id, int x, int y, int width, int height, String displayString)
     {
-        super(id, xPosition, yPosition, width, height, displayString);
+        super(id, x, y, width, height, displayString);
         this.scale = 1F;
         this.width = 200;
         this.height = 20;
         this.enabled = true;
         this.visible = true;
         this.id = id;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.displayString = displayString;
@@ -56,38 +56,38 @@ public class GuiCustomButton extends GuiElement
 
     public void drawButton(float scale)
     {
-        this.drawButton(Game.minecraft(), (int) (Screen.scaledMousePosition().x * scale), (int) (Screen.scaledMousePosition().y * scale));
+        this.drawButton(Game.minecraft(), (int) (Screen.scaledMousePosition().x * scale), (int) (Screen.scaledMousePosition().y * scale), Game.partialTicks());
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY)
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
     {
-        super.drawButton(mc, mouseX, mouseY);
+        super.drawButton(mc, mouseX, mouseY, partialTicks);
         
         if (this.visible)
         {
-            this.hovered = mouseX >= this.xPosition * scale && mouseY >= this.yPosition * scale && mouseX < (this.xPosition + this.width) * scale && mouseY < (this.yPosition + this.height) * scale;
+            this.hovered = mouseX >= this.x * scale && mouseY >= this.y * scale && mouseX < (this.x + this.width) * scale && mouseY < (this.y + this.height) * scale;
             int state = this.getHoverState(this.hovered);
             int overlayColor = state == 2 ? (Mouse.isButtonDown(0) ? overlayColorPressed : overlayColorHover) : overlayColorNormal;
 
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
             OpenGL.enableBlend();
-            Draw.drawRect(this.xPosition, this.yPosition, this.width, this.height, baseColor);
-            Draw.drawRect(this.xPosition, this.yPosition, this.width, this.height, overlayColor);
+            Draw.drawRect(this.x, this.y, this.width, this.height, baseColor);
+            Draw.drawRect(this.x, this.y, this.width, this.height, overlayColor);
 
             this.mouseDragged(mc, mouseX, mouseY);
 
             if (this.textAlignment == ElementAlignment.CENTER)
             {
-                Draw.drawStringAlignCenter(this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, fontColor, fontShadow);
+                Draw.drawStringAlignCenter(this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, fontColor, fontShadow);
             }
             else if (this.textAlignment == ElementAlignment.LEFT)
             {
-                Draw.drawString(this.displayString, this.xPosition + 4, this.yPosition + (this.height - 8) / 2, fontColor, fontShadow);
+                Draw.drawString(this.displayString, this.x + 4, this.y + (this.height - 8) / 2, fontColor, fontShadow);
             }
             else if (this.textAlignment == ElementAlignment.RIGHT)
             {
-                Draw.drawStringAlignRight(this.displayString, this.xPosition + this.width - 4, this.yPosition + (this.height - 8) / 2, fontColor, fontShadow);
+                Draw.drawStringAlignRight(this.displayString, this.x + this.width - 4, this.y + (this.height - 8) / 2, fontColor, fontShadow);
             }
 
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -129,13 +129,13 @@ public class GuiCustomButton extends GuiElement
     @Override
     public void setX(int x)
     {
-        this.xPosition = x;
+        this.x = x;
     }
 
     @Override
     public void setY(int y)
     {
-        this.yPosition = y;
+        this.y = y;
     }
 
     @Override

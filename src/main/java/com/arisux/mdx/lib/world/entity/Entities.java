@@ -33,6 +33,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.GameData;
 
 public class Entities
 {
@@ -227,7 +228,7 @@ public class Entities
                 double distance = reach;
                 Vec3d renderPosition = Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks);
                 Vec3d lookVec = Game.minecraft().getRenderViewEntity().getLook(partialTicks);
-                Vec3d lookPos = renderPosition.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
+                Vec3d lookPos = renderPosition.addVector(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
                 RayTraceResult blockTrace = rayTraceBlocks(Game.minecraft().world, Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks), lookPos, false, true, true);
 
                 if (blockTrace != null)
@@ -237,7 +238,7 @@ public class Entities
 
                 pointedEntity = null;
                 Vec3d hitVec = null;
-                List list = Game.minecraft().world.getEntitiesWithinAABBExcludingEntity(Game.minecraft().getRenderViewEntity(), Game.minecraft().getRenderViewEntity().getEntityBoundingBox().addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand((double) 1F, (double) 1F, (double) 1F));
+                List list = Game.minecraft().world.getEntitiesWithinAABBExcludingEntity(Game.minecraft().getRenderViewEntity(), Game.minecraft().getRenderViewEntity().getEntityBoundingBox().expand(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach).expand((double) 1F, (double) 1F, (double) 1F));
                 double entityDist = distance;
 
                 for (int idx = 0; idx < list.size(); ++idx)
@@ -249,7 +250,7 @@ public class Entities
                         AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand((double) entity.getCollisionBorderSize(), (double) entity.getCollisionBorderSize(), (double) entity.getCollisionBorderSize());
                         RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(renderPosition, lookPos);
 
-                        if (axisalignedbb.isVecInside(renderPosition))
+                        if (axisalignedbb.contains(renderPosition))
                         {
                             if (0.0D < entityDist || entityDist == 0.0D)
                             {
@@ -342,8 +343,8 @@ public class Entities
 
         if (lookVec != null)
         {
-            posHit = pos.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
-            List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.xCoord, pos.yCoord, pos.zCoord, pos.xCoord + 1F, pos.yCoord + 1F, pos.zCoord + 1F).addCoord(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach).expand(1.0F, 1.0F, 1.0F));
+            posHit = pos.addVector(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
+            List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x + 1F, pos.y + 1F, pos.z + 1F).expand(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach).expand(1.0F, 1.0F, 1.0F));
 
             for (Entity e : entities)
             {
@@ -392,11 +393,11 @@ public class Entities
 
     public static RayTraceResult rayTraceBlocks(World world, Vec3d pos, Vec3d pos2, boolean hitLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock)
     {
-        if (!Double.isNaN(pos.xCoord) && !Double.isNaN(pos.yCoord) && !Double.isNaN(pos.zCoord))
+        if (!Double.isNaN(pos.x) && !Double.isNaN(pos.y) && !Double.isNaN(pos.z))
         {
-            if (!Double.isNaN(pos2.xCoord) && !Double.isNaN(pos2.yCoord) && !Double.isNaN(pos2.zCoord))
+            if (!Double.isNaN(pos2.x) && !Double.isNaN(pos2.y) && !Double.isNaN(pos2.z))
             {
-                BlockPos blockpos = new BlockPos(MathHelper.floor(pos.xCoord), MathHelper.floor(pos.yCoord), MathHelper.floor(pos.zCoord));
+                BlockPos blockpos = new BlockPos(MathHelper.floor(pos.x), MathHelper.floor(pos.y), MathHelper.floor(pos.z));
                 IBlockState blockstate = world.getBlockState(blockpos);
                 Block block = blockstate.getBlock();
                 int posMeta = block.getMetaFromState(blockstate);
@@ -418,18 +419,18 @@ public class Entities
                 int dist = 200;
                 
 
-                double tX = pos.xCoord;
-                double tY = pos.yCoord;
-                double tZ = pos.zCoord;
+                double tX = pos.x;
+                double tY = pos.y;
+                double tZ = pos.z;
 
                 while (dist-- >= 0)
                 {
-                    if (Double.isNaN(pos.xCoord) || Double.isNaN(pos.yCoord) || Double.isNaN(pos.zCoord))
+                    if (Double.isNaN(pos.x) || Double.isNaN(pos.y) || Double.isNaN(pos.z))
                     {
                         return null;
                     }
 
-                    if (posX == pos2.xCoord && posY == pos2.yCoord && posZ == pos2.zCoord)
+                    if (posX == pos2.x && posY == pos2.y && posZ == pos2.z)
                     {
                         return returnLastUncollidableBlock ? movObjPos : null;
                     }
@@ -441,11 +442,11 @@ public class Entities
                     double distY = 999.0D;
                     double distZ = 999.0D;
 
-                    if (pos2.xCoord > posX)
+                    if (pos2.x > posX)
                     {
                         distX = (double) posX + 1.0D;
                     }
-                    else if (pos2.xCoord < posX)
+                    else if (pos2.x < posX)
                     {
                         distX = (double) posX + 0.0D;
                     }
@@ -454,11 +455,11 @@ public class Entities
                         endX = false;
                     }
 
-                    if (pos2.yCoord > posY)
+                    if (pos2.y > posY)
                     {
                         distY = (double) posY + 1.0D;
                     }
-                    else if (pos2.yCoord < posY)
+                    else if (pos2.y < posY)
                     {
                         distY = (double) posY + 0.0D;
                     }
@@ -467,11 +468,11 @@ public class Entities
                         endY = false;
                     }
 
-                    if (pos2.zCoord > posZ)
+                    if (pos2.z > posZ)
                     {
                         distZ = (double) posZ + 1.0D;
                     }
-                    else if (pos2.zCoord < posZ)
+                    else if (pos2.z < posZ)
                     {
                         distZ = (double) posZ + 0.0D;
                     }
@@ -483,30 +484,30 @@ public class Entities
                     double dX = 999.0D;
                     double dY = 999.0D;
                     double dZ = 999.0D;
-                    double displacementX = pos2.xCoord - pos.xCoord;
-                    double displacementY = pos2.yCoord - pos.yCoord;
-                    double displacementZ = pos2.zCoord - pos.zCoord;
+                    double displacementX = pos2.x - pos.x;
+                    double displacementY = pos2.y - pos.y;
+                    double displacementZ = pos2.z - pos.z;
 
                     if (endX)
                     {
-                        dX = (distX - pos.xCoord) / displacementX;
+                        dX = (distX - pos.x) / displacementX;
                     }
 
                     if (endY)
                     {
-                        dY = (distY - pos.yCoord) / displacementY;
+                        dY = (distY - pos.y) / displacementY;
                     }
 
                     if (endZ)
                     {
-                        dZ = (distZ - pos.zCoord) / displacementZ;
+                        dZ = (distZ - pos.z) / displacementZ;
                     }
 
                     byte side;
 
                     if (dX < dY && dX < dZ)
                     {
-                        if (pos2.xCoord > posX)
+                        if (pos2.x > posX)
                         {
                             side = 4;
                         }
@@ -521,7 +522,7 @@ public class Entities
                     }
                     else if (dY < dZ)
                     {
-                        if (pos2.yCoord > posY)
+                        if (pos2.y > posY)
                         {
                             side = 0;
                         }
@@ -536,7 +537,7 @@ public class Entities
                     }
                     else
                     {
-                        if (pos2.zCoord > posZ)
+                        if (pos2.z > posZ)
                         {
                             side = 2;
                         }
@@ -552,21 +553,21 @@ public class Entities
                     
                     pos = new Vec3d(tX, tY, tZ);
 
-                    posX = (int) ((double) MathHelper.floor(pos.xCoord));
+                    posX = (int) ((double) MathHelper.floor(pos.x));
 
                     if (side == 5)
                     {
                         --posX;
                     }
 
-                    posY = (int) ((double) MathHelper.floor(pos.yCoord));
+                    posY = (int) ((double) MathHelper.floor(pos.y));
 
                     if (side == 1)
                     {
                         --posY;
                     }
 
-                    posZ = (int) ((double) MathHelper.floor(pos.zCoord));
+                    posZ = (int) ((double) MathHelper.floor(pos.z));
 
                     if (side == 3)
                     {
@@ -832,18 +833,18 @@ public class Entities
 
     public static Class<? extends Entity> getRegisteredEntityClass(String entityId)
     {
-        return (Class<? extends Entity>) EntityList.NAME_TO_CLASS.get(entityId);
+        return (Class<? extends Entity>) EntityList.getClassFromName(entityId);
     }
 
-    public static String getEntityRegistrationId(Entity entity)
-    {
-        return getEntityRegistrationId(entity.getClass());
-    }
-
-    public static String getEntityRegistrationId(Class<? extends Entity> c)
-    {
-        return (String) EntityList.CLASS_TO_NAME.get(c);
-    }
+//    public static String getEntityRegistrationId(Entity entity)
+//    {
+//        return getEntityRegistrationId(entity.getClass());
+//    }
+//
+//    public static String getEntityRegistrationId(Class<? extends Entity> c)
+//    {
+//        return (String) EntityList.CLASS_TO_NAME.get(c);
+//    }
 
     public static Pos getSafeLocationAround(Entity toCheck, Pos around)
     {
@@ -941,7 +942,7 @@ public class Entities
     {
         IBlockState blockstate = world.getBlockState(pos);
         AxisAlignedBB box = skipBoundsCheck ? null : blockstate.getCollisionBoundingBox(world, pos);
-        return box != null && !world.checkNoEntityCollision(box, entity) ? false : (blockstate.getMaterial() == Material.CIRCUITS && block == Blocks.ANVIL ? true : blockstate.getBlock().isReplaceable(world, pos) && block.canReplace(world, pos, side, stack));
+        return box != null && !world.checkNoEntityCollision(box, entity) ? false : (blockstate.getMaterial() == Material.CIRCUITS && block == Blocks.ANVIL ? true : blockstate.getBlock().isReplaceable(world, pos));
     }
 
     public static EnumFacing getEntityFacingRotY(Entity entity)

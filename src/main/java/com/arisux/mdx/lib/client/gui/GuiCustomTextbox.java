@@ -35,8 +35,8 @@ public class GuiCustomTextbox implements IGuiElement
     protected boolean         isEnabled;
     protected boolean         visible;
     protected long            lastRendered;
-    protected int             xPosition;
-    protected int             yPosition;
+    protected int             x;
+    protected int             y;
     protected int             width;
     protected int             height;
     protected int             maxStringLength;
@@ -58,13 +58,13 @@ public class GuiCustomTextbox implements IGuiElement
 
     public GuiCustomTextbox(int x, int y, int width, int height)
     {
-        this.xPosition = x;
-        this.yPosition = y;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.trackInput = true;
-        this.xPosition = x;
-        this.yPosition = y;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.maxStringLength = 32;
@@ -112,7 +112,7 @@ public class GuiCustomTextbox implements IGuiElement
 
         this.setCursorPositionEnd();
 
-        int pos = this.xPosition + this.width;
+        int pos = this.x + this.width;
 
         if (this.getEnableBackgroundDrawing())
         {
@@ -121,8 +121,8 @@ public class GuiCustomTextbox implements IGuiElement
 
         int lineScrollOffset = 0;
 
-        String s = Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(text.substring(lineScrollOffset), this.width);
-        this.setCursorPosition(Minecraft.getMinecraft().fontRendererObj.trimStringToWidth(s, pos).length());
+        String s = Minecraft.getMinecraft().fontRenderer.trimStringToWidth(text.substring(lineScrollOffset), this.width);
+        this.setCursorPosition(Minecraft.getMinecraft().fontRenderer.trimStringToWidth(s, pos).length());
     }
 
     @Override
@@ -552,7 +552,7 @@ public class GuiCustomTextbox implements IGuiElement
      */
     public void mouseClicked(int mouseX, int mouseY, int i)
     {
-        boolean flag = mouseX >= this.xPosition && mouseX < this.xPosition + this.width && mouseY >= this.yPosition && mouseY < this.yPosition + this.height;
+        boolean flag = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
 
         if (this.canLoseFocus)
         {
@@ -561,7 +561,7 @@ public class GuiCustomTextbox implements IGuiElement
 
         if (this.isFocused && i == 0)
         {
-            int l = mouseX - this.xPosition;
+            int l = mouseX - this.x;
 
             if (this.enableBackgroundDrawing)
             {
@@ -582,7 +582,7 @@ public class GuiCustomTextbox implements IGuiElement
         {
             if (this.getEnableBackgroundDrawing())
             {
-                Draw.drawRectWithOutline(this.xPosition, this.yPosition, this.width, this.height, 1, this.backgroundColor, this.borderColor);
+                Draw.drawRectWithOutline(this.x, this.y, this.width, this.height, 1, this.backgroundColor, this.borderColor);
             }
 
             int color = this.isEnabled ? this.textColor : this.textColorDisabled;
@@ -591,8 +591,8 @@ public class GuiCustomTextbox implements IGuiElement
             String textboxText = Game.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
             boolean flag = pos >= 0 && pos <= textboxText.length();
             boolean cursorActive = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
-            int padding = this.enableBackgroundDrawing ? this.xPosition + 4 : this.xPosition;
-            int cursorHeight = this.enableBackgroundDrawing ? this.yPosition + (this.height - 8) / 2 : this.yPosition;
+            int padding = this.enableBackgroundDrawing ? this.x + 4 : this.x;
+            int cursorHeight = this.enableBackgroundDrawing ? this.y + (this.height - 8) / 2 : this.y;
             int cursorPosX = padding;
 
             if (end > textboxText.length())
@@ -667,14 +667,14 @@ public class GuiCustomTextbox implements IGuiElement
             h = i1;
         }
 
-        if (w > this.xPosition + this.width)
+        if (w > this.x + this.width)
         {
-            w = this.xPosition + this.width;
+            w = this.x + this.width;
         }
 
-        if (x > this.xPosition + this.width)
+        if (x > this.x + this.width)
         {
-            x = this.xPosition + this.width;
+            x = this.x + this.width;
         }
 
         OpenGL.color(0.0F, 0.0F, 255.0F, 255.0F);
@@ -938,7 +938,7 @@ public class GuiCustomTextbox implements IGuiElement
         int mouseX = (int) mousePosition.x;
         int mouseY = (int) mousePosition.y;
 
-        return this.isEnabled() && this.getVisible() && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+        return this.isEnabled() && this.getVisible() && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
     }
 
     @Override
@@ -981,13 +981,13 @@ public class GuiCustomTextbox implements IGuiElement
     @Override
     public int x()
     {
-        return this.xPosition;
+        return this.x;
     }
 
     @Override
     public int y()
     {
-        return this.yPosition;
+        return this.y;
     }
 
     @Override
@@ -1005,13 +1005,13 @@ public class GuiCustomTextbox implements IGuiElement
     @Override
     public void setX(int x)
     {
-        this.xPosition = x;
+        this.x = x;
     }
 
     @Override
     public void setY(int y)
     {
-        this.yPosition = y;
+        this.y = y;
     }
 
     @Override

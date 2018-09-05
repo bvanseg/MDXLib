@@ -43,7 +43,7 @@ public class GuiCustomSlider extends GuiCustomButton
             if (this.dragging)
             {
                 this.displayString = label + ": " + (int) (sliderValue * sliderMaxValue);
-                this.sliderValue = (float) (mouseX - (this.xPosition + 4)) / (float) (this.width - 8);
+                this.sliderValue = (float) (mouseX - (this.x + 4)) / (float) (this.width - 8);
 
                 if (this.sliderValue < 0.0F)
                 {
@@ -61,13 +61,13 @@ public class GuiCustomSlider extends GuiCustomButton
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY)
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
     {
-        super.drawButton(mc, mouseX, mouseY);
+        super.drawButton(mc, mouseX, mouseY, partialTicks);
         
         if (this.visible)
         {
-            Draw.drawRect(this.xPosition + (int) (this.sliderValue * (this.width - 8)), this.yPosition, 8, this.height, this.sliderButtonColor);
+            Draw.drawRect(this.x + (int) (this.sliderValue * (this.width - 8)), this.y, 8, this.height, this.sliderButtonColor);
         }
     }
 
@@ -76,7 +76,7 @@ public class GuiCustomSlider extends GuiCustomButton
     {
         if (super.mousePressed(minecraft, mouseX, mouseY))
         {
-            this.sliderValue = (float) (mouseX - (this.xPosition + 4)) / (float) (this.width - 8);
+            this.sliderValue = (float) (mouseX - (this.x + 4)) / (float) (this.width - 8);
 
             if (this.sliderValue < 0.0F)
             {

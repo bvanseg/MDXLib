@@ -9,10 +9,10 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.TextureOffset;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -315,7 +315,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         {
             this.displayList = GLAllocation.generateDisplayLists(1);
             GlStateManager.glNewList(this.displayList, 4864);
-            VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
             for (ModelBox box : this.cubeList)
             {

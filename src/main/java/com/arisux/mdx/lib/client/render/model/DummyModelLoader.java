@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.arisux.mdx.lib.client.render.Draw;
 import com.arisux.mdx.lib.game.Game;
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.block.state.IBlockState;
@@ -102,15 +101,15 @@ public class DummyModelLoader implements ICustomModelLoader
         }
 
         @Override
-        public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
-        {
-            return new CachedDummyModel();
-        }
-
-        @Override
         public IModelState getDefaultState()
         {
             return TRSRTransformation.identity();
+        }
+
+        @Override
+        public IBakedModel bake(IModelState state, VertexFormat format, java.util.function.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+        {
+            return new CachedDummyModel();
         }
     }
 

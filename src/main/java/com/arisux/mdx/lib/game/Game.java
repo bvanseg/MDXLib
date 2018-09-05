@@ -9,27 +9,21 @@ import com.arisux.mdx.lib.world.entity.player.inventory.Inventories;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -57,7 +51,7 @@ public class Game
     @SideOnly(Side.CLIENT)
     public static FontRenderer fontRenderer()
     {
-        return Game.minecraft().fontRendererObj;
+        return Game.minecraft().fontRenderer;
     }
 
     /** Easy access to the partialTickTime variable. **/
@@ -158,13 +152,14 @@ public class Game
     public static List<IRecipe> getRecipes(Object obj)
     {
         ItemStack stack = Inventories.newStack(obj);
-        List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
         List<IRecipe> foundRecipes = new ArrayList<IRecipe>();
 
         if (stack != null)
         {
-            for (IRecipe recipe : recipes)
+            for (ResourceLocation res : CraftingManager.REGISTRY.getKeys())
             {
+                IRecipe recipe = CraftingManager.REGISTRY.getObject(res);
+                
                 if (recipe != null && recipe.getRecipeOutput() != null && recipe.getRecipeOutput().getItem() == stack.getItem())
                 {
                     foundRecipes.add(recipe);
@@ -184,20 +179,13 @@ public class Game
     @SuppressWarnings("unchecked")
     public static IRecipe getRecipe(Object obj)
     {
-        ItemStack stack = Inventories.newStack(obj);
-        List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-
-        if (stack != null)
+        List<IRecipe> recipes = getRecipes(obj);
+        
+        if (recipes != null && recipes.size() > 0)
         {
-            for (IRecipe recipe : recipes)
-            {
-                if (recipe != null && recipe.getRecipeOutput() != null && recipe.getRecipeOutput().getItem() == stack.getItem())
-                {
-                    return recipe;
-                }
-            }
+            return recipes.get(0);
         }
-
+        
         return null;
     }
 
@@ -250,47 +238,47 @@ public class Game
         return null;
     }
 
-    public static Item register(String modid, String identifier, Item item)
-    {
-        item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        GameRegistry.register(item, new ResourceLocation(modid, identifier));
+//    public static Item register(String modid, String identifier, Item item)
+//    {
+//        item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
+//        GameRegistry.register(item, new ResourceLocation(modid, identifier));
+//
+//        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+//        {
+//            Renderers.registerIcon(item);
+//        }
+//
+//        return item;
+//    }
 
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
-        {
-            Renderers.registerIcon(item);
-        }
-
-        return item;
-    }
-
-    public static Block register(String modid, String identifier, Block block)
-    {
-        block.setUnlocalizedName(String.format("%s:%s", modid, identifier));
-        
-        GameRegistry.register(block, new ResourceLocation(modid, identifier));
-        GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
-        {
-            Item item = Item.getItemFromBlock(block);
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-        }
-
-        return block;
-    }
+//    public static Block register(String modid, String identifier, Block block)
+//    {
+//        block.setUnlocalizedName(String.format("%s:%s", modid, identifier));
+//        
+//        GameRegistry.register(block, new ResourceLocation(modid, identifier));
+//        GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+//
+//        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+//        {
+//            Item item = Item.getItemFromBlock(block);
+//            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+//        }
+//
+//        return block;
+//    }
 
     public static Item getItem(Block block)
     {
         return Item.getItemFromBlock(block);
     }
 
-    public static void register(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
-    {
-        EntityRegistry.registerModEntity(entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
-    }
-
-    public static void register(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int eggPrimaryColor, int eggSecondaryColor)
-    {
-        EntityRegistry.registerModEntity(entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates, eggPrimaryColor, eggSecondaryColor);
-    }
+//    public static void register(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
+//    {
+//        EntityRegistry.registerModEntity(entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
+//    }
+//
+//    public static void register(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int eggPrimaryColor, int eggSecondaryColor)
+//    {
+//        EntityRegistry.registerModEntity(entityClass, entityName, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates, eggPrimaryColor, eggSecondaryColor);
+//    }
 }

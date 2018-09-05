@@ -8,8 +8,8 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
@@ -70,7 +70,7 @@ public class EntityBloodFX extends Particle
             this.setExpired();
         }
 
-        if (this.isCollided)
+        if (this.onGround)
         {
             this.motionX *= 0.699999988079071D;
             this.motionZ *= 0.699999988079071D;
@@ -92,7 +92,7 @@ public class EntityBloodFX extends Particle
     }
 
     @Override
-    public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
+    public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
     {
         float s = 0.1F * this.particleScale;
 

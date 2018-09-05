@@ -177,9 +177,11 @@ public class Inventories
             }
             else
             {
-                if (--player.inventory.mainInventory[i].stackSize <= 0)
+                player.inventory.mainInventory.get(i).shrink(1);
+                
+                if (player.inventory.mainInventory.get(i).getCount() <= 0)
                 {
-                    player.inventory.mainInventory[i] = null;
+                    player.inventory.mainInventory.set(i, null);
                 }
 
                 return true;
@@ -198,9 +200,9 @@ public class Inventories
      */
     public static int getSlotFor(InventoryPlayer inventory, Item item)
     {
-        for (int i = 0; i < inventory.mainInventory.length; ++i)
+        for (int i = 0; i < inventory.mainInventory.size(); ++i)
         {
-            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == item)
+            if (inventory.mainInventory.get(i) != null && inventory.mainInventory.get(i).getItem() == item)
             {
                 return i;
             }
@@ -219,10 +221,10 @@ public class Inventories
      */
     public static int getSlotFor(InventoryPlayer inventory, Item item, int meta)
     {
-        for (int i = 0; i < inventory.mainInventory.length; ++i)
+        for (int i = 0; i < inventory.mainInventory.size(); ++i)
         {
     		ItemStack stack = inventory.getStackInSlot(i);
-            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == item && stack.getMetadata() == meta)
+            if (inventory.mainInventory.get(i) != null && inventory.mainInventory.get(i).getItem() == item && stack.getMetadata() == meta)
             {
                 return i;
             }
@@ -239,7 +241,7 @@ public class Inventories
      */
     public static ItemStack getHelmSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorInventory[3];
+        return player.inventory.armorInventory.get(3);
     }
 
     /**
@@ -250,7 +252,7 @@ public class Inventories
      */
     public static ItemStack getChestSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorInventory[2];
+        return player.inventory.armorInventory.get(2);
     }
 
     /**
@@ -261,7 +263,7 @@ public class Inventories
      */
     public static ItemStack getLegsSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorInventory[1];
+        return player.inventory.armorInventory.get(1);
     }
 
     /**
@@ -272,7 +274,7 @@ public class Inventories
      */
     public static ItemStack getBootSlotItemStack(EntityPlayer player)
     {
-        return player.inventory.armorInventory[0];
+        return player.inventory.armorInventory.get(0);
     }
     
     /**
@@ -302,7 +304,7 @@ public class Inventories
         {
             if (stack != null && stack.getItem() == item)
             {
-                amount += stack.stackSize;
+                amount += stack.getCount();
             }
         }
 
@@ -324,7 +326,7 @@ public class Inventories
         {
             if (stack != null && stack.getItem() == item && stack.getMetadata() == meta)
             {
-                amount += stack.stackSize;
+                amount += stack.getCount();
             }
         }
 
@@ -346,7 +348,7 @@ public class Inventories
 		{
 			if (stack != null && stack.getItem() == item) 
 			{
-				count += stack.stackSize;
+				count += stack.getCount();
 			}
 		}
 		return amount <= count;
@@ -368,7 +370,7 @@ public class Inventories
 		{
 			if (stack != null && stack.getItem() == item && stack.getMetadata() == meta) 
 			{
-				count += stack.stackSize;
+				count += stack.getCount();
 			}
 		}
 		return amount <= count;
@@ -389,7 +391,7 @@ public class Inventories
 				ItemStack stack = player.inventory.getStackInSlot(i);
 				if (stack != null && stack.getItem() == item) 
 				{
-					stack.stackSize--;
+				    stack.shrink(1);
 				}
 			}
 		}
@@ -413,16 +415,16 @@ public class Inventories
 				ItemStack stack = player.inventory.getStackInSlot(i);
 				if (stack != null && stack.getItem() == item) 
 				{
-					if (amount - stack.stackSize < 0) 
+					if (amount - stack.getCount() < 0) 
 					{
-						stack.stackSize -= amount;
+					    stack.shrink(amount);
 						return true;
 					} 
 					
 					else 
 					{
-						amount = stack.stackSize;
-						player.inventory.mainInventory[i] = null;
+						amount = stack.getCount();
+						player.inventory.mainInventory.set(i, null);
 						if (amount == 0)
 							return true;
 					}
@@ -450,16 +452,16 @@ public class Inventories
 				ItemStack stack = player.inventory.getStackInSlot(i);
 				if (stack != null && stack.getItem() == item && stack.getMetadata() == meta) 
 				{
-					if (amount - stack.stackSize < 0) 
+					if (amount - stack.getCount() < 0) 
 					{
-						stack.stackSize -= amount;
+					    stack.shrink(amount);
 						return true;
 					} 
 					
 					else 
 					{
-						amount = stack.stackSize;
-						player.inventory.mainInventory[i] = null;
+						amount = stack.getCount();
+						player.inventory.mainInventory.set(i, null);
 						if (amount == 0)
 							return true;
 					}

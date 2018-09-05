@@ -8,9 +8,9 @@ import com.arisux.mdx.lib.client.Resources;
 import com.arisux.mdx.lib.client.render.OpenGL;
 
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -60,7 +60,7 @@ public class EntityFXElectricArc extends Particle
     }
 
     @Override
-    public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
+    public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
     {
         Resources.BLANK.bind();
         this.drawArc(buffer, posX, posY, posZ, targetX, targetY, targetZ, displacement, complexity, density);
@@ -79,7 +79,7 @@ public class EntityFXElectricArc extends Particle
         this.rotPitch = ((float) (Math.atan2(y, variance) * 180.0D / Math.PI));
     }
 
-    private void drawArc(VertexBuffer buffer, double x, double y, double z, double targetX, double targetY, double targetZ, double displacement, double complexity, float density)
+    private void drawArc(BufferBuilder buffer, double x, double y, double z, double targetX, double targetY, double targetZ, double displacement, double complexity, float density)
     {
         if (displacement < complexity)
         {

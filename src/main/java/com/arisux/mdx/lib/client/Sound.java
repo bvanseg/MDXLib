@@ -8,7 +8,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Sound
 {
@@ -32,9 +31,9 @@ public class Sound
         this.delay = true;
     }
 
-    public void register(String soundName)
+    public SoundEvent createSoundEvent(String soundName)
     {
-        this.event = GameRegistry.register(new SoundEvent(this.location).setRegistryName(this.location));
+        return this.event = new SoundEvent(this.location).setRegistryName(this.location);
     }
 
     public Sound setDistanceDelay(boolean delay)

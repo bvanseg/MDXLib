@@ -2,7 +2,7 @@ package com.arisux.mdx.lib.world.entity.player.inventory.creativetabs;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class CreativeTabMDX extends CreativeTabs
 {
@@ -14,8 +14,8 @@ public class CreativeTabMDX extends CreativeTabs
     }
 
     @Override
-    public Item getTabIconItem()
+    public ItemStack getTabIconItem()
     {
-        return Items.REPEATER;
+        return new ItemStack(Items.REPEATER);
     }
 }

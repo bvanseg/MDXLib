@@ -13,7 +13,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath 'org.ajoberstar:gradle-git:0.10.1'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.8"
     }
@@ -38,9 +38,9 @@ dependencies {
 def version_major=2
 def version_minor=0
 def version_micro=0
-def version_minecraft="1.10.2"
-def version_forge="12.18.3.2511"
-def version_mappings="stable_29"
+def version_minecraft="1.12.2"
+def version_forge="14.23.4.2705"
+def version_mappings="snapshot_20180401"
 def curseforge_id="248278"
 def curseforge_release_type="beta"
 def curseforge_api_key=project.ext.properties.curseforge_api_key == null ? "00000-00000-00000-00000-00000" : project.ext.properties.curseforge_api_key

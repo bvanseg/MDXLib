@@ -3,9 +3,11 @@ package com.arisux.mdx.lib.world.item;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,11 +22,9 @@ public class HookedItem extends Item
     {
         return this;
     }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         String descriptionKey = String.format("%s.desc", this.getUnlocalizedName());
 
@@ -36,7 +36,7 @@ public class HookedItem extends Item
             {
                 if (!line.equals(descriptionKey))
                 {
-                    list.add(line);
+                    tooltip.add(line);
                 }
             }
         }

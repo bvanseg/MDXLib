@@ -6,9 +6,9 @@ import com.arisux.mdx.lib.game.Game;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -104,7 +104,7 @@ public class DebugToolsRenderer
     {
         EntityPlayer p = Minecraft.getMinecraft().player;
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buff = tess.getBuffer();
+        BufferBuilder buff = tess.getBuffer();
 
         DebugToolsRenderer.instance.drawBlockScannerBorders(event, p, tess, buff);
         DebugToolsRenderer.instance.drawChunkBorders(event, p, tess, buff);
@@ -135,7 +135,7 @@ public class DebugToolsRenderer
         }
     }
 
-    private void drawBlockScannerBorders(RenderWorldLastEvent event, EntityPlayer p, Tessellator tess, VertexBuffer buff)
+    private void drawBlockScannerBorders(RenderWorldLastEvent event, EntityPlayer p, Tessellator tess, BufferBuilder buff)
     {
         if (isBlockScannerEnabled() && Game.minecraft().gameSettings.thirdPersonView == 0)
         {
@@ -231,7 +231,7 @@ public class DebugToolsRenderer
         }
     }
 
-    private void drawChunkBorders(RenderWorldLastEvent event, EntityPlayer p, Tessellator tess, VertexBuffer buff)
+    private void drawChunkBorders(RenderWorldLastEvent event, EntityPlayer p, Tessellator tess, BufferBuilder buff)
     {
         if (areChunkBordersEnabled())
         {

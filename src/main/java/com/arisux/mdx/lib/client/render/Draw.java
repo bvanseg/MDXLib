@@ -22,10 +22,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -36,16 +36,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class Draw
 {
-    public static VertexBuffer buffer()
+    public static BufferBuilder buffer()
     {
         return Tessellator.getInstance().getBuffer();
     }
@@ -70,27 +70,27 @@ public class Draw
         Tessellator.getInstance().draw();
     }
 
-    public static VertexBuffer vertex(int x, int y, int z)
+    public static BufferBuilder vertex(int x, int y, int z)
     {
         return vertex((double) x, (double) y, (double) z);
     }
 
-    public static VertexBuffer vertex(double x, double y, double z)
+    public static BufferBuilder vertex(double x, double y, double z)
     {
         return buffer().pos(x, y, z);
     }
 
-    public static VertexBuffer vertex(int x, int y, int z, float u, float v)
+    public static BufferBuilder vertex(int x, int y, int z, float u, float v)
     {
         return vertex((double) x, (double) y, (double) z, u, v);
     }
 
-    public static VertexBuffer vertex(double x, double y, double z, float u, float v)
+    public static BufferBuilder vertex(double x, double y, double z, float u, float v)
     {
         return buffer().pos(x, y, z).tex(u, v);
     }
 
-    public static VertexBuffer vertex(double x, double y, double z, double u, double v)
+    public static BufferBuilder vertex(double x, double y, double z, double u, double v)
     {
         return buffer().pos(x, y, z).tex(u, v);
     }
@@ -1090,7 +1090,7 @@ public class Draw
 
                 if (irecipe instanceof ShapedRecipes)
                 {
-                    ItemStack slotStack = ((ShapedRecipes) irecipe).recipeItems[gX + gY * 3];
+                    ItemStack slotStack = ((ShapedRecipes) irecipe).recipeItems.get(gX + gY * 3).getMatchingStacks()[0];
 
                     if (slotStack != null)
                     {
@@ -1102,33 +1102,18 @@ public class Draw
                 {
                     ShapedOreRecipe recipe = (ShapedOreRecipe) irecipe;
 
-                    for (Object o : recipe.getInput())
+                    for (Ingredient i : recipe.getIngredients())
                     {
                         try
                         {
-                            Class<?> unmodifiableArrayList = Class.forName("net.minecraftforge.oredict.OreDictionary$UnmodifiableArrayList");
-
-                            if (unmodifiableArrayList.isInstance(o))
+                            if ((gX + gY * 3) < recipe.getIngredients().size())
                             {
-                                String domain = o.toString().contains("item.") ? o.toString().substring(o.toString().indexOf("x") + 1, o.toString().indexOf("item.")).equalsIgnoreCase("") ? "minecraft" : o.toString().substring(o.toString().indexOf("x") + 1, o.toString().indexOf("item.")) : "null";
-                                Item item = GameRegistry.findItem(domain, o.toString().substring(o.toString().indexOf(".") + 1, o.toString().indexOf("@")));
-
-                                if (item != null)
-                                {
-                                    drawItem(new ItemStack(item, 1), x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
-                                }
-                            }
-                            else if ((gX + gY * 3) < recipe.getInput().length)
-                            {
-                                if (recipe.getInput()[gX + gY * 3] instanceof ItemStack)
-                                {
-                                    ItemStack slotStack = (ItemStack) recipe.getInput()[gX + gY * 3];
+                                    ItemStack slotStack = (ItemStack) recipe.getIngredients().get(gX + gY * 3).getMatchingStacks()[0];
 
                                     if (slotStack != null)
                                     {
                                         drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
                                     }
-                                }
                             }
                         }
                         catch (Exception e)

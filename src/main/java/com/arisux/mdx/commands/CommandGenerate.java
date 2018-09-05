@@ -58,8 +58,9 @@ public class CommandGenerate extends CommandBase
                         double posZ = Double.parseDouble(args[3]);
                         data = new Pos(posX, posY, posZ);
                     }
+                    
 
-                    WorldServer worldServer = server.worldServerForDimension(PLAYER.dimension);
+                    WorldServer worldServer = server.getWorld(PLAYER.dimension);
                     Structure structure = new Structure(schematic, worldServer, data) {
                         @Override
                         public String getName()

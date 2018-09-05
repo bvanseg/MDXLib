@@ -33,9 +33,9 @@ public abstract class GuiElement extends GuiButton implements IGuiElement
             this.visible = false;
         }
     }
-
+    
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY)
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
     {
         this.lastRendered = System.currentTimeMillis();
     }
@@ -92,7 +92,7 @@ public abstract class GuiElement extends GuiButton implements IGuiElement
         int mouseX = (int) mousePosition.x;
         int mouseY = (int) mousePosition.y;
 
-        return this.isEnabled() && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+        return this.isEnabled() && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
     }
 
     @Override
@@ -123,13 +123,13 @@ public abstract class GuiElement extends GuiButton implements IGuiElement
     @Override
     public int x()
     {
-        return this.xPosition;
+        return this.x;
     }
     
     @Override
     public int y()
     {
-        return this.yPosition;
+        return this.y;
     }
     
     @Override
