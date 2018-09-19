@@ -14,19 +14,21 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class Renderers implements IPostInitEvent
+public class Renderers implements IPreInitEvent
 {
     public static final Renderers                    INSTANCE       = new Renderers();
     private final HashMap<Item, ItemRenderer<?>>     ITEM_RENDERERS = new HashMap<Item, ItemRenderer<?>>();
@@ -74,22 +76,36 @@ public class Renderers implements IPostInitEvent
      */
     public static void registerItemRenderer(Item item, ItemRenderer<?> renderer)
     {
-        if (item != null && item.getRegistryName() == null || renderer == null)
+        if (item != null && item.getRegistryName() == null || item == null || renderer == null || item == Items.AIR)
         {
-            MDX.log().warn("Failed to register Item Renderer for item: " + item.getRegistryName());
+            if (item == null)
+            {
+                MDX.log().warn("Failed to register item renderer: NULL");
+                Exception e = new Exception();
+                e.printStackTrace();
+                return;
+            }
+            
+            MDX.log().warn("Failed to register item renderer for item " + item.getRegistryName());
             return;
         }
-
+        
         if (getItemRenderer(item) == null)
         {
+            if (INSTANCE.ICON_RENDERERS.containsKey(item))
+            {
+                MDX.log().warn("%s has already been registered once. Removing the previous registration and proceeding.", item.getRegistryName());
+                INSTANCE.ICON_RENDERERS.remove(item);
+            }
+            
             INSTANCE.ITEM_RENDERERS.put(item, renderer);
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            MDX.log().info("Registered item renderer for item " + item.getRegistryName());
         }
     }
 
     public static void registerIcon(Item item)
     {
-        ItemIconRenderer<?> renderer = new ItemIconRenderer(item);
+        ItemIconRenderer<?> renderer = new ItemIconRenderer<>(item);
 
         if (item != null && item.getRegistryName() == null || renderer == null)
         {
@@ -102,6 +118,7 @@ public class Renderers implements IPostInitEvent
             INSTANCE.ICON_RENDERERS.put(item, renderer);
             DummyModelLoader.INSTANCE.registerDummy(Type.ITEM, item.getRegistryName());
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            MDX.log().info("Registered icon for " + item.getRegistryName());
         }
     }
 
@@ -126,32 +143,60 @@ public class Renderers implements IPostInitEvent
     }
 
     @Override
-    public void post(FMLPostInitializationEvent event)
+    public void pre(FMLPreInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onModelRegistry(ModelRegistryEvent event)
+    {
+        System.out.println("REIGSTER MODELS4");
+        for (Item item : ITEM_RENDERERS.keySet())
+        {
+            ModelResourceLocation resource = new ModelResourceLocation(item.getRegistryName(), "inventory");
+            ItemRenderer<?> itemRenderer = ITEM_RENDERERS.get(item);
+
+            if (itemRenderer != null)
+            {
+                ModelLoader.setCustomModelResourceLocation(item, 0, resource);
+                System.out.println("Registering model for " + item.getRegistryName() + ", " + itemRenderer);
+            }
+        }
+
+        for (Item item : ICON_RENDERERS.keySet())
+        {
+            ModelResourceLocation resource = new ModelResourceLocation(item.getRegistryName(), "inventory");
+            ItemRenderer<?> itemRenderer = ICON_RENDERERS.get(item);
+
+            if (itemRenderer != null)
+            {
+                DummyModelLoader.INSTANCE.registerDummy(Type.ITEM, item.getRegistryName());
+                ModelLoader.setCustomModelResourceLocation(item, 0, resource);
+            }
+        }
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event)
     {
+        MDX.log().info("Injecting item renderers...");
+        
         for (Item item : ITEM_RENDERERS.keySet())
         {
-            if (ICON_RENDERERS.containsKey(item))
-            {
-                ICON_RENDERERS.remove(item);
-            }
-
             ModelResourceLocation resource = new ModelResourceLocation(item.getRegistryName(), "inventory");
             ItemRenderer<?> itemRenderer = ITEM_RENDERERS.get(item);
 
             if (itemRenderer != null)
             {
                 event.getModelRegistry().putObject(resource, itemRenderer);
+                MDX.log().info("Injecting item renderer in place of default model for " + item.getRegistryName());
             }
             else
             {
-                MDX.log().warn(String.format("Error Injecting Item Renderer (%s): %s", itemRenderer, resource));
+                MDX.log().warn(String.format("Error injecting item renderer (%s): %s", itemRenderer, resource));
             }
         }
 
@@ -166,7 +211,7 @@ public class Renderers implements IPostInitEvent
             }
             else
             {
-                MDX.log().warn(String.format("Error Injecting Item Icon Renderer (%s): %s", itemRenderer, resource));
+                MDX.log().warn(String.format("Error injecting icon renderer (%s): %s", itemRenderer, resource));
             }
         }
     }

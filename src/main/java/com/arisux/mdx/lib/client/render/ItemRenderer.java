@@ -7,8 +7,8 @@ import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.arisux.mdx.lib.client.render.model.Model;
 import com.arisux.mdx.lib.client.render.model.MapModelTexture;
+import com.arisux.mdx.lib.client.render.model.Model;
 import com.arisux.mdx.lib.game.Game;
 import com.google.common.collect.Lists;
 
@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 
 public abstract class ItemRenderer<M extends Model> implements IBakedModel
 {
-    protected MapModelTexture<M>                          model;
+    protected MapModelTexture<M>                        model;
     protected static final Minecraft                    MC    = Minecraft.getMinecraft();
     private ItemRenderList<M>                           overrides;
     private final Pair<? extends IBakedModel, Matrix4f> SELF_PAIR;
@@ -46,7 +46,7 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     {
         public ItemRenderList()
         {
-            super(Lists.<ItemOverride> newArrayList());
+            super(Lists.<ItemOverride>newArrayList());
         }
 
         @SuppressWarnings("all")
@@ -81,32 +81,38 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     {
         GlStateManager.pushMatrix();
         this.renderPre(this.stack, this.entity, type);
-        
+
         switch (type)
         {
-            case FIRST_PERSON_LEFT_HAND: {
+            case FIRST_PERSON_LEFT_HAND:
+            {
                 this.renderFirstPersonLeft(this.stack, this.entity, type);
             }
                 break;
-            case FIRST_PERSON_RIGHT_HAND: {
+            case FIRST_PERSON_RIGHT_HAND:
+            {
                 this.renderFirstPersonRight(this.stack, this.entity, type);
             }
                 break;
-            case GUI: {
+            case GUI:
+            {
                 GlStateManager.resetColor();
                 OpenGL.enableStandardItemLighting();
                 this.renderInInventory(this.stack, this.entity, type);
             }
                 break;
-            case THIRD_PERSON_LEFT_HAND: {
+            case THIRD_PERSON_LEFT_HAND:
+            {
                 this.renderThirdPersonLeft(this.stack, this.entity, type);
             }
                 break;
-            case THIRD_PERSON_RIGHT_HAND: {
+            case THIRD_PERSON_RIGHT_HAND:
+            {
                 this.renderThirdPersonRight(this.stack, this.entity, type);
             }
                 break;
-            case GROUND: {
+            case GROUND:
+            {
                 this.renderInWorld(this.stack, this.entity, type);
             }
                 break;

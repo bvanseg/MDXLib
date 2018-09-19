@@ -2,6 +2,7 @@ package com.arisux.mdx.lib.client.render.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.arisux.mdx.lib.client.render.Draw;
@@ -122,14 +123,15 @@ public class DummyModelLoader implements ICustomModelLoader
         {
             try
             {
-                return ModelLoaderRegistry.getModel(MODEL_LOCATION).bake(new TRSRTransformation(EnumFacing.NORTH), DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL, ModelLoader.defaultTextureGetter()).getQuads(state, side, rand);
+                //The initialization issue is here somewhere... wrong format blah blah blah
+                return ModelLoaderRegistry.getModel(MODEL_LOCATION).bake(TRSRTransformation.from(EnumFacing.NORTH), DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL, ModelLoader.defaultTextureGetter()).getQuads(state, side, rand);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
 
-            return null;
+            return Collections.emptyList();
         }
 
         @Override

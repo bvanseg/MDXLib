@@ -240,7 +240,7 @@ public class Game
 
 //    public static Item register(String modid, String identifier, Item item)
 //    {
-//        item.setUnlocalizedName(String.format("%s:%s", modid, identifier));
+//        item.setTranslationKey(String.format("%s:%s", modid, identifier));
 //        GameRegistry.register(item, new ResourceLocation(modid, identifier));
 //
 //        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
@@ -253,7 +253,7 @@ public class Game
 
 //    public static Block register(String modid, String identifier, Block block)
 //    {
-//        block.setUnlocalizedName(String.format("%s:%s", modid, identifier));
+//        block.setTranslationKey(String.format("%s:%s", modid, identifier));
 //        
 //        GameRegistry.register(block, new ResourceLocation(modid, identifier));
 //        GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));

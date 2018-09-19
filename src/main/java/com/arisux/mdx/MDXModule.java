@@ -47,6 +47,7 @@ public class MDXModule
         Game.registerEventHandler(NotifierModule.instance);
         Game.registerEventHandler(GUIElementTracker.INSTANCE);
         Game.registerEventHandler(DebugToolsRenderer.instance);
+        MDX.renders().pre(event);
     }
 
     @EventHandler
@@ -73,7 +74,6 @@ public class MDXModule
     @EventHandler
     public void postClient(FMLPostInitializationEvent event)
     {
-        MDX.renders().post(event);
         MDX.notifications().onStartup();
     }
 }

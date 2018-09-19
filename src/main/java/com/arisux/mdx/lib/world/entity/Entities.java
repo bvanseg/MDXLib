@@ -835,15 +835,15 @@ public class Entities
         return (Class<? extends Entity>) EntityList.getClassFromName(entityId);
     }
 
-//    public static String getEntityRegistrationId(Entity entity)
-//    {
-//        return getEntityRegistrationId(entity.getClass());
-//    }
-//
-//    public static String getEntityRegistrationId(Class<? extends Entity> c)
-//    {
-//        return (String) EntityList.CLASS_TO_NAME.get(c);
-//    }
+    public static String getEntityRegistrationId(Entity entity)
+    {
+        return getEntityRegistrationId(entity.getClass());
+    }
+
+    public static String getEntityRegistrationId(Class<? extends Entity> c)
+    {
+        return (String) EntityList.getKey(c).getPath();//TODO: I think i just cheated
+    }
 
     public static Pos getSafeLocationAround(Entity toCheck, Pos around)
     {

@@ -1140,7 +1140,7 @@ public class Draw
      * @param resource - The ResourceLocation to retrieve a path of.
      * @return The full path of the resource, including the domain.
      */
-    public static String getResourcePath(ResourceLocation resource)
+    public static String getPath(ResourceLocation resource)
     {
         return String.format("%s:%s", resource.getNamespace(), resource.getPath());
     }
