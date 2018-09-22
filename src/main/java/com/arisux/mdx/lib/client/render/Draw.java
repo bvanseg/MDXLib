@@ -1055,8 +1055,7 @@ public class Draw
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
-        Draw.bindTexture(getResourceLocationFullPath(ibakedmodel.getParticleTexture()));
-        Draw.drawQuad(x, y, width, height);
+        Game.minecraft().getRenderItem().renderItemIntoGUI(stack, x, y);
         GlStateManager.disableAlpha();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableLighting();

@@ -48,7 +48,7 @@ public class DummyModelLoader implements ICustomModelLoader
             return String.format("%s:" + location, resource.getNamespace(), resource.getPath());
         }
     }
-
+    
     public void registerDummy(DummyModelLoader.Type type, ResourceLocation resource)
     {
         dummyIDs.add(type.location(resource));
@@ -123,7 +123,6 @@ public class DummyModelLoader implements ICustomModelLoader
         {
             try
             {
-                //The initialization issue is here somewhere... wrong format blah blah blah
                 return ModelLoaderRegistry.getModel(MODEL_LOCATION).bake(TRSRTransformation.from(EnumFacing.NORTH), DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL, ModelLoader.defaultTextureGetter()).getQuads(state, side, rand);
             }
             catch (Exception e)

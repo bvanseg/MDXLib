@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -69,6 +70,11 @@ public class Renderers implements IPreInitEvent
             }
         });
     }
+    
+    public static void registerBlockItemRenderer(ItemBlock item, ItemRenderer<?> renderer)
+    {
+        registerItemRenderer(item, renderer);
+    }
 
     /**
      * Working replacement for ItemRenderer, but should only be used in rare cases when
@@ -97,7 +103,7 @@ public class Renderers implements IPreInitEvent
                 MDX.log().warn("%s has already been registered once. Removing the previous registration and proceeding.", item.getRegistryName());
                 INSTANCE.ICON_RENDERERS.remove(item);
             }
-            
+
             INSTANCE.ITEM_RENDERERS.put(item, renderer);
             MDX.log().info("Registered item renderer for item " + item.getRegistryName());
         }
@@ -152,7 +158,8 @@ public class Renderers implements IPreInitEvent
     @SubscribeEvent
     public void onModelRegistry(ModelRegistryEvent event)
     {
-        System.out.println("REIGSTER MODELS4");
+        MDX.log().info("Registering models...");
+        
         for (Item item : ITEM_RENDERERS.keySet())
         {
             ModelResourceLocation resource = new ModelResourceLocation(item.getRegistryName(), "inventory");
