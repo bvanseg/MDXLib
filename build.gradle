@@ -35,7 +35,7 @@ dependencies {
     deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
 }
 
-def version_major=2
+def version_major=3
 def version_minor=0
 def version_micro=0
 def version_minecraft="1.12.2"
