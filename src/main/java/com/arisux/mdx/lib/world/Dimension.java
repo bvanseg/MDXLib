@@ -28,16 +28,36 @@ public class Dimension
     {
         if (!this.registered)
         {
-            this.id = DimensionManager.getNextFreeDimId();
-            this.type = DimensionType.register(this.name, this.suffix, this.id, this.provider, this.keepLoaded);
-            DimensionManager.registerDimension(this.id, this.type);
-            this.registered = true;
+            this.findAvailableID();
+            
+            if (this.id > 0)
+            {
+                this.type = DimensionType.register(this.name, this.suffix, this.id, this.provider, this.keepLoaded);
+                DimensionManager.registerDimension(this.id, this.type);
+                this.registered = true;
+            }
         }
         else
         {
             MDX.log().warn("Attempted to register dimension with name %s more than once. Registration attempt blocked.", name);
         }
         return this;
+    }
+    
+    private void findAvailableID()
+    {
+        for (int i = 2; i < Integer.MAX_VALUE; i++)
+        {
+            if (!DimensionManager.isDimensionRegistered(i))
+            {
+                MDX.log().info(String.format("Registering dimension %s with ID %s", this.name, i));
+                this.id = i;
+                return;
+            }
+        }
+
+        MDX.log().warn(String.format("Could not find an available dimension ID for dimension %s", this.name));
+        this.id = -1;
     }
 
     public DimensionType getType()
