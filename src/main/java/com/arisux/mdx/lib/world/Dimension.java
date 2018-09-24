@@ -46,7 +46,7 @@ public class Dimension
     
     private void findAvailableID()
     {
-        for (int i = 2; i < Integer.MAX_VALUE; i++)
+        for (int i = 200; i < Integer.MAX_VALUE; i++)
         {
             if (!DimensionManager.isDimensionRegistered(i))
             {
