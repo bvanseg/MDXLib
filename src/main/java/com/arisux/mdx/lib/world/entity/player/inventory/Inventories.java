@@ -181,7 +181,7 @@ public class Inventories
                 
                 if (player.inventory.mainInventory.get(i).getCount() <= 0)
                 {
-                    player.inventory.mainInventory.set(i, null);
+                    player.inventory.mainInventory.set(i, ItemStack.EMPTY);
                 }
 
                 return true;
