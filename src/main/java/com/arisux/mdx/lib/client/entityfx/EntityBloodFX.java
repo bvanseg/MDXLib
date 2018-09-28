@@ -2,6 +2,7 @@ package com.arisux.mdx.lib.client.entityfx;
 
 import org.lwjgl.opengl.GL11;
 
+import com.arisux.mdx.lib.client.render.Draw;
 import com.arisux.mdx.lib.client.render.OpenGL;
 
 import net.minecraft.block.BlockLiquid;
@@ -19,15 +20,12 @@ import net.minecraft.world.World;
 public class EntityBloodFX extends Particle
 {
     private int     bobTimer;
-    private int     color;
     private boolean glow;
 
-    //TODO: Figure out what is causing the blood color bug. Suggested to check bit math and/or GL code.
     public EntityBloodFX(World worldIn, double posX, double posY, double posZ, int color, boolean glow)
     {
         super(worldIn, posX, posY, posZ);
         this.particleMaxAge = ((60 * 20) * 3) + ((this.rand.nextInt(30 * 20)));
-        this.color = color;
         this.glow = glow;
         this.particleGravity = 0.06F;
         this.particleScale = (this.rand.nextFloat() * 0.5F + 0.5F);
@@ -36,12 +34,14 @@ public class EntityBloodFX extends Particle
         this.motionY = (double) (this.rand.nextFloat() * 0.4F + 0.05F);
         this.motionZ = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
         this.motionX = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
-        float r = ((float) ((color & 0xFF0000) >> 16)) / 255F;
-        float g = ((float) ((color & 0xFF00) >> 8)) / 255F;
-        float b = ((float) (color & 0xFF)) / 255F;
-        this.particleRed = r;
-        this.particleGreen = g;
-        this.particleBlue = b;
+        this.particleRed = ((float) ((color & 0xFF0000) >> 16)) / 255F;
+        this.particleGreen = ((float) ((color & 0xFF00) >> 8)) / 255F;
+        this.particleBlue = ((float) (color & 0xFF)) / 255F;
+        this.particleAlpha = 255F;
+
+//        this.particleRed = this.particleRed < 0.4F ? 0.4F : this.particleRed;
+//        this.particleGreen = this.particleGreen < 0.4F ? 0.4F : this.particleGreen;
+//        this.particleBlue = this.particleBlue < 0.4F ? 0.4F : this.particleBlue;
     }
 
     @Override
@@ -100,22 +100,34 @@ public class EntityBloodFX extends Particle
         float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
         float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 
-        float r = ((float) ((color & 0xFF0000) >> 16)) / 255F;
-        float g = ((float) ((color & 0xFF00) >> 8)) / 255F;
-        float b = ((float) (color & 0xFF)) / 255F;
+//        float r = ((color & 0xFF0000) >> 16) / 255F;
+//        float g = ((color & 0xFF00) >> 8) / 255F;
+//        float b = ((color & 0xFF)) / 255F;
+        
+        float r = this.particleRed;
+        float g = this.particleGreen;
+        float b = this.particleBlue;
+        
+//        OpenGL.enableLight();
+        OpenGL.disableBlend();
+        OpenGL.blendClear();
+        OpenGL.enableCullFace();
+//        OpenGL.enableLighting();
         
         if (glow)
         {
             OpenGL.disableLightMapping();
             OpenGL.disableLight();
+            
         }
+//        OpenGL.enableBlend();
         
-        OpenGL.color(r, g, b, 255F);
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos((double) (x - rX * s - rXY * s), (double) (y - rZ * s), (double) (z - rYZ * s - rXZ * s)).color(r, g, b, 255).endVertex();
-        buffer.pos((double) (x - rX * s + rXY * s), (double) (y + rZ * s), (double) (z - rYZ * s + rXZ * s)).color(r, g, b, 255).endVertex();
-        buffer.pos((double) (x + rX * s + rXY * s), (double) (y + rZ * s), (double) (z + rYZ * s + rXZ * s)).color(r, g, b, 255).endVertex();
-        buffer.pos((double) (x + rX * s - rXY * s), (double) (y - rZ * s), (double) (z + rYZ * s - rXZ * s)).color(r, g, b, 255).endVertex();
+//        OpenGL.color(r, g, b, 1F);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos((double) (x - rX * s - rXY * s), (double) (y - rZ * s), (double) (z - rYZ * s - rXZ * s)).color(r, g, b, 1F).endVertex();
+        buffer.pos((double) (x - rX * s + rXY * s), (double) (y + rZ * s), (double) (z - rYZ * s + rXZ * s)).color(r, g, b, 1F).endVertex();
+        buffer.pos((double) (x + rX * s + rXY * s), (double) (y + rZ * s), (double) (z + rYZ * s + rXZ * s)).color(r, g, b, 1F).endVertex();
+        buffer.pos((double) (x + rX * s - rXY * s), (double) (y - rZ * s), (double) (z + rYZ * s - rXZ * s)).color(r, g, b, 1F).endVertex();
         Tessellator.getInstance().draw();
 
         if (glow)
