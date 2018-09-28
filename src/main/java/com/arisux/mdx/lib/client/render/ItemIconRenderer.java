@@ -144,7 +144,9 @@ public class ItemIconRenderer<M extends Model> extends ItemRenderer<M>
         OpenGL.rotate(180F, 0, 1, 0);
         OpenGL.disableStandardItemLighting();
         Draw.bindTexture(this.icon);
+        OpenGL.disableCullFace();
         Draw.drawQuad(0, 0, 1, 1, 0, 0F, 1F, 0F, 1F);
+        OpenGL.enableCullFace();
         OpenGL.enableStandardItemLighting();
         OpenGL.popMatrix();
     }
