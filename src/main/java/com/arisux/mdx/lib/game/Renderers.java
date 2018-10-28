@@ -105,7 +105,7 @@ public class Renderers implements IPreInitEvent
             }
 
             INSTANCE.ITEM_RENDERERS.put(item, renderer);
-            MDX.log().info("Registered item renderer for item " + item.getRegistryName());
+            //MDX.log().info("Registered item renderer for item " + item.getRegistryName());
         }
     }
 
@@ -124,7 +124,7 @@ public class Renderers implements IPreInitEvent
             INSTANCE.ICON_RENDERERS.put(item, renderer);
             DummyModelLoader.INSTANCE.registerDummy(Type.ITEM, item.getRegistryName());
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-            MDX.log().info("Registered icon for " + item.getRegistryName());
+            //MDX.log().info("Registered icon for " + item.getRegistryName());
         }
     }
 
@@ -168,7 +168,7 @@ public class Renderers implements IPreInitEvent
             if (itemRenderer != null)
             {
                 ModelLoader.setCustomModelResourceLocation(item, 0, resource);
-                System.out.println("Registering model for " + item.getRegistryName() + ", " + itemRenderer);
+                //System.out.println("Registering model for " + item.getRegistryName() + ", " + itemRenderer);
             }
         }
 
@@ -199,7 +199,7 @@ public class Renderers implements IPreInitEvent
             if (itemRenderer != null)
             {
                 event.getModelRegistry().putObject(resource, itemRenderer);
-                MDX.log().info("Injecting item renderer in place of default model for " + item.getRegistryName());
+                //MDX.log().info("Injecting item renderer in place of default model for " + item.getRegistryName());
             }
             else
             {
