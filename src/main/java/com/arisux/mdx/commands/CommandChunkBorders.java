@@ -1,7 +1,7 @@
 package com.arisux.mdx.commands;
 
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.lib.client.render.DebugToolsRenderer;
+import com.arisux.mdx.lib.client.render.DebugToolsRenderer.BlockScanner;
 import com.arisux.mdx.lib.game.network.IClientCommand;
 import com.arisux.mdx.lib.game.network.server.PacketCommandChunkBorders;
 import com.arisux.mdx.lib.world.entity.player.Players;
@@ -56,13 +56,13 @@ public class CommandChunkBorders extends CommandBase implements IClientCommand
         {
             if (args[0].equalsIgnoreCase("enabled") || args[0].equalsIgnoreCase("true") || args[0].equalsIgnoreCase("on"))
             {
-                DebugToolsRenderer.instance.setChunkBordersEnabled(true);
+                BlockScanner.setChunkBordersEnabled(true);
                 player.sendMessage(new TextComponentString("Enabled chunk borders."));
                 return;
             }
             else if (args[0].equalsIgnoreCase("disabled") || args[0].equalsIgnoreCase("false") || args[0].equalsIgnoreCase("off"))
             {
-                DebugToolsRenderer.instance.setChunkBordersEnabled(false);
+                BlockScanner.setChunkBordersEnabled(false);
                 player.sendMessage(new TextComponentString("Disabled chunk borders."));
                 return;
             }

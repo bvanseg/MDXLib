@@ -1,6 +1,6 @@
 package com.arisux.mdx.lib.game.network.server;
 
-import com.arisux.mdx.lib.game.CommandHandler;
+import com.arisux.mdx.commands.CommandBlockScanner;
 import com.arisux.mdx.lib.game.Game;
 
 import io.netty.buffer.ByteBuf;
@@ -59,7 +59,7 @@ public class PacketCommandBlockScanner implements IMessage, IMessageHandler<Pack
             @Override
             public void run()
             {
-                CommandHandler.INSTANCE.blockScanner.executeClient(Game.minecraft().player, packet.args);
+                new CommandBlockScanner().executeClient(Game.minecraft().player, packet.args);
             }
         });
         return null;

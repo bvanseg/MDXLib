@@ -13,11 +13,11 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 public class CommandHandler implements IInitEvent
 {
     public static final CommandHandler INSTANCE = new CommandHandler();
+    
     public CommandGenerate generate;
     public CommandBlockUpdate blockUpdate;
     public CommandBlockScanner blockScanner;
     public CommandChunkBorders chunkBorders;
-    
 
     @Override
     public void init(FMLInitializationEvent event)

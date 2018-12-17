@@ -13,6 +13,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
@@ -30,6 +32,7 @@ public class CommandBlockScanner extends CommandBase implements IClientCommand
     @Override
     public String getUsage(ICommandSender commandSender)
     {
+        commandSender.sendMessage(new TextComponentString("/blockscanner add <range> <color_hex>"));
         return "/blockscanner <enabled/disabled/clear/add> - Block scanner debug tool management command.";
     }
     
@@ -59,19 +62,20 @@ public class CommandBlockScanner extends CommandBase implements IClientCommand
         {
             if (args[0].equalsIgnoreCase("enabled") || args[0].equalsIgnoreCase("true") || args[0].equalsIgnoreCase("on"))
             {
-                DebugToolsRenderer.instance.setBlockScannerEnabled(true);
+                System.out.println("teest");
+                BlockScanner.setBlockScannerEnabled(true);
                 player.sendMessage(new TextComponentString("Enabled block scanner."));
                 return;
             }
             else if (args[0].equalsIgnoreCase("disabled") || args[0].equalsIgnoreCase("false") || args[0].equalsIgnoreCase("off"))
             {
-                DebugToolsRenderer.instance.setBlockScannerEnabled(false);
+                BlockScanner.setBlockScannerEnabled(false);
                 player.sendMessage(new TextComponentString("Disabled block scanner."));
                 return;
             }
             else if (args[0].equalsIgnoreCase("clear"))
             {
-                DebugToolsRenderer.destroyBlockScanners();
+                BlockScanner.destroyBlockScanners();
                 player.sendMessage(new TextComponentString("Cleared block scanner tracking array."));
                 return;
             }
@@ -79,11 +83,11 @@ public class CommandBlockScanner extends CommandBase implements IClientCommand
             {
                 ItemStack itemHeld = player.getHeldItemMainhand();
 
-                if (itemHeld != null)
+                if (itemHeld != null && itemHeld.getItem() != null && itemHeld.getItem() != Items.AIR)
                 {
                     Block block = Block.getBlockFromItem(itemHeld.getItem());
 
-                    if (block != null)
+                    if (block != null && block != Blocks.AIR)
                     {
                         int scanRange = 32;
                         int color = 0xFFFF0000;
@@ -102,7 +106,7 @@ public class CommandBlockScanner extends CommandBase implements IClientCommand
                         float g = (color >> 8 & 255) / 255.0F;
                         float b = (color & 255) / 255.0F;
 
-                        DebugToolsRenderer.scanForBlock(new BlockScanner(block, scanRange, r, g, b, 0.4F));
+                        BlockScanner.scanForBlock(new BlockScanner.Scannable(block, scanRange, r, g, b, 0.4F));
                         player.sendMessage(new TextComponentString(String.format("Tracking %s with a range of %s and a render color of %s", block.getLocalizedName(), scanRange, color)));
                     }
                 }
