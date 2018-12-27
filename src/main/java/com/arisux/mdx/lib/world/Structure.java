@@ -70,13 +70,14 @@ public abstract class Structure
 
             for (int i = 0; i < sectionSize; i++)
             {
-                Pos pos = this.blockQueue.get(this.blockQueue.size() - 1 - i);
-
-                if (pos.getBlock(world) != Blocks.AIR)
+                Pos pos = this.blockQueue.get((this.blockQueue.size() - 1) - i);
+                
+                if (pos.store() instanceof BlockDataStore)
                 {
-                    if (pos.store() instanceof BlockDataStore)
+                    BlockDataStore data = (BlockDataStore) pos.store();
+
+                    if (data.asBlock() != Blocks.AIR)
                     {
-                        BlockDataStore data = (BlockDataStore) pos.store();
                         this.world.setBlockState(pos.blockPos(), data.asBlock().getStateFromMeta(data.metadata), 2);
                     }
                 }

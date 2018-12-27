@@ -26,7 +26,7 @@ public class CommandGenerate extends CommandBase
     @Override
     public String getUsage(ICommandSender commandSender)
     {
-        return "Generates a schematic that is currently loaded.";
+        return "/genschematic <name> [x] [y] [z]";
     }
 
     @Override
