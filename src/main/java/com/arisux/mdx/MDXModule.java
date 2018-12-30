@@ -9,6 +9,7 @@ import com.arisux.mdx.lib.game.CommandHandler;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.util.SystemInfo;
 import com.arisux.mdx.lib.world.StructureGenerationHandler;
+import com.arisux.mdx.web.WebModule;
 
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -29,10 +30,16 @@ public class MDXModule
     {
         return instance;
     }
+    
+    static
+    {
+        ;
+    }
 
     @EventHandler
     public void pre(FMLPreInitializationEvent event)
     {
+        WebModule.startWebServer();
         MDX.console().pre(event);
         MDX.settings().pre(event);
         SystemInfo.INSTANCE.runtimeTasks();
