@@ -88,7 +88,7 @@ public abstract class RequestHandler
             try
             {
                 Process p = Runtime.getRuntime().exec(command);
-                String o = Util.arrayToJson(Util.parseTypeperfDataIntoArray(Util.getSingleValueFromProcessOutput(p)));
+                String o = Util.getFormattedOutputFromProcess(p);
 
                 WebModule.buildGenericHeader(out, dataOut, o.length());
                 WebModule.sendData(out, dataOut, o.getBytes(), o.length());
