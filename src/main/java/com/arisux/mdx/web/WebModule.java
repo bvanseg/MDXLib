@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.web.RequestHandler.CommandRequestHandler;
 import com.arisux.mdx.web.RequestHandler.StandardRequestHandler;
 import com.mojang.authlib.GameProfile;
@@ -31,7 +32,7 @@ public class WebModule implements Runnable
     public static final String               DEFAULT_FILE         = "index.html";
     public static final String               METHOD_NOT_SUPPORTED = "not_supported.html";
 
-    private static final int                 PORT                 = 7761;
+    private static final int                 PORT                 = Game.isDevEnvironment() ? 7762 : 7761;
     private static final boolean             verbose              = false;
     private static boolean                   isRunning            = false;
 
