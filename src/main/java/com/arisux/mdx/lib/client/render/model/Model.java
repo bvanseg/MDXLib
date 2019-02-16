@@ -449,6 +449,11 @@ public abstract class Model<TYPE extends Object> extends ModelBase
     {
         this.animatior = Animator.create();
     }
+    
+    public static float partialTicks()
+    {
+        return Game.minecraft().isGamePaused() ? 0 : Game.minecraft().getRenderPartialTicks();
+    }
 
     /**
      * Set the width and height of this ModelBaseExtension's texture.
@@ -563,7 +568,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         if (o != null && o instanceof EntityLivingBase)
         {
             EntityLivingBase base = (EntityLivingBase) o;
-            return base.ticksExisted + Game.partialTicks();
+            return base.ticksExisted + partialTicks();
         }
 
         return 0F;
@@ -580,7 +585,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         if (o != null && o instanceof EntityLivingBase)
         {
             EntityLivingBase base = (EntityLivingBase) o;
-            return base.limbSwing - base.limbSwingAmount * (1.0F - Game.partialTicks());
+            return base.limbSwing - base.limbSwingAmount * (1.0F - partialTicks());
         }
 
         return 0F;
@@ -597,7 +602,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         if (o != null && o instanceof EntityLivingBase)
         {
             EntityLivingBase base = (EntityLivingBase) o;
-            return base.prevLimbSwingAmount + (base.limbSwingAmount - base.prevLimbSwingAmount) * Game.partialTicks();
+            return base.prevLimbSwingAmount + (base.limbSwingAmount - base.prevLimbSwingAmount) * partialTicks();
         }
 
         return 0F;
@@ -614,8 +619,8 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         if (o != null && o instanceof EntityLivingBase)
         {
             EntityLivingBase base = (EntityLivingBase) o;
-            float yawOffset = MDXMath.interpolateRotation(base.prevRenderYawOffset, base.renderYawOffset, Game.partialTicks());
-            float yawHead = MDXMath.interpolateRotation(base.prevRotationYawHead, base.rotationYawHead, Game.partialTicks());
+            float yawOffset = MDXMath.interpolateRotation(base.prevRenderYawOffset, base.renderYawOffset, partialTicks());
+            float yawHead = MDXMath.interpolateRotation(base.prevRotationYawHead, base.rotationYawHead, partialTicks());
             return yawHead - yawOffset;
         }
 
@@ -633,7 +638,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
         if (o != null && o instanceof EntityLivingBase)
         {
             EntityLivingBase base = (EntityLivingBase) o;
-            return (base.prevRotationPitch + (base.rotationPitch - base.prevRotationPitch) * Game.partialTicks());
+            return (base.prevRotationPitch + (base.rotationPitch - base.prevRotationPitch) * partialTicks());
         }
 
         return 0F;
