@@ -1,8 +1,8 @@
 package com.arisux.mdx.commands;
 
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.lib.client.render.DebugToolsRenderer;
-import com.arisux.mdx.lib.client.render.DebugToolsRenderer.BlockScanner;
+import com.arisux.mdx.lib.client.DebugToolsRenderer;
+import com.arisux.mdx.lib.client.DebugToolsRenderer.BlockScanner;
 import com.arisux.mdx.lib.game.network.IClientCommand;
 import com.arisux.mdx.lib.game.network.server.PacketCommandBlockScanner;
 import com.arisux.mdx.lib.world.entity.player.Players;

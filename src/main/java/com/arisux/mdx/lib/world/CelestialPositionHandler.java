@@ -2,7 +2,7 @@ package com.arisux.mdx.lib.world;
 
 import java.util.Random;
 
-import com.arisux.mdx.lib.client.render.Draw;
+import com.arisux.mdx.lib.client.util.Draw;
 
 public class CelestialPositionHandler
 {

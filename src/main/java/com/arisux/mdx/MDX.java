@@ -2,7 +2,7 @@ package com.arisux.mdx;
 
 import org.apache.logging.log4j.Logger;
 
-import com.arisux.mdx.lib.client.Notifications;
+import com.arisux.mdx.lib.client.gui.notifications.Notifications;
 import com.arisux.mdx.lib.game.Access;
 import com.arisux.mdx.lib.game.Network;
 import com.arisux.mdx.lib.game.Renderers;

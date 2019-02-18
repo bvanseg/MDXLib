@@ -1,7 +1,7 @@
 package com.arisux.mdx.lib.client;
 
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.lib.client.render.Texture;
+import com.arisux.mdx.lib.client.util.Texture;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

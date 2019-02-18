@@ -5,7 +5,7 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.arisux.mdx.lib.client.Resources;
-import com.arisux.mdx.lib.client.render.OpenGL;
+import com.arisux.mdx.lib.client.util.OpenGL;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;

@@ -2,8 +2,6 @@ package com.arisux.mdx.lib.client.gui;
 
 import javax.vecmath.Vector2d;
 
-import com.arisux.mdx.lib.client.GUIElementTracker;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 

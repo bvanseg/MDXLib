@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.arisux.mdx.lib.client.render.OpenGL;
+import com.arisux.mdx.lib.client.util.OpenGL;
 
 public class SystemInfo
 {

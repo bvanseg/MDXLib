@@ -2,7 +2,7 @@ package com.arisux.mdx.lib.client.gui;
 
 import javax.vecmath.Vector2d;
 
-import com.arisux.mdx.lib.client.render.Draw;
+import com.arisux.mdx.lib.client.util.Draw;
 import com.arisux.mdx.lib.game.Game;
 
 import net.minecraft.client.Minecraft;

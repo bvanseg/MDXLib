@@ -3,9 +3,9 @@ package com.arisux.mdx.lib.world.block.material;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
-import com.arisux.mdx.lib.client.render.Draw;
-import com.arisux.mdx.lib.client.render.OpenGL;
-import com.arisux.mdx.lib.client.render.Screen;
+import com.arisux.mdx.lib.client.util.Draw;
+import com.arisux.mdx.lib.client.util.OpenGL;
+import com.arisux.mdx.lib.client.util.Screen;
 import com.arisux.mdx.lib.game.Game;
 
 import net.minecraft.block.material.Material;

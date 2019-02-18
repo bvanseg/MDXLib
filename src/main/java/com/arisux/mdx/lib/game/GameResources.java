@@ -1,6 +1,6 @@
 package com.arisux.mdx.lib.game;
 
-import com.arisux.mdx.lib.client.render.Texture;
+import com.arisux.mdx.lib.client.util.Texture;
 
 public class GameResources
 {

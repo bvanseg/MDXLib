@@ -3,10 +3,10 @@ package com.arisux.mdx.lib.game;
 import java.util.HashMap;
 
 import com.arisux.mdx.MDX;
-import com.arisux.mdx.lib.client.render.ItemIconRenderer;
-import com.arisux.mdx.lib.client.render.ItemRenderer;
-import com.arisux.mdx.lib.client.render.model.loaders.DummyModelLoader;
-import com.arisux.mdx.lib.client.render.model.loaders.DummyModelLoader.Type;
+import com.arisux.mdx.lib.client.model.loaders.DummyModelLoader;
+import com.arisux.mdx.lib.client.model.loaders.DummyModelLoader.Type;
+import com.arisux.mdx.lib.client.util.ItemIconRenderer;
+import com.arisux.mdx.lib.client.util.ItemRenderer;
 
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.block.model.ModelManager;

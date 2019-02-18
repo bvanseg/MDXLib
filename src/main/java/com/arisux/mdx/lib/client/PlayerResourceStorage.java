@@ -2,7 +2,7 @@ package com.arisux.mdx.lib.client;
 
 import java.util.ArrayList;
 
-import com.arisux.mdx.lib.client.render.PlayerResource;
+import com.arisux.mdx.lib.client.util.entity.PlayerResource;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
