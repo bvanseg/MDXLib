@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model.tabula;
+package com.arisux.mdx.lib.client.render.model.loaders.tabula;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.arisux.mdx.lib.client.render.model.Model;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaCubeContainer;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaCubeGroupContainer;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaModelContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaCubeContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaCubeGroupContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaModelContainer;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;

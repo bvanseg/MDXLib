@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model.tabula.baked;
+package com.arisux.mdx.lib.client.render.model.loaders.tabula.baked;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,8 +11,8 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 import com.arisux.mdx.lib.client.render.Matrix;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaCubeContainer;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaModelContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaCubeContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaModelContainer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 

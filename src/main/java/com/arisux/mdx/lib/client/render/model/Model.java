@@ -1,6 +1,7 @@
 package com.arisux.mdx.lib.client.render.model;
 
 import com.arisux.mdx.MDX;
+import com.arisux.mdx.lib.client.render.model.animations.Animator;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.util.MDXMath;
 import com.arisux.mdx.lib.world.entity.IAnimated;

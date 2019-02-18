@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model.tabula;
+package com.arisux.mdx.lib.client.render.model.loaders.tabula;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;

@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model.tabula.baked.deserializer;
+package com.arisux.mdx.lib.client.render.model.loaders.tabula.baked.deserializer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;

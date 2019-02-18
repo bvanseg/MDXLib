@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model.tabula.container;
+package com.arisux.mdx.lib.client.render.model.loaders.tabula.container;
 
 import java.util.ArrayList;
 import java.util.List;

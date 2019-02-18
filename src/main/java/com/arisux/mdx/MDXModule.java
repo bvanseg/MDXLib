@@ -4,7 +4,7 @@ import com.arisux.mdx.MDX.Properties;
 import com.arisux.mdx.lib.client.GUIElementTracker;
 import com.arisux.mdx.lib.client.NotifierModule;
 import com.arisux.mdx.lib.client.render.DebugToolsRenderer;
-import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
+import com.arisux.mdx.lib.client.render.model.loaders.DummyModelLoader;
 import com.arisux.mdx.lib.game.CommandHandler;
 import com.arisux.mdx.lib.game.Game;
 import com.arisux.mdx.lib.util.SystemInfo;

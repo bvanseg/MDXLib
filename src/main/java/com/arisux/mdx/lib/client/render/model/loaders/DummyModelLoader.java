@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model;
+package com.arisux.mdx.lib.client.render.model.loaders;
 
 import java.util.ArrayList;
 import java.util.Collection;

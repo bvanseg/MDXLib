@@ -5,8 +5,8 @@ import java.util.HashMap;
 import com.arisux.mdx.MDX;
 import com.arisux.mdx.lib.client.render.ItemIconRenderer;
 import com.arisux.mdx.lib.client.render.ItemRenderer;
-import com.arisux.mdx.lib.client.render.model.DummyModelLoader;
-import com.arisux.mdx.lib.client.render.model.DummyModelLoader.Type;
+import com.arisux.mdx.lib.client.render.model.loaders.DummyModelLoader;
+import com.arisux.mdx.lib.client.render.model.loaders.DummyModelLoader.Type;
 
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.block.model.ModelManager;

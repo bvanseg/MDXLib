@@ -1,5 +1,6 @@
-package com.arisux.mdx.lib.client.render.model;
+package com.arisux.mdx.lib.client.render.model.animations;
 
+import com.arisux.mdx.lib.client.render.model.Model;
 import com.arisux.mdx.lib.client.render.model.Model.Part;
 import com.arisux.mdx.lib.util.MDXMath;
 

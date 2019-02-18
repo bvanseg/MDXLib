@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model;
+package com.arisux.mdx.lib.client.render.model.loaders;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,12 +11,12 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import com.arisux.mdx.lib.client.render.model.tabula.baked.VanillaTabulaModel;
-import com.arisux.mdx.lib.client.render.model.tabula.baked.deserializer.ItemCameraTransformsDeserializer;
-import com.arisux.mdx.lib.client.render.model.tabula.baked.deserializer.ItemTransformVec3fDeserializer;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaCubeContainer;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaCubeGroupContainer;
-import com.arisux.mdx.lib.client.render.model.tabula.container.TabulaModelContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.baked.VanillaTabulaModel;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.baked.deserializer.ItemCameraTransformsDeserializer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.baked.deserializer.ItemTransformVec3fDeserializer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaCubeContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaCubeGroupContainer;
+import com.arisux.mdx.lib.client.render.model.loaders.tabula.container.TabulaModelContainer;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

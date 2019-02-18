@@ -1,5 +1,6 @@
 package com.arisux.mdx.lib.world.entity;
 
+/** Credit to the developers of LLibrary, for which without this would not be possible. **/
 public class Animation
 {
     private int duration;

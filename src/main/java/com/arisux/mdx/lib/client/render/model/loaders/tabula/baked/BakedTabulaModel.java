@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model.tabula.baked;
+package com.arisux.mdx.lib.client.render.model.loaders.tabula.baked;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

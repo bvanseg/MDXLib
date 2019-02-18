@@ -13,7 +13,7 @@ import com.arisux.mdx.lib.client.render.Color;
 import com.arisux.mdx.lib.client.render.Normal;
 import com.arisux.mdx.lib.client.render.UV;
 import com.arisux.mdx.lib.client.render.Vertex;
-import com.arisux.mdx.lib.client.render.model.WavefrontModelLoader;
+import com.arisux.mdx.lib.client.render.model.loaders.WavefrontModelLoader;
 
 import net.minecraft.util.ResourceLocation;
 

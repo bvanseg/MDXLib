@@ -1,4 +1,4 @@
-package com.arisux.mdx.lib.client.render.model;
+package com.arisux.mdx.lib.client.render.model.animations;
 
 import java.util.HashMap;
 
