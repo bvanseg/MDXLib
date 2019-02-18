@@ -702,7 +702,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
      * @param entity - The Entity instance being rendered.
      * @param swing - The arm swing progress of the Entity being rendered.
      * @param swingPrev - The previous tick's arm swing progress of the Entity being rendered.
-     * @param idle - The idle arm swing progress of the Entity being rendered.
+     * @param idle - The entity age in ticks
      * @param headYaw - The head rotation yaw of the Entity being rendered.
      * @param headPitch - The head rotation pitch of the Entity being rendered.
      * @param scale - The scale this model will render at.
