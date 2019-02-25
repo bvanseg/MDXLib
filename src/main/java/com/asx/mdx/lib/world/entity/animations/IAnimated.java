@@ -8,9 +8,9 @@ public interface IAnimated
 
     public void setAnimationTick(int tick);
 
-    public Animation getAnimation();
+    public Animation getActiveAnimation();
 
-    public void setAnimation(Animation animation);
+    public void setActiveAnimation(Animation animation);
 
     public Animation[] getAnimations();
 }

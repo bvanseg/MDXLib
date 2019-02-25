@@ -2,6 +2,7 @@ package com.asx.mdx.core;
 
 import com.asx.mdx.MDX;
 import com.asx.mdx.core.mods.IInitEvent;
+import com.asx.mdx.core.network.server.PacketAnimation;
 import com.asx.mdx.core.network.server.PacketCommandBlockScanner;
 import com.asx.mdx.core.network.server.PacketCommandChunkBorders;
 
@@ -26,6 +27,7 @@ public class PacketHandler extends SimpleNetworkWrapper implements IInitEvent
     {
         this.registerMessage(Side.CLIENT, PacketCommandBlockScanner.class);
         this.registerMessage(Side.CLIENT, PacketCommandChunkBorders.class);
+        this.registerMessage(Side.CLIENT, PacketAnimation.class);
     }
 
     /**

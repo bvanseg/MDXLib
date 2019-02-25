@@ -52,7 +52,7 @@ public class Animator
     public boolean setAnimation(Animation animation)
     {
         this.tick = this.tickPrev = 0;
-        this.correct = this.entity.getAnimation() == animation;
+        this.correct = this.entity.getActiveAnimation() == animation;
 
         return this.correct;
     }

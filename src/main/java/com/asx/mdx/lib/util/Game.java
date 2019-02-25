@@ -18,6 +18,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
+import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
@@ -57,7 +58,7 @@ public class Game
     @SideOnly(Side.CLIENT)
     public static float partialTicks()
     {
-        return MDX.access().getRenderPartialTicks();
+        return Animation.getPartialTickTime();
     }
 
     /** Access to the Session instance. Please do not abuse this. **/

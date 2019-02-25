@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -453,7 +454,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
     
     public static float partialTicks()
     {
-        return Game.minecraft().isGamePaused() ? 0 : Game.minecraft().getRenderPartialTicks();
+        return Game.minecraft().isGamePaused() ? 0 : Animation.getPartialTickTime();
     }
 
     /**
