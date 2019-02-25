@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.asx.mdx.MDX;
 import com.asx.mdx.lib.util.Game;
+import com.asx.mdx.lib.util.MDXMath;
 import com.asx.mdx.lib.world.Pos;
 import com.asx.mdx.lib.world.Worlds;
 
@@ -20,6 +21,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigate;
@@ -31,6 +33,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -727,10 +731,10 @@ public class Entities
         }
 
         double d3 = MathHelper.sqrt(xDistance * xDistance + zDistance * zDistance);
-        float f2 = (float) (Math.atan2(zDistance, xDistance) * 180.0D / Math.PI) - 90.0F;
-        float f3 = (float) (-(Math.atan2(yDistance, d3) * 180.0D / Math.PI));
-        facer.rotationPitch = updateRotation(facer.rotationPitch, f3, maxPitch);
-        facer.rotationYaw = updateRotation(facer.rotationYaw, f2, maxYaw);
+        float angleYaw = (float) (Math.atan2(zDistance, xDistance) * 180.0D / Math.PI) - 90.0F;
+        float anglePitch = (float) (-(Math.atan2(yDistance, d3) * 180.0D / Math.PI));
+        facer.rotationPitch = updateRotation(facer.rotationPitch, anglePitch, maxPitch);
+        facer.rotationYaw = updateRotation(facer.rotationYaw, angleYaw, maxYaw);
     }
 
     /**
@@ -832,7 +836,8 @@ public class Entities
 
     public static Class<? extends Entity> getRegisteredEntityClass(String entityId)
     {
-        return (Class<? extends Entity>) EntityList.getClassFromName(entityId);
+        EntityEntry entry = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId));
+        return entry == null ? null : entry.getEntityClass();
     }
 
     public static String getEntityRegistrationId(Entity entity)
@@ -977,5 +982,10 @@ public class Entities
         default:
             return EnumFacing.NORTH;
         }
+    }
+
+    public static double calculateAngleBetween(EntityMob from, EntityMob to)
+    {
+        return Math.atan2(to.posZ - from.posZ, to.posX - from.posX) * (180D / MDXMath.PI) + 90D;
     }
 }
