@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -99,6 +100,7 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
                 GlStateManager.resetColor();
                 OpenGL.enableStandardItemLighting();
                 this.renderInInventory(this.stack, this.entity, type);
+                Draw.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE); // Potential fix for inventory texture map rendering bug.
             }
                 break;
             case THIRD_PERSON_LEFT_HAND:
