@@ -2,6 +2,7 @@ package com.asx.mdx.lib.client;
 
 import java.util.ArrayList;
 
+import com.asx.mdx.MDX;
 import com.asx.mdx.lib.client.util.OpenGL;
 import com.asx.mdx.lib.util.Game;
 
@@ -37,6 +38,7 @@ public class DebugToolsRenderer
     public static void tick(ClientTickEvent event)
     {
         BlockScanner.tick(event);
+        MDX.windows().onTick();
     }
 
     @SideOnly(Side.CLIENT)

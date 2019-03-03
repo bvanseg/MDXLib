@@ -8,8 +8,10 @@ import com.asx.mdx.MDX;
 import com.asx.mdx.lib.client.gui.windows.themes.Theme;
 import com.asx.mdx.lib.client.gui.windows.themes.ThemeDefault;
 import com.asx.mdx.lib.client.gui.windows.themes.ThemeMinecraft;
+import com.asx.mdx.lib.util.Game;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 
 public class WindowAPI
 {
@@ -34,7 +36,7 @@ public class WindowAPI
 
     public void onTick()
     {
-        if ((getWindowsRegistry().size() <= 0) && ((Minecraft.getMinecraft().currentScreen instanceof WindowManager)))
+        if ((getWindows().size() <= 0) && ((Minecraft.getMinecraft().currentScreen instanceof WindowManager)))
         {
             Minecraft.getMinecraft().displayGuiScreen(getWindowManager().parentScreen);
         }
@@ -43,6 +45,31 @@ public class WindowAPI
         {
             getWindowManager().parentScreen = Minecraft.getMinecraft().currentScreen;
         }
+
+//        if (System.currentTimeMillis() % 60 == 0)
+//        {
+//            System.out.println("test");
+//            MDX.windows().addWindow(new Window("kfcalc_results", MDX.windows().getWindowManager(), "Test Window", 100, 100, 600, 300) {
+//                
+//                @Override
+//                public void onButtonPress(GuiButton paramGuiButton)
+//                {
+//                    ;
+//                }
+//                
+//                @Override
+//                public void keyTyped(char paramChar, int paramInt)
+//                {
+//                    ;
+//                }
+//                
+//                @Override
+//                public void drawWindowContents()
+//                {
+//                    ;
+//                }
+//            });
+//        }
     }
 
     public WindowManager getWindowManager()
@@ -107,7 +134,7 @@ public class WindowAPI
         return new ArrayList<Theme>(this.themes.values());
     }
 
-    public ArrayList<Window> getWindowsRegistry()
+    public ArrayList<Window> getWindows()
     {
         return this.windows;
     }
@@ -131,6 +158,7 @@ public class WindowAPI
     {
         if ((canWindowManagerOpen()) || (force))
         {
+            getWindowManager().setParentScreen(null);
             Minecraft.getMinecraft().displayGuiScreen(getWindowManager());
         }
     }

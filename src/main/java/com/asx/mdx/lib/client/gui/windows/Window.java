@@ -36,7 +36,7 @@ public abstract class Window implements IWindow
 
     public void onClose()
     {
-        this.manager.getWindowAPI().getWindowsRegistry().remove(this);
+        this.manager.getWindowAPI().getWindows().remove(this);
     }
 
     public void setPosition(int x, int y)
@@ -88,9 +88,9 @@ public abstract class Window implements IWindow
 
     public boolean isTopWindow()
     {
-        if (this.manager.getWindowAPI().getWindowsRegistry().size() > 0)
+        if (this.manager.getWindowAPI().getWindows().size() > 0)
         {
-            return ((Window) this.manager.getWindowAPI().getWindowsRegistry().get(0)).equals(this);
+            return ((Window) this.manager.getWindowAPI().getWindows().get(0)).equals(this);
         }
 
         return false;
