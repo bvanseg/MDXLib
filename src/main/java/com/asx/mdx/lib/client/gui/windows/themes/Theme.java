@@ -9,7 +9,6 @@ import com.asx.mdx.lib.client.util.Draw;
 import com.asx.mdx.lib.client.util.OpenGL;
 import com.asx.mdx.lib.util.Game;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
 public class Theme implements ITheme
@@ -44,7 +43,7 @@ public class Theme implements ITheme
         Draw.drawString("\u29E0", maximizeButtonX + 5, window.getY() - 12, 0xFFFFFFFF, false);
 
         /** Resize button **/
-        int resizeButtonColor = MDX.windows().getWindowManager().isResizeEnabled() ? 0x4412FF12 : 0x1F121212;
+        int resizeButtonColor = window.isResizeEnabled() ? 0x4412FF12 : 0x1F121212;
         int resizeButtonSize = 16;
         int resizeButtonX = window.getX() + window.getWidth() - (resizeButtonSize * 3);
         int resizeButtonY = window.getY() - resizeButtonSize;
@@ -57,7 +56,7 @@ public class Theme implements ITheme
         Draw.drawRect(resizeButtonX, resizeButtonY, resizeButtonSize, resizeButtonSize, resizeButtonColor);
         Draw.drawString("\u2921", resizeButtonX + 5, window.getY() - 12, 0xFFFFFFFF, false);
 
-        if (MDX.windows().getWindowManager().isResizeEnabled())
+        if (window.isResizeEnabled())
         {
             /** Zone **/
             int zoneButtonColor = 0x6612FF12;

@@ -23,11 +23,9 @@ public class WindowManager extends GuiScreen
     protected GuiScreen parentScreen;
     private Window      resetWindow;
     private Window      draggingWindow      = null;
-    private Window      lastActiveWindow        = null;
+    private Window      lastActiveWindow    = null;
     private int         mouseXLast;
     private int         mouseYLast;
-    private boolean     resizeEnabled       = false;
-    private boolean     resizeIgnoreBorders = false;
 
     public WindowManager(WindowAPI windowapi, GuiScreen parentScreen)
     {
@@ -63,7 +61,7 @@ public class WindowManager extends GuiScreen
                 window = w;
             }
         }
-        
+
         return window;
     }
 
@@ -72,36 +70,34 @@ public class WindowManager extends GuiScreen
     {
         super.mouseClicked(mouseX, mouseY, buttonId);
 
-        Window active = lastActiveWindow = getTopWindow(mouseX, mouseY);
+        Window topWindow = lastActiveWindow = getTopWindow(mouseX, mouseY);
 
         /** close button **/
-        if (active != null)
+        if (topWindow != null)
         {
-            if ((mouseX > active.getX() + active.getWidth() - 14) && (mouseX < active.getX() + active.getWidth() - 2) && (mouseY < active.getY() - 2) && (mouseY > active.getY() - 14))
+            if ((mouseX > topWindow.getX() + topWindow.getWidth() - 14) && (mouseX < topWindow.getX() + topWindow.getWidth() - 2) && (mouseY < topWindow.getY() - 2) && (mouseY > topWindow.getY() - 14))
             {
-                active.onClose();
+                topWindow.onClose();
             }
 
             /** Maximize Button **/
             int maximizeButtonSize = 16;
-            int maximizeButtonX = active.getX() + active.getWidth() - (maximizeButtonSize * 2);
-            int maximizeButtonY = active.getY() - maximizeButtonSize;
+            int maximizeButtonX = topWindow.getX() + topWindow.getWidth() - (maximizeButtonSize * 2);
+            int maximizeButtonY = topWindow.getY() - maximizeButtonSize;
 
             if (mouseX > maximizeButtonX && mouseX < maximizeButtonX + maximizeButtonSize && mouseY > maximizeButtonY && mouseY < maximizeButtonY + maximizeButtonSize)
             {
-                ScaledResolution res = Screen.scaledDisplayResolution();
-                active.setPosition(0, 0 + 16);
-                active.setDimensions(res.getScaledWidth(), res.getScaledHeight() - 16);
+                topWindow.maximize();
             }
 
             /** Resize Button **/
             int resizeButtonSize = 16;
-            int resizeButtonX = active.getX() + active.getWidth() - (resizeButtonSize * 3);
-            int resizeButtonY = active.getY() - resizeButtonSize;
+            int resizeButtonX = topWindow.getX() + topWindow.getWidth() - (resizeButtonSize * 3);
+            int resizeButtonY = topWindow.getY() - resizeButtonSize;
 
             if (mouseX > resizeButtonX && mouseX < resizeButtonX + resizeButtonSize && mouseY > resizeButtonY && mouseY < resizeButtonY + resizeButtonSize)
             {
-                this.setResizeEnabled(!this.isResizeEnabled());
+                topWindow.setResizeEnabled(!topWindow.isResizeEnabled());
             }
         }
 
@@ -109,7 +105,7 @@ public class WindowManager extends GuiScreen
         {
             Window window = (Window) this.windowapi.getWindows().get(x);
 
-            if (active == window)
+            if (topWindow == window)
             {
                 this.resetWindow = window;
 
@@ -145,44 +141,7 @@ public class WindowManager extends GuiScreen
             // MDX.log().warn("Parent screen returned null.");
         }
 
-        Window active = getTopWindow(mouseX, mouseY);
-
-        if (MDX.windows().getWindowManager().isResizeEnabled())
-        {
-            if (Mouse.isButtonDown(0))
-            {
-                if (active != null)
-                {
-                    /** Resize Zone Button **/
-                    int zoneButtonSize = 10;
-                    int zoneButtonX = active.getX() + active.getWidth() - (zoneButtonSize);
-                    int zoneButtonY = active.getY() + active.getHeight() - (zoneButtonSize);
-
-                    if (mouseX > zoneButtonX && mouseX < zoneButtonX + zoneButtonSize && mouseY > zoneButtonY && mouseY < zoneButtonY + zoneButtonSize)
-                    {
-                        int newWidth = mouseX - active.getX() + 5;
-                        int newHeight = mouseY - active.getY() + 5;
-
-                        resizeIgnoreBorders = true;
-                        active.setDimensions(newWidth, newHeight);
-                    }
-                }
-
-                if (lastActiveWindow != null && resizeIgnoreBorders)
-                {
-                    int newWidth = mouseX - lastActiveWindow.getX() + 5;
-                    int newHeight = mouseY - lastActiveWindow.getY() + 5;
-
-                    lastActiveWindow.setDimensions(newWidth, newHeight);
-                }
-            }
-            else
-            {
-                resizeIgnoreBorders = false;
-            }
-        }
-
-        Draw.drawGradientRect(0, 0, Screen.scaledDisplayResolution().getScaledWidth(), Screen.scaledDisplayResolution().getScaledHeight(), 0xEF000000, 0xBB000000);
+        Draw.drawGradientRect(0, 0, Screen.scaledDisplayResolution().getScaledWidth(), Screen.scaledDisplayResolution().getScaledHeight(), 0xCF000000, 0xAA000000);
 
         GL11.glPushMatrix();
 
@@ -224,6 +183,7 @@ public class WindowManager extends GuiScreen
         for (Window window : this.windowapi.getWindows())
         {
             this.windowapi.drawWindow(window, mouseX, mouseY);
+            window.onUpdate(mouseX, mouseY);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -245,16 +205,6 @@ public class WindowManager extends GuiScreen
         {
             window.onButtonPress(b);
         }
-    }
-
-    public void setResizeEnabled(boolean resizeEnabled)
-    {
-        this.resizeEnabled = resizeEnabled;
-    }
-
-    public boolean isResizeEnabled()
-    {
-        return resizeEnabled;
     }
 
     public GuiScreen getParentScreen()
