@@ -6,6 +6,7 @@ import com.asx.mdx.core.Access;
 import com.asx.mdx.core.PacketHandler;
 import com.asx.mdx.lib.client.Renderers;
 import com.asx.mdx.lib.client.gui.notifications.Notifications;
+import com.asx.mdx.lib.client.gui.windows.WindowAPI;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -62,6 +63,12 @@ public class MDX
     public static Notifications notifications()
     {
         return Notifications.INSTANCE;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static WindowAPI windows()
+    {
+        return WindowAPI.INSTANCE;
     }
 
     @SideOnly(Side.CLIENT)
