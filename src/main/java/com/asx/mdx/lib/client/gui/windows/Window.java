@@ -13,7 +13,7 @@ public abstract class Window implements IWindow
     protected int                                           height;
     private String                                          title;
     private String                                          id;
-    protected ArrayList<net.minecraft.client.gui.GuiButton> buttonList = new ArrayList();
+    protected ArrayList<net.minecraft.client.gui.GuiButton> buttonList = new ArrayList<net.minecraft.client.gui.GuiButton>();
 
     public Window(String id, WindowManager manager, String title, int xPos, int yPos, int width, int height)
     {
