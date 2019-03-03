@@ -18,6 +18,7 @@ import com.asx.mdx.lib.world.Worlds;
 import com.asx.mdx.lib.world.entity.player.Players;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
@@ -973,6 +974,58 @@ public class Draw
         Draw.bindTexture(resource);
         OpenGL.color(r, g, b, a);
         drawQuad(posX - (width / 2), posY, width, height, 0, 0, u, 0, v);
+    }
+    
+    /**
+     * Draw the specified IBlockState texture at the specified coordinates stretched to the provided width.
+     * 
+     * @param blockstate - The IBlockState to obtain the texture from.
+     * @param x - X Coordinate
+     * @param y - Y Coordinate
+     * @param w - Width
+     * @param h - Height
+     */
+    public static void drawBlock(IBlockState blockstate, int x, int y, int w, int h)
+    {
+        drawBlock(blockstate, x, y, w, h, 1F, 1F);
+    }
+    
+    /**
+     * Draw the specified IBlockState texture at the specified coordinates, with the specified width and UV.
+     * 
+     * @param blockstate - The IBlockState to obtain the texture from.
+     * @param x - X Coordinate
+     * @param y - Y Coordinate
+     * @param w - Width
+     * @param h - Height
+     * @param u - Texture U
+     * @param v - Texture V
+     */
+    public static void drawBlock(IBlockState blockstate, int x, int y, int w, int h, float u, float v)
+    {
+        drawBlock(blockstate, x, y, w, h, u, v, 1F, 1F, 1F, 1F);
+    }
+    
+    /**
+     * Draw the specified IBlockState texture at the specified coordinates, with the specified width, UV, and RGBA color filtering.
+     * 
+     * @param blockstate - The IBlockState to obtain the texture from.
+     * @param x - X Coordinate
+     * @param y - Y Coordinate
+     * @param w - Width
+     * @param h - Height
+     * @param u - Texture U
+     * @param v - Texture V
+     * @param r - Red filtering
+     * @param g - Green filtering
+     * @param b - Blue filtering
+     * @param a - Alpha filtering
+     */
+    public static void drawBlock(IBlockState blockstate, int x, int y, int w, int h, float u, float v, float r, float g, float b, float a)
+    {
+        TextureAtlasSprite sprite = Game.minecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(blockstate);
+        ResourceLocation resource = Draw.getResourceLocationFullPath(sprite);
+        Draw.drawResource(resource, x, y, w, h, r, g, b, a, u, v);
     }
 
     /**
