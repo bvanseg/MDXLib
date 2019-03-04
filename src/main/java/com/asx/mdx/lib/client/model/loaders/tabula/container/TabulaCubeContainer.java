@@ -60,30 +60,60 @@ public class TabulaCubeContainer
     {
         return this.dimensions;
     }
+    
+    public void setDimensions(int[] dimensions)
+    {
+        this.dimensions = dimensions;
+    }
 
     public double[] getPosition()
     {
         return this.position;
+    }
+    
+    public void setPosition(double[] position)
+    {
+        this.position = position;
     }
 
     public double[] getOffset()
     {
         return this.offset;
     }
+    
+    public void setOffset(double[] offset)
+    {
+        this.offset = offset;
+    }
 
     public double[] getRotation()
     {
         return this.rotation;
+    }
+    
+    public void setRotation(double[] rotation)
+    {
+        this.rotation = rotation;
     }
 
     public double[] getScale()
     {
         return this.scale;
     }
+    
+    public void setScale(double[] scale)
+    {
+        this.scale = scale;
+    }
 
     public int[] getTextureOffset()
     {
         return this.txOffset;
+    }
+    
+    public void setTxOffset(int[] txOffset)
+    {
+        this.txOffset = txOffset;
     }
 
     public boolean isTextureMirrorEnabled()
