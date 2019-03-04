@@ -72,7 +72,7 @@ public abstract class Window implements IWindow
         this.manager.getWindowAPI().getWindows().remove(this);
     }
 
-    protected void maximize()
+    public void maximize()
     {
         ScaledResolution res = Screen.scaledDisplayResolution();
         this.setPosition(0, 0 + 16);
