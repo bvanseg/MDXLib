@@ -1,5 +1,7 @@
 package com.asx.mdx.lib.client.model.loaders;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -71,7 +73,23 @@ public enum TabulaModelLoader implements ICustomModelLoader, JsonDeserialization
             path += ".tbl";
         }
         InputStream stream = TabulaModelLoader.class.getResourceAsStream(path);
-        return TabulaModelLoader.INSTANCE.loadTabulaModel(this.getModelJsonStream(path, stream));
+        TabulaModelContainer model = TabulaModelLoader.INSTANCE.loadTabulaModel(this.getModelJsonStream(path, stream));
+        stream.close();
+        return model;
+    }
+    
+    public TabulaModelContainer loadTabulaModel(File file) throws IOException
+    {
+        TabulaModelContainer model = null;
+        
+        if (file.getAbsolutePath().endsWith(".tbl"))
+        {
+            InputStream stream = new FileInputStream(file);
+            model = TabulaModelLoader.INSTANCE.loadTabulaModel(this.getModelJsonStream(file.getName(), stream));
+            stream.close();
+        }
+        
+        return model;
     }
 
     /**
