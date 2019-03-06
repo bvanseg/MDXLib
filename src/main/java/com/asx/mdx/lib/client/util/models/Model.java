@@ -440,16 +440,16 @@ public abstract class Model<TYPE extends Object> extends ModelBase
 
     public static final float DEFAULT_SCALE = 1F / 16F;
     private float             movementScale = 1.0F;
-    protected Animator        animatior;
+    protected Animator        animator;
 
     public Animator getAnimationHandler()
     {
-        return this.animatior;
+        return this.animator;
     }
     
     public Model()
     {
-        this.animatior = Animator.create();
+        this.animator = Animator.create();
     }
     
     public static float partialTicks()
