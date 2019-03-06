@@ -9,6 +9,10 @@ public class Transform
     private float offsetX;
     private float offsetY;
     private float offsetZ;
+    
+    private float positionX;
+    private float positionY;
+    private float positionZ;
 
     public float getRotationX()
     {
@@ -39,6 +43,21 @@ public class Transform
     {
         return this.offsetZ;
     }
+    
+    public float getPositionX()
+    {
+        return positionX;
+    }
+    
+    public float getPositionY()
+    {
+        return positionY;
+    }
+    
+    public float getPositionZ()
+    {
+        return positionZ;
+    }
 
     public void addRotation(float x, float y, float z)
     {
@@ -52,6 +71,13 @@ public class Transform
         this.offsetX += x;
         this.offsetY += y;
         this.offsetZ += z;
+    }
+
+    public void addPosition(float x, float y, float z)
+    {
+        this.positionX += x;
+        this.positionY += y;
+        this.positionZ += z;
     }
 
     public void resetRotation()
@@ -68,6 +94,13 @@ public class Transform
         this.offsetZ = 0.0F;
     }
 
+    public void resetPosition()
+    {
+        this.positionX = 0.0F;
+        this.positionY = 0.0F;
+        this.positionZ = 0.0F;
+    }
+
     public void setRotation(float x, float y, float z)
     {
         this.resetRotation();
@@ -78,5 +111,11 @@ public class Transform
     {
         this.resetOffset();
         this.addOffset(x, y, z);
+    }
+    
+    public void setPosition(float x, float y, float z)
+    {
+        this.resetPosition();
+        this.addPosition(x, y, z);
     }
 }

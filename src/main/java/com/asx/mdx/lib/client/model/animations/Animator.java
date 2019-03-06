@@ -57,6 +57,10 @@ public class Animator
         return this.correct;
     }
 
+    /**
+     * Start the keyframe and set the duration of the current keyframe
+     * @param duration
+     */
     public void startKeyframe(int duration)
     {
         if (!this.correct)
@@ -68,18 +72,52 @@ public class Animator
         this.tick += duration;
     }
 
+    /**
+     * Hold the keyframe for the provided duration
+     * @param duration
+     */
     public void setStaticKeyframe(int duration)
     {
         this.startKeyframe(duration);
         this.endKeyframe(true);
     }
 
+    /**
+     * Resets the keyframe to the default position over a period of the provided duration
+     * @param duration
+     */
     public void resetKeyframe(int duration)
     {
         this.startKeyframe(duration);
         this.endKeyframe();
     }
+    
+    /**
+     * Rotates the cube to a specified rotation in degrees.
+     * 
+     * @param box
+     * @param x
+     * @param y
+     * @param z
+     */
+    public void rotateTo(ModelRenderer box, float x, float y, float z)
+    {
+        x = (float) Math.toRadians(x);
+        y = (float) Math.toRadians(y);
+        z = (float) Math.toRadians(z);
+        
+        rotate(box, x, y, z);
+    }
 
+    
+    /**
+     * Rotates the cube progressively using radians.
+     * 
+     * @param box
+     * @param x
+     * @param y
+     * @param z
+     */
     public void rotate(ModelRenderer box, float x, float y, float z)
     {
         if (!this.correct)
@@ -88,6 +126,24 @@ public class Animator
         }
 
         this.getTransform(box).addRotation(x, y, z);
+    }
+    
+    /**
+     * Moves the cube to a specified point.
+     * 
+     * @param box
+     * @param x
+     * @param y
+     * @param z
+     */
+    public void moveTo(ModelRenderer box, float x, float y, float z)
+    {
+        float f = 1F;
+        x = x * f;
+        y = y * f;
+        z = z * f;
+        
+        move(box, x, y, z);
     }
 
     public void move(ModelRenderer box, float x, float y, float z)
@@ -98,6 +154,16 @@ public class Animator
         }
 
         this.getTransform(box).addOffset(x, y, z);
+    }
+
+    public void reposition(ModelRenderer box, float x, float y, float z)
+    {
+        if (!this.correct)
+        {
+            return;
+        }
+
+        this.getTransform(box).addPosition(x, y, z);
     }
 
     private Transform getTransform(ModelRenderer box)
