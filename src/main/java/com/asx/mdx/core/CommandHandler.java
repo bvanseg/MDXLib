@@ -4,12 +4,15 @@ import com.asx.mdx.commands.CommandBlockScanner;
 import com.asx.mdx.commands.CommandBlockUpdate;
 import com.asx.mdx.commands.CommandChunkBorders;
 import com.asx.mdx.commands.CommandGenerate;
+import com.asx.mdx.commands.CommandKeyframeDifferenceCalculator;
 import com.asx.mdx.core.mods.IInitEvent;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CommandHandler implements IInitEvent
 {
@@ -33,5 +36,10 @@ public class CommandHandler implements IInitEvent
         event.registerServerCommand(this.blockUpdate = new CommandBlockUpdate());
         event.registerServerCommand(this.blockScanner = new CommandBlockScanner());
         event.registerServerCommand(this.chunkBorders = new CommandChunkBorders());
+        
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+        {
+            event.registerServerCommand(new CommandKeyframeDifferenceCalculator());
+        }
     }
 }
