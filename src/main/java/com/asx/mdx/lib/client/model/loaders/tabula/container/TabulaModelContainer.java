@@ -92,4 +92,42 @@ public class TabulaModelContainer
     {
         return this.cubeCount;
     }
+
+    public ArrayList<TabulaCubeContainer> getAllCubes()
+    {
+        return getAllCubes(null, null);
+    }
+
+    private ArrayList<TabulaCubeContainer> getAllCubes(TabulaCubeContainer parent, ArrayList<TabulaCubeContainer> list)
+    {
+        if (list == null)
+        {
+            list = new ArrayList<TabulaCubeContainer>();
+        }
+
+        for (TabulaCubeContainer p : (parent == null ? this.getCubes() : parent.getChildren()))
+        {
+            list.add(p);
+
+            if (p.getChildren().size() > 0)
+            {
+                getAllCubes(p, list);
+            }
+        }
+
+        return list;
+    }
+
+    public TabulaCubeContainer getCubeByName(String name)
+    {
+        for (TabulaCubeContainer c : this.getAllCubes())
+        {
+            if (c.getName().equals(name))
+            {
+                return c;
+            }
+        }
+
+        return null;
+    }
 }
