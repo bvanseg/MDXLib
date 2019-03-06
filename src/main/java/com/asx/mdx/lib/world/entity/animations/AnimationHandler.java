@@ -54,7 +54,8 @@ public enum AnimationHandler
             {
                 if (entity.getAnimationTick() == 0)
                 {
-                    AnimationEvent event = new AnimationEvent.Start<>(entity, entity.getActiveAnimation());
+                    AnimationEvent<T> event = new AnimationEvent.Start<>(entity, entity.getActiveAnimation());
+                    
                     if (!MinecraftForge.EVENT_BUS.post(event))
                     {
                         this.sendAnimationMessage(entity, event.getAnimation());
