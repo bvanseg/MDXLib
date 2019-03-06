@@ -20,6 +20,8 @@ public abstract class Window implements IWindow
     private boolean                                         resizeEnabled       = false;
     private boolean                                         resizeIgnoreBorders = false;
     protected ArrayList<net.minecraft.client.gui.GuiButton> buttonList          = new ArrayList<net.minecraft.client.gui.GuiButton>();
+    protected int                                           sizeLimitX          = 100;
+    protected int                                           sizeLimitY          = 50;
 
     public Window(String id, WindowManager manager, String title, int xPos, int yPos, int width, int height)
     {
@@ -57,7 +59,16 @@ public abstract class Window implements IWindow
                     int newHeight = mouseY - this.getY() + 5;
 
                     resizeIgnoreBorders = true;
-                    this.setDimensions(newWidth, newHeight);
+
+                    if (newWidth >= sizeLimitX)
+                    {
+                        this.setDimensions(newWidth, this.getHeight());
+                    }
+
+                    if (newHeight >= sizeLimitY)
+                    {
+                        this.setDimensions(this.getWidth(), newHeight);
+                    }
                 }
             }
             else
@@ -149,5 +160,21 @@ public abstract class Window implements IWindow
     public boolean isResizeEnabled()
     {
         return resizeEnabled;
+    }
+
+    public int getSizeLimitX()
+    {
+        return sizeLimitX;
+    }
+
+    public int getSizeLimitY()
+    {
+        return sizeLimitY;
+    }
+
+    public void setSizeLimit(int sizeLimitX, int sizeLimitY)
+    {
+        this.sizeLimitX = sizeLimitX;
+        this.sizeLimitY = sizeLimitY;
     }
 }
