@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.lib.client.GameResources;
 import com.asx.mdx.lib.client.gui.GuiCustomScreen;
+import com.asx.mdx.lib.util.Chat;
 import com.asx.mdx.lib.util.Game;
 import com.asx.mdx.lib.util.MDXMath;
 import com.asx.mdx.lib.world.Worlds;
@@ -95,7 +96,7 @@ public class Draw
     {
         return buffer().pos(x, y, z).tex(u, v);
     }
-    
+
     public static void triangle(Vertex vertex1, Vertex vertex2, Vertex vertex3)
     {
         triangle(vertex1, vertex2, vertex3, false);
@@ -129,7 +130,7 @@ public class Draw
         GL11.glLineWidth(width);
         OpenGL.color4i(color);
         OpenGL.translate(0F, 0F, depth);
-        //TODO: Find a replacement for this, doesn't seem to have an existing replacement in GLStateManager.
+        // TODO: Find a replacement for this, doesn't seem to have an existing replacement in GLStateManager.
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glBegin(GL11.GL_LINES);
         GL11.glVertex2d(x1, y1);
@@ -140,7 +141,7 @@ public class Draw
     }
 
     /**
-     * Draws a rectangle at the specified coordinates, with the 
+     * Draws a rectangle at the specified coordinates, with the
      * specified width, height and color.
      * 
      * @param x - x coordinate
@@ -155,7 +156,7 @@ public class Draw
     }
 
     /**
-     * Draws a rectangle at the specified coordinates, with the 
+     * Draws a rectangle at the specified coordinates, with the
      * specified width, height and linear gradient color.
      * 
      * @param x - x coordinate
@@ -171,7 +172,7 @@ public class Draw
     }
 
     /**
-     * Draws a rectangle at the specified coordinates, with the 
+     * Draws a rectangle at the specified coordinates, with the
      * specified width, height and linear gradient color.
      * 
      * @param x - x coordinate
@@ -211,7 +212,7 @@ public class Draw
     }
 
     /**
-     * Draws a quad at the specified coordinates, with the 
+     * Draws a quad at the specified coordinates, with the
      * specified width and height on the specified z level.
      * 
      * @param x - x coordinate
@@ -226,7 +227,7 @@ public class Draw
     }
 
     /**
-     * Draws a quad at the specified coordinates, with the 
+     * Draws a quad at the specified coordinates, with the
      * specified width and height and specified texture uv coords.
      * 
      * @param x - x coordinate
@@ -242,7 +243,7 @@ public class Draw
     }
 
     /**
-     * Draws a quad at the specified coordinates, with the 
+     * Draws a quad at the specified coordinates, with the
      * specified width and height and specified texture uv coords.
      * 
      * @param x - x coordinate
@@ -266,7 +267,7 @@ public class Draw
     }
 
     /**
-     * Draws a quad at the specified coordinates, with the 
+     * Draws a quad at the specified coordinates, with the
      * specified width and height and specified texture uv coords.
      * 
      * @param x - x coordinate
@@ -284,7 +285,7 @@ public class Draw
     }
 
     /**
-     * Draws a quad at the specified coordinates, with the 
+     * Draws a quad at the specified coordinates, with the
      * specified width and height and specified texture uv coords.
      * 
      * @param x - x coordinate
@@ -445,6 +446,78 @@ public class Draw
         return Game.fontRenderer().getStringWidth(TextFormatting.getTextWithoutFormattingCodes(s));
     }
 
+    public static int sizeStringToWidth(String str, int wrapWidth, boolean wordBreak)
+    {
+        int stringLength = str.length();
+        int curWidth = 0;
+        int idx = 0;
+        int lastIdx = -1;
+
+        for (boolean flag = false; idx < stringLength; ++idx)
+        {
+            char ch = str.charAt(idx);
+
+            switch (ch)
+            {
+                case '\n':
+                    --idx;
+                    break;
+                case ' ':
+                    if (wordBreak)
+                    {
+                        lastIdx = idx;
+                    }
+                default:
+                    curWidth += Game.minecraft().fontRenderer.getCharWidth(ch);
+
+                    if (flag)
+                    {
+                        ++curWidth;
+                    }
+
+                    break;
+                case Chat.Chars.SECTION_SIGN:
+
+                    if (idx < stringLength - 1)
+                    {
+                        ++idx;
+                        char c = str.charAt(idx);
+
+                        if (c != 'l' && c != 'L')
+                        {
+                            if (c == 'r' || c == 'R' || isFormatColor(c))
+                            {
+                                flag = false;
+                            }
+                        }
+                        else
+                        {
+                            flag = true;
+                        }
+                    }
+            }
+
+            if (ch == '\n')
+            {
+                ++idx;
+                lastIdx = idx;
+                break;
+            }
+
+            if (curWidth > wrapWidth)
+            {
+                break;
+            }
+        }
+
+        return idx != stringLength && lastIdx != -1 && lastIdx < idx ? lastIdx : idx;
+    }
+
+    public static boolean isFormatColor(char colorChar)
+    {
+        return colorChar >= '0' && colorChar <= '9' || colorChar >= 'a' && colorChar <= 'f' || colorChar >= 'A' && colorChar <= 'F';
+    }
+
     /**
      * Draws a tooltip at the specified cordinates.
      * 
@@ -572,8 +645,8 @@ public class Draw
      * @param barHeight - The height of the progress bar
      * @param stringPosY - The offset height of the label text (0 is default)
      * @param color - The color of the progress bar
-     * @param barStyle - Set to false for a solid style progress bar. Set to true 
-     * for a box-style progress bar.
+     * @param barStyle - Set to false for a solid style progress bar. Set to true
+     *            for a box-style progress bar.
      */
     public static void drawProgressBar(String label, int maxProgress, int curProgress, int posX, int posY, int barWidth, int barHeight, int stringPosY, int color, boolean barStyle)
     {
@@ -607,7 +680,7 @@ public class Draw
     }
 
     /**
-     * Draws a centered rectangle with an outline at the specified 
+     * Draws a centered rectangle with an outline at the specified
      * coordinates and the specified width, height, and color.
      * 
      * @param x - x coordinate
@@ -628,7 +701,7 @@ public class Draw
     }
 
     /**
-     * Draws a rectangle with an outline at the specified 
+     * Draws a rectangle with an outline at the specified
      * coordinates and the specified width, height, and color.
      * 
      * @param x - x coordinate
@@ -655,6 +728,7 @@ public class Draw
 
     /**
      * Draws an overlay across the entire screen using the specified ResourceLocation
+     * 
      * @param resource - The ResourceLocation to draw
      */
     public static void drawOverlay(ResourceLocation resource)
@@ -663,7 +737,7 @@ public class Draw
     }
 
     /**
-     * Draws an overlay across the entire screen using the specified ResourceLocation 
+     * Draws an overlay across the entire screen using the specified ResourceLocation
      * and an alpha value.
      * 
      * @param resource - The ResourceLocation to draw
@@ -675,7 +749,7 @@ public class Draw
     }
 
     /**
-     * Draws an overlay across the entire screen using the specified ResourceLocation 
+     * Draws an overlay across the entire screen using the specified ResourceLocation
      * and 3 RGB color values.
      * 
      * @param resource - The ResourceLocation to draw
@@ -689,7 +763,7 @@ public class Draw
     }
 
     /**
-     * Draws an overlay across the entire screen using the specified ResourceLocation 
+     * Draws an overlay across the entire screen using the specified ResourceLocation
      * and 4 RGBA color values.
      * 
      * @param resource - The ResourceLocation to draw
@@ -801,7 +875,7 @@ public class Draw
     }
 
     /**
-     * Draw the specified entity at the specified coordinates using 
+     * Draw the specified entity at the specified coordinates using
      * the specified scale, yaw, and pitch.
      * 
      * @param x - x coordinate
@@ -975,7 +1049,7 @@ public class Draw
         OpenGL.color(r, g, b, a);
         drawQuad(posX - (width / 2), posY, width, height, 0, 0, u, 0, v);
     }
-    
+
     /**
      * Draw the specified IBlockState texture at the specified coordinates stretched to the provided width.
      * 
@@ -989,7 +1063,7 @@ public class Draw
     {
         drawBlock(blockstate, x, y, w, h, 1F, 1F);
     }
-    
+
     /**
      * Draw the specified IBlockState texture at the specified coordinates, with the specified width and UV.
      * 
@@ -1005,7 +1079,7 @@ public class Draw
     {
         drawBlock(blockstate, x, y, w, h, u, v, 1F, 1F, 1F, 1F);
     }
-    
+
     /**
      * Draw the specified IBlockState texture at the specified coordinates, with the specified width, UV, and RGBA color filtering.
      * 
@@ -1063,16 +1137,16 @@ public class Draw
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        
-        GlStateManager.translate((float)x, (float)y, 100F);
+
+        GlStateManager.translate((float) x, (float) y, 100F);
         GlStateManager.translate(8.0F, 8.0F, 0.0F);
         GlStateManager.scale(1.0F, -1.0F, 1.0F);
         GlStateManager.scale(16.0F, 16.0F, 16.0F);
-        
+
         IBakedModel ibakedmodel = Game.minecraft().getRenderItem().getItemModelMesher().getItemModel(stack);
         ibakedmodel = ibakedmodel.getOverrides().handleItemState(ibakedmodel, stack, Game.minecraft().world, Game.minecraft().player);
         ibakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ibakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-        
+
         Game.minecraft().getRenderItem().renderItem(stack, ibakedmodel);
         GlStateManager.disableAlpha();
         GlStateManager.disableRescaleNormal();
@@ -1080,7 +1154,7 @@ public class Draw
         GlStateManager.popMatrix();
         Game.minecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         Game.minecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-        
+
         OpenGL.popMatrix();
     }
 
@@ -1160,12 +1234,12 @@ public class Draw
                         {
                             if ((gX + gY * 3) < recipe.getIngredients().size())
                             {
-                                    ItemStack slotStack = (ItemStack) recipe.getIngredients().get(gX + gY * 3).getMatchingStacks()[0];
+                                ItemStack slotStack = (ItemStack) recipe.getIngredients().get(gX + gY * 3).getMatchingStacks()[0];
 
-                                    if (slotStack != null)
-                                    {
-                                        drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
-                                    }
+                                if (slotStack != null)
+                                {
+                                    drawItem(slotStack, x + slotPadding + gX * (size + slotPadding), y + slotPadding + gY * (size + slotPadding), size, size);
+                                }
                             }
                         }
                         catch (Exception e)
@@ -1180,6 +1254,7 @@ public class Draw
 
     /**
      * Binds a texture to OpenGL using Minecraft's render engine.
+     * 
      * @param resource - The ResourceLocation of the resource to bind.
      */
     public static void bindTexture(ResourceLocation resource)
@@ -1189,6 +1264,7 @@ public class Draw
 
     /**
      * Get the full path of the specified ResourceLocation. Format: domain:path/to/resource.png
+     * 
      * @param resource - The ResourceLocation to retrieve a path of.
      * @return The full path of the resource, including the domain.
      */
@@ -1196,7 +1272,7 @@ public class Draw
     {
         return String.format("%s:%s", resource.getNamespace(), resource.getPath());
     }
-    
+
     public static ResourceLocation getMissingTexture()
     {
         return getResourceLocationPartialPath(Game.minecraft().getTextureMapBlocks().getMissingSprite());
