@@ -199,22 +199,19 @@ public class Access
         Game.minecraft().entityRenderer.applyBobbing(partialTicks);        
     }
 
-    @Deprecated
     public void setMoveHelper(EntityLiving living, EntityMoveHelper moveHelper)
     {
-        ;
+        Reflect.set(EntityLiving.class, living, "moveHelper", "field_70765_h", moveHelper);
     }
 
-    @Deprecated
     public void setNavigator(EntityLiving living, PathNavigate navigator)
     {
-        ;
+        Reflect.set(EntityLiving.class, living, "navigator", "field_70699_by", navigator);
     }
 
-    @Deprecated
     public void setLookHelper(EntityLiving living, EntityLookHelper lookHelper)
     {
-        ;
+        Reflect.set(EntityLiving.class, living, "lookHelper", "field_70749_g", lookHelper);
     }
 
     public double getMoveHelperPosX(EntityMoveHelper moveHelper)
