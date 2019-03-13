@@ -3,6 +3,7 @@ package com.asx.mdx.lib.client.model.animations;
 import java.util.HashMap;
 
 import com.asx.mdx.lib.client.util.Transform;
+import com.asx.mdx.lib.client.util.models.Model;
 import com.asx.mdx.lib.util.Game;
 import com.asx.mdx.lib.world.entity.animations.Animation;
 import com.asx.mdx.lib.world.entity.animations.IAnimated;
@@ -59,6 +60,7 @@ public class Animator
 
     /**
      * Start the keyframe and set the duration of the current keyframe
+     * 
      * @param duration
      */
     public void startKeyframe(int duration)
@@ -74,6 +76,7 @@ public class Animator
 
     /**
      * Hold the keyframe for the provided duration
+     * 
      * @param duration
      */
     public void setStaticKeyframe(int duration)
@@ -84,6 +87,7 @@ public class Animator
 
     /**
      * Resets the keyframe to the default position over a period of the provided duration
+     * 
      * @param duration
      */
     public void resetKeyframe(int duration)
@@ -91,7 +95,7 @@ public class Animator
         this.startKeyframe(duration);
         this.endKeyframe();
     }
-    
+
     /**
      * Rotates the cube to a specified rotation in degrees.
      * 
@@ -102,14 +106,36 @@ public class Animator
      */
     public void rotateTo(ModelRenderer box, float x, float y, float z)
     {
+        this.rotateTo(box, x, y, z, false);
+    }
+
+    /**
+     * Rotates the cube to a specified rotation in degrees.
+     * 
+     * @param box
+     * @param x
+     * @param y
+     * @param z
+     * @param s - Whether this is a static pose or not
+     */
+    public void rotateTo(ModelRenderer box, float x, float y, float z, boolean s)
+    {
         x = (float) Math.toRadians(x);
         y = (float) Math.toRadians(y);
         z = (float) Math.toRadians(z);
-        
-        rotate(box, x, y, z);
+
+        if (s)
+        {
+            box.rotateAngleX += x;
+            box.rotateAngleY += y;
+            box.rotateAngleZ += z;
+        }
+        else
+        {
+            rotate(box, x, y, z);
+        }
     }
 
-    
     /**
      * Rotates the cube progressively using radians.
      * 
@@ -138,11 +164,11 @@ public class Animator
      */
     public void moveTo(ModelRenderer box, float x, float y, float z)
     {
-        float f = 1F;
+        float f = Model.DEFAULT_SCALE;
         x = x * f;
         y = y * f;
         z = z * f;
-        
+
         move(box, x, y, z);
     }
 
@@ -204,14 +230,24 @@ public class Animator
                     box.rotateAngleX += t.getRotationX();
                     box.rotateAngleY += t.getRotationY();
                     box.rotateAngleZ += t.getRotationZ();
-                    box.rotationPointX += t.getOffsetX();
-                    box.rotationPointY += t.getOffsetY();
-                    box.rotationPointZ += t.getOffsetZ();
+                    box.offsetX += t.getOffsetX();
+                    box.offsetY += t.getOffsetY();
+                    box.offsetZ += t.getOffsetZ();
+                    box.rotationPointX += t.getPositionX();
+                    box.rotationPointY += t.getPositionY();
+                    box.rotationPointZ += t.getPositionZ();
                 }
             }
             else
             {
-                float tick = (animationTick - this.tickPrev + Game.partialTicks()) / (this.tick - this.tickPrev);
+                float partialTicks = Game.partialTicks();
+                
+                if (Game.minecraft().isGamePaused() || this.entity.isAnimationPaused())
+                {
+                    partialTicks = 0;
+                }
+                
+                float tick = (animationTick - this.tickPrev + partialTicks) / (this.tick - this.tickPrev);
                 float inc = MathHelper.sin((float) (tick * Math.PI / 2.0F)), dec = 1.0F - inc;
 
                 for (ModelRenderer box : this.transformsPrev.keySet())
@@ -221,9 +257,12 @@ public class Animator
                     box.rotateAngleX += dec * t.getRotationX();
                     box.rotateAngleY += dec * t.getRotationY();
                     box.rotateAngleZ += dec * t.getRotationZ();
-                    box.rotationPointX += dec * t.getOffsetX();
-                    box.rotationPointY += dec * t.getOffsetY();
-                    box.rotationPointZ += dec * t.getOffsetZ();
+                    box.offsetX += dec * t.getOffsetX();
+                    box.offsetY += dec * t.getOffsetY();
+                    box.offsetZ += dec * t.getOffsetZ();
+                    box.rotationPointX += t.getPositionX();
+                    box.rotationPointY += t.getPositionY();
+                    box.rotationPointZ += t.getPositionZ();
                 }
 
                 for (ModelRenderer box : this.transforms.keySet())
@@ -233,9 +272,12 @@ public class Animator
                     box.rotateAngleX += inc * t.getRotationX();
                     box.rotateAngleY += inc * t.getRotationY();
                     box.rotateAngleZ += inc * t.getRotationZ();
-                    box.rotationPointX += inc * t.getOffsetX();
-                    box.rotationPointY += inc * t.getOffsetY();
-                    box.rotationPointZ += inc * t.getOffsetZ();
+                    box.offsetX += inc * t.getOffsetX();
+                    box.offsetY += inc * t.getOffsetY();
+                    box.offsetZ += inc * t.getOffsetZ();
+                    box.rotationPointX += t.getPositionX();
+                    box.rotationPointY += t.getPositionY();
+                    box.rotationPointZ += t.getPositionZ();
                 }
             }
         }

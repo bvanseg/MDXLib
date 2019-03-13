@@ -13,4 +13,10 @@ public interface IAnimated
     public void setActiveAnimation(Animation animation);
 
     public Animation[] getAnimations();
+    
+    public boolean isAnimationPaused();
+    
+    public void pauseAnimation();
+    
+    public void playAnimation();
 }
