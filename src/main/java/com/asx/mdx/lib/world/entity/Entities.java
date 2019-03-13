@@ -971,7 +971,6 @@ public class Entities
     public static EnumFacing getEntityFacingRotX(Entity entity)
     {
         int dir = MathHelper.floor((entity.rotationPitch / 90) + 0.5) & 3;
-        System.out.println(dir);
 
         switch (dir)
         {
