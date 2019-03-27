@@ -39,9 +39,9 @@ public class MDXModule
     @EventHandler
     public void pre(FMLPreInitializationEvent event)
     {
-        WebModule.startWebServer();
         MDX.console().pre(event);
         MDX.settings().pre(event);
+        WebModule.startWebServer();
         SystemInfo.INSTANCE.runtimeTasks();
         Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
     }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import com.asx.mdx.MDXModule;
+import com.asx.mdx.Settings;
 import com.asx.mdx.lib.util.Game;
 import com.asx.mdx.webserver.RequestHandler.CommandRequestHandler;
 import com.asx.mdx.webserver.RequestHandler.StandardRequestHandler;
@@ -32,7 +34,6 @@ public class WebModule implements Runnable
     public static final String               DEFAULT_FILE         = "index.html";
     public static final String               METHOD_NOT_SUPPORTED = "not_supported.html";
 
-    private static final int                 PORT                 = Game.isDevEnvironment() ? 7762 : 7761;
     private static final boolean             verbose              = false;
     private static boolean                   isRunning            = false;
 
@@ -58,15 +59,15 @@ public class WebModule implements Runnable
             public Object getData()
             {
                 MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-                
+
                 if (server != null && server.getPlayerList() != null)
                 {
                     ArrayList<ArrayList<String>> playersList = new ArrayList<ArrayList<String>>();
-                    
+
                     for (GameProfile profile : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOnlinePlayerProfiles())
                     {
                         ArrayList<String> information = new ArrayList<String>();
-                        
+
                         EntityPlayerMP playerMP = server.getPlayerList().getPlayerByUsername(profile.getName());
                         information.add(profile.getName());
                         information.add(profile.getId().toString());
@@ -75,18 +76,18 @@ public class WebModule implements Runnable
                         information.add(String.valueOf(playerMP.getHealth()));
                         information.add(String.valueOf(playerMP.getMaxHealth()));
                         information.add(String.valueOf(playerMP.getServerWorld().provider.getDimensionType().getName()));
-                        
+
                         playersList.add(information);
                     }
-                    
+
                     return Util.toJson(playersList);
                 }
-                
+
                 return null;
             }
         }));
     }
-    
+
     public static ArrayList<RequestHandler> REQUESTS()
     {
         return REQUESTS;
@@ -94,47 +95,51 @@ public class WebModule implements Runnable
 
     public static void startWebServer()
     {
-        isRunning = true;
-        webServerThread = new Thread() {
-            public void run()
-            {
-                ServerSocket socket = null;
-
-                try
+        if (Settings.INSTANCE.isWebServerEnabled())
+        {
+            isRunning = true;
+            webServerThread = new Thread() {
+                public void run()
                 {
-                    socket = new ServerSocket(PORT);
-                    System.out.println("MDXLib Internal Web Server started.\nListening for connections on port " + PORT + "...\n");
+                    ServerSocket socket = null;
 
-                    while (isRunning)
-                    {
-                        WebModule web = new WebModule(socket.accept());
-                        Thread thread = new Thread(web);
-                        thread.start();
-                    }
-
-                }
-                catch (IOException e)
-                {
-                    System.err.println("Server Connection error : " + e.getMessage());
-                }
-                finally
-                {
                     try
                     {
-                        if (socket != null)
+                        int port = Settings.INSTANCE.getWebserverPort();
+                        socket = new ServerSocket(port);
+                        System.out.println("MDXLib Internal Web Server started.\nListening for connections on port " + port + "...\n");
+
+                        while (isRunning)
                         {
-                            socket.close();
+                            WebModule web = new WebModule(socket.accept());
+                            Thread thread = new Thread(web);
+                            thread.start();
                         }
+
                     }
                     catch (IOException e)
                     {
-                        e.printStackTrace();
+                        System.err.println("Server Connection error : " + e.getMessage());
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            if (socket != null)
+                            {
+                                socket.close();
+                            }
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        };
-        webServerThread.setDaemon(false);
-        webServerThread.start();
+            };
+            webServerThread.setDaemon(false);
+            webServerThread.start();
+        }
     }
 
     public static void kill()

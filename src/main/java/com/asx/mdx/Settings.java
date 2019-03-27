@@ -3,6 +3,7 @@ package com.asx.mdx;
 import java.io.File;
 
 import com.asx.mdx.core.mods.IPreInitEvent;
+import com.asx.mdx.lib.util.Game;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -15,6 +16,8 @@ public class Settings implements IPreInitEvent
     private Configuration        configuration;
     private final String         CATEGORY_STARTUP = "startup";
     private Property             startupNotification;
+    private Property             webServerEnabled;
+    private Property             webserverPort;
 
     @Override
     @EventHandler
@@ -26,6 +29,8 @@ public class Settings implements IPreInitEvent
         {
             configuration.load();
             startupNotification = configuration.get(CATEGORY_STARTUP, "startup_notification", true);
+            webServerEnabled = configuration.get(CATEGORY_STARTUP, "webserver", true);
+            webserverPort = configuration.get(CATEGORY_STARTUP, "webserver_port", 7761);
         }
         finally
         {
@@ -42,6 +47,16 @@ public class Settings implements IPreInitEvent
     public boolean isStartupNotificationEnabled()
     {
         return startupNotification.getBoolean();
+    }
+    
+    public boolean isWebServerEnabled()
+    {
+        return webServerEnabled.getBoolean();
+    }
+    
+    public int getWebserverPort()
+    {
+        return Game.isDevEnvironment() ? 7762 : webserverPort.getInt();
     }
 
     public Configuration getConfig()
