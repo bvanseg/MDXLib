@@ -35,9 +35,6 @@ dependencies {
     deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
 }
 
-def version_major=3
-def version_minor=0
-def version_micro=0
 def version_minecraft="1.12.2"
 def version_forge="14.23.4.2705"
 def version_mappings="stable_39"
@@ -47,7 +44,7 @@ def curseforge_api_key=project.ext.properties.curseforge_api_key == null ? "0000
 def mavenUsername=project.ext.properties.mavenUsername == null ? "user" : project.ext.properties.mavenUsername
 def mavenPassword=project.ext.properties.mavenPassword == null ? "none" : project.ext.properties.mavenPassword
 
-version = "${version_major}.${version_minor}.${version_micro}.${System.env.BUILD_NUMBER}"
+version = "${System.env.PROJECT_VERSION}"
 group = "com.asx"
 archivesBaseName = "mdxlib"
 
@@ -62,7 +59,7 @@ minecraft {
     runDir = "run"
     mappings = version_mappings
     
-    replace "@VERSION@", "${project.version}" 
+    replace "@VERSION@", "${System.env.PROJECT_VERSION}" 
     replaceIn 'MDX.java'
 }
 
