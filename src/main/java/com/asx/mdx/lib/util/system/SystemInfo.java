@@ -34,18 +34,18 @@ public class SystemInfo
 
             switch (osType)
             {
-            case WINDOWS:
-                process = runtime.exec("wmic cpu get name");
-                break;
-            case LINUX:
-                process = runtime.exec("cat /proc/cpuinfo | grep \"model name\"");
-                break;
-            case OSX:
-                process = runtime.exec("sysctl -n machdep.cpu.brand_string");
-                break;
-            default:
-                process = runtime.exec("wmic cpu get name");
-                break;
+                case WINDOWS:
+                    process = runtime.exec("wmic cpu get name");
+                    break;
+                case LINUX:
+                    process = runtime.exec("cat /proc/cpuinfo | grep \"model name\"");
+                    break;
+                case OSX:
+                    process = runtime.exec("sysctl -n machdep.cpu.brand_string");
+                    break;
+                default:
+                    process = runtime.exec("wmic cpu get name");
+                    break;
             }
 
             if (process != null)
@@ -67,9 +67,11 @@ public class SystemInfo
 
             switch (osType)
             {
-            default:
-                process = runtime.exec("wmic memorychip get capacity");
-                break;
+                case WINDOWS:
+                    process = runtime.exec("wmic memorychip get capacity");
+                    break;
+                default:
+                    break;
             }
 
             if (process != null)
@@ -320,6 +322,6 @@ public class SystemInfo
      */
     public static double toBFromGB(long gb)
     {
-        return gb *  Math.pow(bytesUnit, 3);
+        return gb * Math.pow(bytesUnit, 3);
     }
 }
