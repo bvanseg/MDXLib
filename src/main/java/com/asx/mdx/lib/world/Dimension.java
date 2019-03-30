@@ -2,8 +2,11 @@ package com.asx.mdx.lib.world;
 
 import com.asx.mdx.MDX;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
 public class Dimension
@@ -12,9 +15,10 @@ public class Dimension
     protected String                         suffix;
     protected Class<? extends WorldProvider> provider;
     protected boolean                        keepLoaded;
-    private int                              id;
+    protected int                            id;
     private DimensionType                    type;
     private boolean                          registered;
+    private int                              chunkLoadRadius;
 
     public Dimension(String name, String suffix, Class<? extends WorldProvider> provider, boolean keepLoaded)
     {
@@ -22,14 +26,20 @@ public class Dimension
         this.suffix = suffix;
         this.provider = provider;
         this.keepLoaded = keepLoaded;
+        this.chunkLoadRadius = 256;
+    }
+
+    public void findNextAvailableID()
+    {
+        this.id = DimensionManager.getNextFreeDimId();
     }
 
     public Dimension register()
     {
         if (!this.registered)
         {
-            this.findAvailableID();
-            
+            // this.findAvailableID();
+
             if (this.id > 0)
             {
                 this.type = DimensionType.register(this.name, this.suffix, this.id, this.provider, this.keepLoaded);
@@ -43,7 +53,8 @@ public class Dimension
         }
         return this;
     }
-    
+
+    @Deprecated
     private void findAvailableID()
     {
         for (int i = 200; i < Integer.MAX_VALUE; i++)
@@ -88,5 +99,43 @@ public class Dimension
     public boolean shouldKeepLoaded()
     {
         return keepLoaded;
+    }
+
+    public Teleporter getTeleporter(WorldServer worldServer)
+    {
+        return new Teleporter(worldServer) {
+            @Override
+            public void placeInPortal(Entity entityIn, float rotationYaw)
+            {
+                ;
+            }
+
+            @Override
+            public boolean placeInExistingPortal(Entity entityIn, float rotationYaw)
+            {
+                return false;
+            }
+
+            @Override
+            public boolean makePortal(Entity entity)
+            {
+                return true;
+            }
+        };
+    }
+
+    public int getInitialChunkLoadRadius()
+    {
+        return this.chunkLoadRadius;
+    }
+
+    public boolean shouldRegisterWithForge()
+    {
+        return true;
+    }
+
+    public boolean shouldAutoLoad()
+    {
+        return false;
     }
 }
