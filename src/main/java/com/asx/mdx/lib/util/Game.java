@@ -16,11 +16,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
@@ -38,6 +40,11 @@ public class Game
     public static Minecraft minecraft()
     {
         return Minecraft.getMinecraft();
+    }
+
+    public static MinecraftServer server()
+    {
+        return FMLCommonHandler.instance().getMinecraftServerInstance();
     }
 
     /** A wrapper method for the RenderManager instance. **/
