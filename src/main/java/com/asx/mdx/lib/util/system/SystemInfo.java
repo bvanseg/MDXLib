@@ -80,20 +80,23 @@ public class SystemInfo
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line = "";
 
-                while ((line = buffer.readLine()) != null)
+                if (buffer != null)
                 {
-                    if (!line.isEmpty())
+                    while ((line = buffer.readLine()) != null)
                     {
-                        line = StringUtils.deleteWhitespace(line);
-
-                        if (StringUtils.isNumeric(line))
+                        if (!line.isEmpty())
                         {
-                            memoryCapacity = memoryCapacity + Long.parseLong(line);
+                            line = StringUtils.deleteWhitespace(line);
+
+                            if (StringUtils.isNumeric(line))
+                            {
+                                memoryCapacity = memoryCapacity + Long.parseLong(line);
+                            }
                         }
                     }
-                }
 
-                buffer.close();
+                    buffer.close();
+                }
             }
         }
         catch (Exception e)
