@@ -1182,7 +1182,12 @@ public class Draw
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
-        Game.minecraft().getRenderItem().renderItemIntoGUI(stack, x, y);
+        float sX = width * 1F / 16;
+        float sY = height * 1F / 16;
+        float mX = 1.0F / sX;
+        float mY = 1.0F / sY;
+        GlStateManager.scale(sX, sY, 1.0F);
+        Game.minecraft().getRenderItem().renderItemIntoGUI(stack, Math.round(x * mX), Math.round(y * mY));
         GlStateManager.disableAlpha();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableLighting();
