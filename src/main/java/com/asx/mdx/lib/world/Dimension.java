@@ -39,12 +39,14 @@ public class Dimension
         if (!this.registered)
         {
             // this.findAvailableID();
+            this.findNextAvailableID();
 
             if (this.id > 0)
             {
                 this.type = DimensionType.register(this.name, this.suffix, this.id, this.provider, this.keepLoaded);
                 DimensionManager.registerDimension(this.id, this.type);
                 this.registered = true;
+                MDX.log().info(String.format("Registered dimension %s with ID %s", this.name, this.id));
             }
         }
         else
@@ -101,7 +103,7 @@ public class Dimension
         return keepLoaded;
     }
 
-    public Teleporter getTeleporter(WorldServer worldServer)
+    public static Teleporter getTeleporter(WorldServer worldServer)
     {
         return new Teleporter(worldServer) {
             @Override
