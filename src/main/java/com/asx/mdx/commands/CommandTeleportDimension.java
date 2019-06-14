@@ -62,7 +62,7 @@ public class CommandTeleportDimension extends CommandBase
     public void transferPlayerToDimension(EntityPlayerMP player, int dimensionId, Pos coord)
     {
         WorldServer worldServer = player.getServerWorld();
-        Teleporter teleporter = Dimension.getTeleporter(worldServer);
+        Teleporter teleporter = Dimension.getDefaultTeleporter(worldServer);
 
         if (teleporter != null)
         {
