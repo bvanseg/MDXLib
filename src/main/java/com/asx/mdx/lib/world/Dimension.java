@@ -38,7 +38,6 @@ public class Dimension
     {
         if (!this.registered)
         {
-            // this.findAvailableID();
             this.findNextAvailableID();
 
             if (this.id > 0)
