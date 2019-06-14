@@ -5,8 +5,10 @@ import com.asx.mdx.commands.CommandBlockUpdate;
 import com.asx.mdx.commands.CommandChunkBorders;
 import com.asx.mdx.commands.CommandGenerate;
 import com.asx.mdx.commands.CommandKeyframeDifferenceCalculator;
+import com.asx.mdx.commands.CommandTeleportDimension;
 import com.asx.mdx.core.mods.IInitEvent;
 
+import net.minecraft.command.server.CommandTeleport;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -36,6 +38,7 @@ public class CommandHandler implements IInitEvent
         event.registerServerCommand(this.blockUpdate = new CommandBlockUpdate());
         event.registerServerCommand(this.blockScanner = new CommandBlockScanner());
         event.registerServerCommand(this.chunkBorders = new CommandChunkBorders());
+        event.registerServerCommand(new CommandTeleportDimension());
         
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
