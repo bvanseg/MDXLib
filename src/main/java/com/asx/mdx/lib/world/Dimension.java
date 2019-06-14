@@ -102,7 +102,12 @@ public class Dimension
         return keepLoaded;
     }
 
-    public static Teleporter getTeleporter(WorldServer worldServer)
+    public Teleporter getTeleporter(WorldServer worldServer)
+    {
+        return getDefaultTeleporter(worldServer);
+    }
+
+    public static Teleporter getDefaultTeleporter(WorldServer worldServer)
     {
         return new Teleporter(worldServer) {
             @Override
