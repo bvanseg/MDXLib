@@ -88,8 +88,17 @@ public class Entities
     public static Pos getSafePositionAboveBelow(Pos pos, World world)
     {
         Pos newSafePosition = Worlds.getNextSafePositionAbove(pos, world);
+        boolean notSafe = false;
+        
+        if (newSafePosition != null)
+        {
+            if (newSafePosition.add(0, -1, 0).getBlock(world) == Blocks.AIR || newSafePosition.getBlock(world) != Blocks.AIR)
+            {
+                notSafe = true;
+            }
+        }
 
-        if (newSafePosition == null)
+        if (newSafePosition == null || notSafe)
         {
             newSafePosition = Worlds.getNextSafePositionBelow(pos, world);
         }

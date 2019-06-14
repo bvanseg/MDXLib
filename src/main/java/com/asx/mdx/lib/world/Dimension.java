@@ -1,6 +1,7 @@
 package com.asx.mdx.lib.world;
 
 import com.asx.mdx.MDX;
+import com.asx.mdx.lib.world.entity.Entities;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.DimensionType;
@@ -143,5 +144,36 @@ public class Dimension
     public boolean shouldAutoLoad()
     {
         return false;
+    }
+    
+    public void transferEntityTo(Entity e)
+    {
+        transferEntityTo(e, this.getId());
+    }
+    
+    public static void transferEntityTo(Entity e, int dimensionId)
+    {
+        WorldServer worldServer = e.getEntityWorld().getMinecraftServer().getWorld(dimensionId);
+        Teleporter teleporter = new Teleporter(worldServer) {
+            @Override
+            public void placeInPortal(Entity entityIn, float rotationYaw)
+            {
+                Pos coord = Entities.getSafePositionAboveBelow(new Pos(entityIn.posX, worldServer.provider.getAverageGroundLevel(), entityIn.posZ), worldServer);
+                entityIn.setLocationAndAngles(coord.x, coord.y, coord.z, entityIn.rotationYaw, entityIn.rotationPitch);
+            }
+
+            @Override
+            public boolean placeInExistingPortal(Entity entityIn, float rotationYaw)
+            {
+                return false;
+            }
+
+            @Override
+            public boolean makePortal(Entity entity)
+            {
+                return false;
+            }
+        };
+        e.changeDimension(dimensionId, teleporter);
     }
 }
