@@ -189,6 +189,15 @@ public class WebModule implements Runnable
             }
             else
             {
+                String o = "MDX Integrated Web Server";
+
+                WebModule.buildGenericHeader(out, dataOut, o.length());
+                WebModule.sendData(out, dataOut, o.getBytes(), o.length());
+            }
+            
+            /**
+            else
+            {
                 if (request.endsWith("/"))
                 {
                     request += DEFAULT_FILE;
@@ -210,6 +219,7 @@ public class WebModule implements Runnable
                     System.out.println("File " + request + " of type " + content + " returned");
                 }
             }
+            **/
         }
         catch (FileNotFoundException fnfe)
         {
