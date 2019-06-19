@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import java.util.StringTokenizer;
 import com.asx.mdx.Settings;
 import com.asx.mdx.webserver.RequestHandler.CommandRequestHandler;
 import com.asx.mdx.webserver.RequestHandler.StandardRequestHandler;
+import com.google.common.io.ByteStreams;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -165,9 +167,11 @@ public class WebModule implements Runnable
 
         try
         {
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            InputStream stream = ByteStreams.limit(connection.getInputStream(), 1024 * 256);//Limit the input to 256KB of data
+            in = new BufferedReader(new InputStreamReader(stream));
             out = new PrintWriter(connection.getOutputStream());
             dataOut = new BufferedOutputStream(connection.getOutputStream());
+            
 
             String input = in.readLine();
             StringTokenizer parse = new StringTokenizer(input);
