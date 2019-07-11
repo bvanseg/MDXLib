@@ -185,7 +185,14 @@ public class Entities
      */
     public static <T extends Entity> List<T> getEntitiesInCoordsRange(World world, Class<? extends T> entityClass, Pos data, int range, int height)
     {
-        return world.getEntitiesWithinAABB(entityClass, new AxisAlignedBB(data.x, data.y, data.z, data.x + 1, data.y + 1, data.z + 1).expand(range * 2, height, range * 2));
+        double minX = data.x - range;
+        double minY = data.y - height;
+        double minZ = data.z - range;
+        double maxX = data.x + range;
+        double maxY = data.y + height;
+        double maxZ = data.z + range;
+        
+        return world.getEntitiesWithinAABB(entityClass, new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
     }
     
     public static RayTraceResult.Type getMovingObjectType(int ordinal)
