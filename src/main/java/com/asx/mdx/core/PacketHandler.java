@@ -6,6 +6,7 @@ import com.asx.mdx.core.network.server.PacketAnimation;
 import com.asx.mdx.core.network.server.PacketAnimationPause;
 import com.asx.mdx.core.network.server.PacketCommandBlockScanner;
 import com.asx.mdx.core.network.server.PacketCommandChunkBorders;
+import com.asx.mdx.core.network.server.PacketCommandChunkPlane;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -28,6 +29,7 @@ public class PacketHandler extends SimpleNetworkWrapper implements IInitEvent
     {
         this.registerMessage(Side.CLIENT, PacketCommandBlockScanner.class);
         this.registerMessage(Side.CLIENT, PacketCommandChunkBorders.class);
+        this.registerMessage(Side.CLIENT, PacketCommandChunkPlane.class);
         this.registerMessage(Side.CLIENT, PacketAnimation.class);
         this.registerMessage(Side.CLIENT, PacketAnimationPause.class);
     }

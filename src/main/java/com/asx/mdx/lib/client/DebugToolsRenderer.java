@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -44,8 +45,9 @@ public class DebugToolsRenderer
     @SideOnly(Side.CLIENT)
     public static class BlockScanner
     {
-        private static boolean                 blockScannerEnabled;
-        private static boolean                 chunkBordersEnabled;
+        private static boolean              blockScannerEnabled;
+        private static boolean              chunkBordersEnabled;
+        private static boolean              chunkPlaneEnabled;
         private static ArrayList<Scannable> blockScanners = new ArrayList<Scannable>();;
 
         public static class Scannable
@@ -125,6 +127,7 @@ public class DebugToolsRenderer
 
             BlockScanner.drawBlockScannerBorders(event, p, tess, buff);
             BlockScanner.drawChunkBorders(event, p, tess, buff);
+            BlockScanner.drawChunkPlane(event, p, tess, buff);
         }
 
         public static void tick(ClientTickEvent event)
@@ -333,6 +336,69 @@ public class DebugToolsRenderer
             }
         }
 
+        private static void drawChunkPlane(RenderWorldLastEvent event, EntityPlayer p, Tessellator tess, BufferBuilder buff)
+        {
+            if (isChunkPlaneEnabled())
+            {
+                Entity e = Game.minecraft().renderViewEntity;
+                double x = e.lastTickPosX + (e.posX - e.lastTickPosX) * (double) event.getPartialTicks();
+                double y = e.lastTickPosY + (e.posY - e.lastTickPosY) * (double) event.getPartialTicks();
+                double z = e.lastTickPosZ + (e.posZ - e.lastTickPosZ) * (double) event.getPartialTicks();
+                
+                y = 0 - y;
+                
+                double sY = 0.0D - y;
+                double eY = 256.0D - y;
+                double sX = (double) (p.chunkCoordX << 4) - x;
+                double sZ = (double) (p.chunkCoordZ << 4) - z;
+
+                GlStateManager.disableTexture2D();
+                GlStateManager.glLineWidth(1.0F);
+                GlStateManager.enableBlend();
+                buff.begin(3, DefaultVertexFormats.POSITION_COLOR);
+
+//                for (int yDist = -16 * 16; yDist < 16 * 16; yDist += 1)
+//                {
+//                    for (int xDist = -16 * 16; xDist < 16 * 16; xDist += 1)
+//                    {
+//                        double yLevel = (double) y;
+//                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                        buff.pos(sX + xDist, yLevel, sZ + 1.0D + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                        buff.pos(sX + xDist + 1.0D, yLevel, sZ + 1.0D + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                        buff.pos(sX + xDist + 1.0D, yLevel, sZ + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex();
+//                    }
+//                }
+                
+
+                tess.draw();
+                GlStateManager.glLineWidth(1F);
+                buff.begin(3, DefaultVertexFormats.POSITION_COLOR);
+
+                for (int yDist = -16 * 100; yDist <= 16 * 100; yDist += 16)
+                {
+                    for (int xDist = -16 * 100; xDist <= 16 * 100; xDist += 16)
+                    {
+                        double yLevel = (double) y;
+                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.25F, 0.25F, 1.0F, 0.0F).endVertex();
+                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.25F, 0F, 1.0F, 1.0F).endVertex();
+                        buff.pos(sX + xDist, yLevel, sZ + 16.0D + yDist).color(0.25F, 0F, 1.0F, 1.0F).endVertex();
+                        buff.pos(sX + xDist + 16.0D, yLevel, sZ + 16.0D + yDist).color(0.25F, 0F, 1.0F, 1.0F).endVertex();
+                        buff.pos(sX + xDist + 16.0D, yLevel, sZ + yDist).color(0.25F, 0F, 1.0F, 1.0F).endVertex();
+                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.25F, 0F, 1.0F, 1.0F).endVertex();
+                        buff.pos(sX + xDist, yLevel, sZ + yDist).color(0.25F, 0.25F, 1.0F, 0.0F).endVertex();
+                    }
+                }
+
+                tess.draw();
+                GlStateManager.glLineWidth(1.0F);
+                GlStateManager.enableTexture2D();
+                OpenGL.disableBlend();
+            }
+        }
+
         public static boolean areChunkBordersEnabled()
         {
             return chunkBordersEnabled;
@@ -341,6 +407,16 @@ public class DebugToolsRenderer
         public static void setChunkBordersEnabled(boolean enabled)
         {
             chunkBordersEnabled = enabled;
+        }
+
+        public static boolean isChunkPlaneEnabled()
+        {
+            return chunkPlaneEnabled;
+        }
+
+        public static void setChunkPlaneEnabled(boolean enabled)
+        {
+            chunkPlaneEnabled = enabled;
         }
 
         public static boolean isBlockScannerEnabled()
