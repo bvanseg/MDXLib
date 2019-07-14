@@ -863,7 +863,15 @@ public class Entities
 
     public static String getEntityRegistrationId(Class<? extends Entity> c)
     {
-        return (String) EntityList.getKey(c).getPath();
+        for (EntityEntry ee : ForgeRegistries.ENTITIES)
+        {
+            if (ee.getEntityClass() == c)
+            {
+                return ee.getRegistryName().toString();
+            }
+        }
+        
+        return null;
     }
 
     public static Pos getSafeLocationAround(Entity toCheck, Pos around)
