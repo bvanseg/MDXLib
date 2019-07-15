@@ -154,7 +154,7 @@ public class Entities
     {
         List<? extends Entity> entities = getEntitiesInCoordsRange(world, entityClass, data, range, height);
 
-        return entities.size() > 1 ? (Entity) entities.get((new Random()).nextInt(entities.size())) : null;
+        return entities.size() >= 1 ? (Entity) entities.get((new Random()).nextInt(entities.size())) : null;
     }
 
     /**
