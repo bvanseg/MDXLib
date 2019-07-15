@@ -171,4 +171,9 @@ public class MDXMath
     {
         return a == b ? 0 : a < b ? -1 : 1;
     }
+    
+    public static double map(double x, double inMin, double inMax, double outMin, double outMax)
+    {
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
 }
