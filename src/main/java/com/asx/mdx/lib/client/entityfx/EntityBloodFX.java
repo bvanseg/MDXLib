@@ -30,10 +30,10 @@ public class EntityBloodFX extends Particle
         this.motionY = (double) (this.rand.nextFloat() * 0.4F + 0.05F);
         this.motionZ = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
         this.motionX = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
+        this.particleAlpha = ((float) ((color & 0xFF000000) >> 24)) / 255F;;
         this.particleRed = ((float) ((color & 0xFF0000) >> 16)) / 255F;
         this.particleGreen = ((float) ((color & 0xFF00) >> 8)) / 255F;
         this.particleBlue = ((float) (color & 0xFF)) / 255F;
-        this.particleAlpha = 255F;
 
         // this.particleRed = this.particleRed < 0.4F ? 0.4F : this.particleRed;
         // this.particleGreen = this.particleGreen < 0.4F ? 0.4F : this.particleGreen;
@@ -93,13 +93,12 @@ public class EntityBloodFX extends Particle
         float r = this.particleRed;
         float g = this.particleGreen;
         float b = this.particleBlue;
-        float a = 0.5F;
+        float a = this.particleAlpha;
 
         if (glow)
         {
             OpenGL.disableLightMapping();
             OpenGL.disableLight();
-
         }
 
         float u2 = (float) this.particleTextureIndexX / 16.0F;
