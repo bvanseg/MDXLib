@@ -34,10 +34,6 @@ public class EntityBloodFX extends Particle
         this.particleRed = ((float) ((color & 0xFF0000) >> 16)) / 255F;
         this.particleGreen = ((float) ((color & 0xFF00) >> 8)) / 255F;
         this.particleBlue = ((float) (color & 0xFF)) / 255F;
-
-        // this.particleRed = this.particleRed < 0.4F ? 0.4F : this.particleRed;
-        // this.particleGreen = this.particleGreen < 0.4F ? 0.4F : this.particleGreen;
-        // this.particleBlue = this.particleBlue < 0.4F ? 0.4F : this.particleBlue;
     }
 
     @Override
