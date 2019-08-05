@@ -1,5 +1,6 @@
 package com.asx.mdx.lib.client.entityfx;
 
+import com.asx.mdx.lib.client.util.Draw;
 import com.asx.mdx.lib.client.util.OpenGL;
 
 import net.minecraft.block.BlockLiquid;
@@ -7,7 +8,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -15,8 +20,10 @@ import net.minecraft.world.World;
 
 public class EntityBloodFX extends Particle
 {
-    private int     bobTimer;
-    private boolean glow;
+    public static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
+    
+    private int                          bobTimer;
+    private boolean                      glow;
 
     public EntityBloodFX(World worldIn, double posX, double posY, double posZ, int color, boolean glow)
     {
@@ -30,7 +37,8 @@ public class EntityBloodFX extends Particle
         this.motionY = (double) (this.rand.nextFloat() * 0.4F + 0.05F);
         this.motionZ = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
         this.motionX = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
-        this.particleAlpha = ((float) ((color & 0xFF000000) >> 24)) / 255F;;
+        this.particleAlpha = ((float) ((color & 0xFF000000) >> 24)) / 255F;
+        ;
         this.particleRed = ((float) ((color & 0xFF0000) >> 16)) / 255F;
         this.particleGreen = ((float) ((color & 0xFF00) >> 8)) / 255F;
         this.particleBlue = ((float) (color & 0xFF)) / 255F;
@@ -86,6 +94,10 @@ public class EntityBloodFX extends Particle
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
     {
+        Draw.bindTexture(PARTICLE_TEXTURES);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+
         float r = this.particleRed;
         float g = this.particleGreen;
         float b = this.particleBlue;
@@ -140,11 +152,19 @@ public class EntityBloodFX extends Particle
         buffer.pos((double) x + vec[1].x, (double) y + vec[1].y, (double) z + vec[1].z).tex((double) u1, (double) v2).color(r, g, b, a).lightmap(skyLight, blocKLight).endVertex();
         buffer.pos((double) x + vec[2].x, (double) y + vec[2].y, (double) z + vec[2].z).tex((double) u2, (double) v2).color(r, g, b, a).lightmap(skyLight, blocKLight).endVertex();
         buffer.pos((double) x + vec[3].x, (double) y + vec[3].y, (double) z + vec[3].z).tex((double) u2, (double) v1).color(r, g, b, a).lightmap(skyLight, blocKLight).endVertex();
+
+        Tessellator.getInstance().draw();
+
+        if (glow)
+        {
+            OpenGL.enableLightMapping();
+            OpenGL.enableLight();
+        }
     }
 
     @Override
     public int getFXLayer()
     {
-        return 0;
+        return 3;
     }
 }
