@@ -30,17 +30,17 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
     private T convertStringToValue(String value)
     {
         T val = null;
-        
+
         if (isStringHexColor(value))
         {
             return (T) (Object) stringToHexColor(value);
         }
-        
+
         if (isStringInteger(value))
         {
             return (T) (Object) Integer.parseInt(value);
         }
-        
+
         if (isStringBoolean(value))
         {
             return (T) (Object) Boolean.parseBoolean(value);
@@ -52,17 +52,17 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
     private static String convertValueToString(Object value)
     {
         String str = null;
-        
-        if (Integer.toHexString(Integer.parseInt(value.toString())) != null)
+
+        if (value instanceof Integer && isStringHexColor(value.toString()))
         {
             return hexColorToString((int) value);
         }
-        
+
         if (isStringInteger(value.toString()))
         {
             return value.toString();
         }
-        
+
         if (isStringBoolean(value.toString()))
         {
             return value.toString();
@@ -70,7 +70,7 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
 
         return str;
     }
-    
+
     public static boolean isStringBoolean(String value)
     {
         try
@@ -83,7 +83,7 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
             return false;
         }
     }
-    
+
     public static boolean isStringInteger(String value)
     {
         try
@@ -96,16 +96,24 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
             return false;
         }
     }
-    
+
     public static boolean isStringHexColor(String value)
     {
-        if (value.length() > 10)
-        {
-            return false;
-        }
-        
         try
         {
+            String hexString = value;
+
+            try
+            {
+                int intValue = Integer.parseInt(value);
+                hexString = Integer.toHexString(intValue);
+            }
+            catch (Exception e)
+            {
+                hexString = value;
+            }
+
+            Integer.parseUnsignedInt(hexString, 16);
             return true;
         }
         catch (NumberFormatException ex)
@@ -113,12 +121,12 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
             return false;
         }
     }
-    
+
     public static String hexColorToString(int color)
     {
         return Integer.toHexString(color);
     }
-    
+
     public static int stringToHexColor(String value)
     {
         String hex = value.replace("0x", "").replace("#", "");
