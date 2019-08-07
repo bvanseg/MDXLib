@@ -2,6 +2,7 @@ package com.asx.mdx.lib.client.entityfx;
 
 import com.asx.mdx.lib.client.util.Draw;
 import com.asx.mdx.lib.client.util.OpenGL;
+import com.asx.mdx.lib.util.Game;
 
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -28,9 +29,9 @@ public class EntityBloodFX extends Particle
     public EntityBloodFX(World worldIn, double posX, double posY, double posZ, int color, boolean glow)
     {
         super(worldIn, posX, posY, posZ, 0, 0, 0);
-        this.particleMaxAge = ((60 * 20) * 3) + ((this.rand.nextInt(30 * 20)));
+        this.particleMaxAge = ((60 * 20) * 2) + ((this.rand.nextInt(30 * 20)));
         this.glow = glow;
-        this.particleGravity = 0.06F;
+        this.particleGravity = 0.36F;
         this.particleScale = (this.rand.nextFloat() * 0.5F + 0.5F);
         this.bobTimer = 40;
         float particleSpread = 0.15F;
@@ -38,7 +39,6 @@ public class EntityBloodFX extends Particle
         this.motionZ = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
         this.motionX = (double) (this.rand.nextFloat() * particleSpread) - (this.rand.nextFloat() * particleSpread);
         this.particleAlpha = ((float) ((color & 0xFF000000) >> 24)) / 255F;
-        ;
         this.particleRed = ((float) ((color & 0xFF0000) >> 16)) / 255F;
         this.particleGreen = ((float) ((color & 0xFF00) >> 8)) / 255F;
         this.particleBlue = ((float) (color & 0xFF)) / 255F;
@@ -94,6 +94,8 @@ public class EntityBloodFX extends Particle
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
     {
+        OpenGL.enableBlend();
+        OpenGL.blendClear();
         Draw.bindTexture(PARTICLE_TEXTURES);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
@@ -113,7 +115,8 @@ public class EntityBloodFX extends Particle
         float u1 = u2 + 0.0624375F;
         float v2 = (float) this.particleTextureIndexY / 16.0F;
         float v1 = v2 + 0.0624375F;
-        float pScale = 0.3F * this.particleScale;
+        float pScale = 1F * this.particleScale;
+        float pyScale = 0.1F * this.particleScale;
 
         if (this.particleTexture != null)
         {
@@ -122,16 +125,22 @@ public class EntityBloodFX extends Particle
             v2 = this.particleTexture.getMinV();
             v1 = this.particleTexture.getMaxV();
         }
+        
+        Entity rve = Game.minecraft().getRenderViewEntity();
+        
+        double ipx = rve.lastTickPosX + (rve.posX - rve.lastTickPosX) * (double)partialTicks;
+        double ipy = rve.lastTickPosY + (rve.posY - rve.lastTickPosY) * (double)partialTicks;
+        double ipz = rve.lastTickPosZ + (rve.posZ - rve.lastTickPosZ) * (double)partialTicks;
+        
+        float x = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - ipx);
+        float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - ipy + 0.02F);
+        float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - ipz);
 
-        float yOffset = 0.1F;
-        float x = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
-        float y = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY + yOffset);
-        float z = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
-
+        
         int brightness = this.getBrightnessForRender(partialTicks);
         int skyLight = brightness >> 16 & 65535;
         int blocKLight = brightness & 65535;
-        Vec3d[] vec = new Vec3d[] { new Vec3d((double) (-rX * pScale - rXY * pScale), (double) (-rZ * pScale), (double) (-rYZ * pScale - rXZ * pScale)), new Vec3d((double) (-rX * pScale + rXY * pScale), (double) (rZ * pScale), (double) (-rYZ * pScale + rXZ * pScale)), new Vec3d((double) (rX * pScale + rXY * pScale), (double) (rZ * pScale), (double) (rYZ * pScale + rXZ * pScale)), new Vec3d((double) (rX * pScale - rXY * pScale), (double) (-rZ * pScale), (double) (rYZ * pScale - rXZ * pScale)) };
+        Vec3d[] vec = new Vec3d[] { new Vec3d((double) (-rX * pScale - rXY * pScale), (double) (-rZ * pyScale), (double) (-rYZ * pScale - rXZ * pScale)), new Vec3d((double) (-rX * pScale + rXY * pScale), (double) (rZ * pyScale), (double) (-rYZ * pScale + rXZ * pScale)), new Vec3d((double) (rX * pScale + rXY * pScale), (double) (rZ * pyScale), (double) (rYZ * pScale + rXZ * pScale)), new Vec3d((double) (rX * pScale - rXY * pScale), (double) (-rZ * pyScale), (double) (rYZ * pScale - rXZ * pScale)) };
 
         if (this.particleAngle != 0.0F)
         {
