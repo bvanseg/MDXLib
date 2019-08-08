@@ -1,5 +1,6 @@
 package com.asx.mdx.config;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import scala.actors.threadpool.Arrays;
 
 public class ConfigSettingEntitySettingList<T> extends ConfigSetting
 {
