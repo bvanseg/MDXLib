@@ -4,6 +4,9 @@ import com.asx.mdx.lib.client.util.OpenGL;
 import com.asx.mdx.lib.client.util.models.Model;
 
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -225,5 +228,20 @@ public class SpecialModelBiped extends Model
     public void renderCloak(float DEFAULT_SCALE)
     {
         this.bipedCloak.render(DEFAULT_SCALE);
+    }
+    
+    public void postRenderArm(float scale, EnumHandSide side)
+    {
+        this.getArmForSide(side).postRender(scale);
+    }
+
+    protected ModelRenderer getArmForSide(EnumHandSide side)
+    {
+        return side == EnumHandSide.LEFT ? this.bipedLeftArm : this.bipedRightArm;
+    }
+
+    protected EnumHandSide getMainHand(Entity entityIn)
+    {
+        return entityIn instanceof EntityLivingBase ? ((EntityLivingBase) entityIn).getPrimaryHand() : EnumHandSide.RIGHT;
     }
 }
