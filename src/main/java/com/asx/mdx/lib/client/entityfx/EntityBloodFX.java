@@ -1,5 +1,7 @@
 package com.asx.mdx.lib.client.entityfx;
 
+import org.lwjgl.opengl.GL11;
+
 import com.asx.mdx.lib.client.util.Draw;
 import com.asx.mdx.lib.client.util.OpenGL;
 import com.asx.mdx.lib.util.Game;
@@ -10,6 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -108,7 +111,6 @@ public class EntityBloodFX extends Particle
         if (glow)
         {
             OpenGL.disableLightMapping();
-            OpenGL.disableLight();
         }
 
         float u2 = (float) this.particleTextureIndexX / 16.0F;
@@ -167,7 +169,6 @@ public class EntityBloodFX extends Particle
         if (glow)
         {
             OpenGL.enableLightMapping();
-            OpenGL.enableLight();
         }
     }
 
