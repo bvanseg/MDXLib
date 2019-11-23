@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-
 public class StructureGenerationHandler
 {
-    public static final StructureGenerationHandler INSTANCE = new StructureGenerationHandler();
-    private ArrayList<Structure> structuresInQueue = new ArrayList<Structure>();
+    public static final StructureGenerationHandler INSTANCE          = new StructureGenerationHandler();
+    private ArrayList<Structure>                   structuresInQueue = new ArrayList<Structure>();
 
     @SuppressWarnings("unchecked")
     @SubscribeEvent
@@ -25,7 +24,7 @@ public class StructureGenerationHandler
             }
         }
     }
-    
+
     public static void addStructureToQueue(Structure structure)
     {
         getStructuresInQueue().add(structure);
