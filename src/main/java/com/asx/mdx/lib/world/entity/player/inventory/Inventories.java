@@ -169,13 +169,18 @@ public class Inventories
     {
         if (!player.capabilities.isCreativeMode || force)
         {
-            int i = getSlotFor(player.inventory, item);
+            int i = getSlotFor(player.inventory, item, false);
+            boolean isOffhand = false;
 
             if (i < 0)
             {
-                return false;
+            	i = getSlotFor(player.inventory, item, true);
+            	isOffhand = true;
+            	if(i < 0)
+            		return false;
             }
-            else
+            
+            if(!isOffhand)
             {
                 player.inventory.mainInventory.get(i).shrink(1);
                 
@@ -183,8 +188,15 @@ public class Inventories
                 {
                     player.inventory.mainInventory.set(i, ItemStack.EMPTY);
                 }
-
-                return true;
+            }
+            else
+            {
+            	player.inventory.offHandInventory.get(i).shrink(1);
+                
+                if (player.inventory.offHandInventory.get(i).getCount() <= 0)
+                {
+                    player.inventory.offHandInventory.set(i, ItemStack.EMPTY);
+                }
             }
         }
 
@@ -198,14 +210,16 @@ public class Inventories
      * @param item - The item to search for.
      * @return The index of the slot.
      */
-    public static int getSlotFor(InventoryPlayer inventory, Item item)
+    public static int getSlotFor(InventoryPlayer inventory, Item item, boolean checkOffhand)
     {
         for (int i = 0; i < inventory.mainInventory.size(); ++i)
         {
-            if (inventory.mainInventory.get(i) != null && inventory.mainInventory.get(i).getItem() == item)
+            if (!checkOffhand && inventory.mainInventory.get(i) != null && inventory.mainInventory.get(i).getItem() == item)
             {
                 return i;
             }
+            else if(checkOffhand && inventory.offHandInventory.get(i) != null && inventory.offHandInventory.get(i).getItem() == item)
+            	return i;
         }
 
         return -1;
