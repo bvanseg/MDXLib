@@ -29,10 +29,10 @@ public class EntityBloodFX extends Particle
     private int                          bobTimer;
     private boolean                      glow;
 
-    public EntityBloodFX(World worldIn, double posX, double posY, double posZ, int color, boolean glow)
+    public EntityBloodFX(World worldIn, double posX, double posY, double posZ, int color, int maxAge, boolean glow)
     {
         super(worldIn, posX, posY, posZ, 0, 0, 0);
-        this.particleMaxAge = ((60 * 20) * 2) + ((this.rand.nextInt(30 * 20)));
+        this.particleMaxAge = maxAge + this.rand.nextInt((maxAge / 4) + 1);
         this.glow = glow;
         this.particleGravity = 0.36F;
         this.particleScale = (this.rand.nextFloat() * 0.5F + 0.5F);

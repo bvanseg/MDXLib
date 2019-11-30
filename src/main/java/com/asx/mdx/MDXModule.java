@@ -6,6 +6,7 @@ import com.asx.mdx.lib.client.DebugToolsRenderer;
 import com.asx.mdx.lib.client.gui.GUIElementTracker;
 import com.asx.mdx.lib.client.gui.notifications.NotifierModule;
 import com.asx.mdx.lib.client.model.loaders.DummyModelLoader;
+import com.asx.mdx.lib.hotfix.JoinWorldEvent;
 import com.asx.mdx.lib.util.Game;
 import com.asx.mdx.lib.util.system.SystemInfo;
 import com.asx.mdx.lib.world.StructureGenerationHandler;
@@ -44,6 +45,7 @@ public class MDXModule
         WebModule.startWebServer();
         SystemInfo.INSTANCE.runtimeTasks();
         Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
+        Game.registerEventHandler(JoinWorldEvent.INSTANCE);
     }
 
     @SideOnly(Side.CLIENT)
