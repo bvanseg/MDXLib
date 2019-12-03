@@ -289,7 +289,10 @@ public class OpenGL
 
     public static void enableStandardItemLighting()
     {
-        RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableLighting();
+        GlStateManager.enableLight(0);
+        GlStateManager.enableLight(1);
+        GlStateManager.enableColorMaterial();
     }
 
     public static void disableStandardItemLighting()
