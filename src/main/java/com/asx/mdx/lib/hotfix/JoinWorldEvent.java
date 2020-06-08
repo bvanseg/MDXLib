@@ -21,7 +21,7 @@ public class JoinWorldEvent
             
             if(entitySpeed != 0)
             {
-                entity.tasks.addTask(1, new EntityAIWanderPatch(entity, entitySpeed));
+                //entity.tasks.addTask(1, new EntityAIWanderPatch(entity, entitySpeed));
             }
         }
     }
