@@ -242,4 +242,10 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     {
         return entity == Game.minecraft().getRenderViewEntity() && Game.minecraft().gameSettings.thirdPersonView == 0 && (!(Game.minecraft().currentScreen instanceof GuiInventory) && !(Game.minecraft().currentScreen instanceof GuiContainerCreative) || Game.renderManager().playerViewY != 180.0F);
     }
+    
+    public float getIconRotation()
+    {
+        return -45F;
+//        return Game.minecraft().world.getTotalWorldTime() % 360 + Game.partialTicks();
+    }
 }
