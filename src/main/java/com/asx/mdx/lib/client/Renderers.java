@@ -195,17 +195,24 @@ public class Renderers implements IPreInitEvent
         
         for (Item item : ITEM_RENDERERS.keySet())
         {
-            ModelResourceLocation resource = new ModelResourceLocation(item.getRegistryName(), "inventory");
+            /**
+             * Model Resource Types:
+             * inventory - Renders in inventory
+             * normal - Renders in world
+             */
+            ModelResourceLocation modelInventory = new ModelResourceLocation(item.getRegistryName(), "inventory");
+            ModelResourceLocation modelWorld = new ModelResourceLocation(item.getRegistryName(), "normal");
             ItemRenderer<?> itemRenderer = ITEM_RENDERERS.get(item);
 
             if (itemRenderer != null)
             {
-                event.getModelRegistry().putObject(resource, itemRenderer);
+                event.getModelRegistry().putObject(modelInventory, itemRenderer);
+                event.getModelRegistry().putObject(modelWorld, itemRenderer);
                 //MDX.log().info("Injecting item renderer in place of default model for " + item.getRegistryName());
             }
             else
             {
-                MDX.log().warn(String.format("Error injecting item renderer (%s): %s", itemRenderer, resource));
+                MDX.log().warn(String.format("Error injecting item renderer (%s): %s, %s", itemRenderer, modelInventory, modelWorld));
             }
         }
 

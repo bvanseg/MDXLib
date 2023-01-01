@@ -6,6 +6,7 @@ import java.util.List;
 import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.lib.client.util.models.MapModelTexture;
 import com.asx.mdx.lib.client.util.models.Model;
@@ -30,6 +31,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader.White;
 
 public abstract class ItemRenderer<M extends Model> implements IBakedModel
 {
@@ -42,6 +44,7 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     // protected ModelBase model;
     protected ItemStack                                 stack;
     protected EntityLivingBase                          entity;
+    protected TextureAtlasSprite                        sprite;
 
     public static class ItemRenderList<M extends Model> extends ItemOverrideList
     {
@@ -67,6 +70,7 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
 
     public ItemRenderer(MapModelTexture<M> model)
     {
+        this.sprite = White.INSTANCE;
         this.overrides = new ItemRenderList();
         this.SELF_PAIR = Pair.of(this, null);
 
@@ -81,6 +85,8 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type)
     {
         GlStateManager.pushMatrix();
+        /** Keep track of previously bound texture ID **/
+        int previousTexture = GlStateManager.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
         this.renderPre(this.stack, this.entity, type);
 
         switch (type)
@@ -100,7 +106,6 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
                 GlStateManager.resetColor();
                 OpenGL.enableStandardItemLighting();
                 this.renderInInventory(this.stack, this.entity, type);
-                Draw.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE); // Potential fix for inventory texture map rendering bug.
             }
                 break;
             case THIRD_PERSON_LEFT_HAND:
@@ -124,6 +129,8 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
         }
 
         this.renderPost(this.stack, this.entity, type);
+        /** Re-bind previous texture ID to prevent issues **/
+        GlStateManager.bindTexture(previousTexture);
         GlStateManager.popMatrix();
 
         return SELF_PAIR;
@@ -186,7 +193,7 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     @Override
     public TextureAtlasSprite getParticleTexture()
     {
-        return null;
+        return this.sprite;
     }
 
     @Override
