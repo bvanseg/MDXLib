@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.lib.client.Resources;
 import com.asx.mdx.lib.client.util.OpenGL;
+import com.asx.mdx.lib.world.Pos;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -32,6 +33,13 @@ public class EntityFXElectricArc extends Particle
     private double                        targetZ;
     private double                        displacement;
     private double                        complexity;
+    public boolean                        useBlend;
+    public boolean                        useLighting;
+    
+    public Entity targetEntity;
+    public Pos targetOffset;
+    public Entity originEntity;
+    public Pos originOffset;
 
     public EntityFXElectricArc(World world, double x, double y, double z, double targetX, double targetY, double targetZ, int age)
     {
@@ -56,12 +64,30 @@ public class EntityFXElectricArc extends Particle
         this.complexity = complexity;
         this.density = density;
         this.color = color;
+        this.useBlend = true;
+        this.useLighting = false;
+        this.targetOffset = new Pos(0, 0, 0);
+        this.originOffset = new Pos(0, 0, 0);
         this.changeDirection((float) (this.posX - this.targetX), (float) (this.posY - this.targetY), (float) (this.posZ - this.targetZ));
     }
 
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rX, float rZ, float rYZ, float rXY, float rXZ)
     {
+        if (this.originEntity != null)
+        {
+            this.posX = this.originEntity.getPositionVector().x;
+            this.posY = this.originEntity.getPositionVector().y;
+            this.posZ = this.originEntity.getPositionVector().z;
+        }
+        
+        if (this.targetEntity != null)
+        {
+            this.targetX = this.targetEntity.getPositionVector().x;
+            this.targetY = this.targetEntity.getPositionVector().y;
+            this.targetZ = this.targetEntity.getPositionVector().z;
+        }
+        
         Resources.BLANK.bind();
         this.drawArc(buffer, posX, posY, posZ, targetX, targetY, targetZ, displacement, complexity, density);
     }
@@ -79,37 +105,53 @@ public class EntityFXElectricArc extends Particle
         this.rotPitch = ((float) (Math.atan2(y, variance) * 180.0D / Math.PI));
     }
 
-    private void drawArc(BufferBuilder buffer, double x, double y, double z, double targetX, double targetY, double targetZ, double displacement, double complexity, float density)
+    private void drawArc(BufferBuilder buffer, double originX, double originY, double originZ, double targetX, double targetY, double targetZ, double displacement, double complexity, float density)
     {
+        double x = (originX + this.originOffset.x);
+        double y = (originY + this.originOffset.y);
+        double z = (originZ + this.originOffset.z);
+        double tX = (targetX + this.targetOffset.x);
+        double tY = (targetY + this.targetOffset.y);
+        double tZ = (targetZ + this.targetOffset.z);
+        
         if (displacement < complexity)
         {
-            float rx = (float) (x - targetX);
-            float ry = (float) (y - targetY);
-            float rz = (float) (z - targetZ);
+            float rx = (float) (x - tX);
+            float ry = (float) (y - tY);
+            float rz = (float) (z - tZ);
 
             this.changeDirection(rx, ry, rz);
 
             OpenGL.pushMatrix();
             OpenGL.translate((float) (x - interpPosX), (float) (y - interpPosY), (float) (z - interpPosZ));
-            OpenGL.enableBlend();
-            OpenGL.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_CURRENT_BIT);
+
+            if (this.useBlend)
+            {
+                OpenGL.enableBlend();
+                OpenGL.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_CURRENT_BIT);
+            }
+
             OpenGL.disableCullFace();
             OpenGL.rotate(90.0F, 1.0F, 0.0F, 0.0F);
             OpenGL.rotate(180.0F + this.rotYaw, 0.0F, 0.0F, -1.0F);
             OpenGL.rotate(this.rotPitch, 1.0F, 0.0F, 0.0F);
-            OpenGL.disableLightMapping();
-            OpenGL.disableLight();
+
+            if (!this.useLighting)
+            {
+                OpenGL.disableLightMapping();
+                OpenGL.disableLight();
+            }
 
             double vX1 = density * -0.15;
             double vX2 = density * -0.15 * 1.0;
             double vY2 = MathHelper.sqrt(rx * rx + ry * ry + rz * rz);
             double vY1 = 0.0D;
-            
+
             int a = (color >> 24 & 255);
             int r = (color >> 16 & 255);
             int g = (color >> 8 & 255);
             int b = (color & 255);
-            
+
             for (int i2 = 0; i2 < tessellation; i2++)
             {
                 GlStateManager.rotate((360F / tessellation) / 2, 0.0F, 1.0F, 0.0F);
@@ -122,22 +164,31 @@ public class EntityFXElectricArc extends Particle
                 Tessellator.getInstance().draw();
             }
 
-            OpenGL.enableLight();
+            if (!this.useLighting)
+            {
+                OpenGL.enableLight();
+            }
+
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
             OpenGL.enableCullFace();
-            OpenGL.disableBlend();
+
+            if (this.useBlend)
+            {
+                OpenGL.disableBlend();
+            }
+
             OpenGL.popMatrix();
         }
         else
         {
-            double splitX = (targetX + x) / 2;
-            double splitY = (targetY + y) / 2;
-            double splitZ = (targetZ + z) / 2;
+            double splitX = (tX + x) / 2;
+            double splitY = (tY + y) / 2;
+            double splitZ = (tZ + z) / 2;
             splitX += (rand.nextFloat() - 0.5) * displacement;
             splitY += (rand.nextFloat() - 0.5) * displacement;
             splitZ += (rand.nextFloat() - 0.5) * displacement;
             drawArc(buffer, x, y, z, splitX, splitY, splitZ, displacement / 2, complexity, density);
-            drawArc(buffer, targetX, targetY, targetZ, splitX, splitY, splitZ, displacement / 2, complexity, density);
+            drawArc(buffer, tX, tY, tZ, splitX, splitY, splitZ, displacement / 2, complexity, density);
         }
     }
 
