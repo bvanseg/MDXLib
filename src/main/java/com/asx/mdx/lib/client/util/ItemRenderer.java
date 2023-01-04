@@ -93,34 +93,46 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
         {
             case FIRST_PERSON_LEFT_HAND:
             {
+                OpenGL.pushMatrix();
                 this.renderFirstPersonLeft(this.stack, this.entity, type);
+                OpenGL.popMatrix();
             }
                 break;
             case FIRST_PERSON_RIGHT_HAND:
             {
+                OpenGL.pushMatrix();
                 this.renderFirstPersonRight(this.stack, this.entity, type);
+                OpenGL.popMatrix();
             }
                 break;
             case GUI:
             {
+                OpenGL.pushMatrix();
                 GlStateManager.resetColor();
                 OpenGL.enableStandardItemLighting();
                 this.renderInInventory(this.stack, this.entity, type);
+                OpenGL.popMatrix();
             }
                 break;
             case THIRD_PERSON_LEFT_HAND:
             {
+                OpenGL.pushMatrix();
                 this.renderThirdPersonLeft(this.stack, this.entity, type);
+                OpenGL.popMatrix();
             }
                 break;
             case THIRD_PERSON_RIGHT_HAND:
             {
+                OpenGL.pushMatrix();
                 this.renderThirdPersonRight(this.stack, this.entity, type);
+                OpenGL.popMatrix();
             }
                 break;
             case GROUND:
             {
+                OpenGL.pushMatrix();
                 this.renderInWorld(this.stack, this.entity, type);
+                OpenGL.popMatrix();
             }
                 break;
 
@@ -242,10 +254,10 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
     {
         return entity == Game.minecraft().getRenderViewEntity() && Game.minecraft().gameSettings.thirdPersonView == 0 && (!(Game.minecraft().currentScreen instanceof GuiInventory) && !(Game.minecraft().currentScreen instanceof GuiContainerCreative) || Game.renderManager().playerViewY != 180.0F);
     }
-    
+
     public float getIconRotation()
     {
         return -45F;
-//        return Game.minecraft().world.getTotalWorldTime() % 360 + Game.partialTicks();
+        // return Game.minecraft().world.getTotalWorldTime() % 360 + Game.partialTicks();
     }
 }
