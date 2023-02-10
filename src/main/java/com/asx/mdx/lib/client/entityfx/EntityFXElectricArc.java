@@ -1,13 +1,17 @@
 package com.asx.mdx.lib.client.entityfx;
 
+import static org.lwjgl.opengl.GL11.GL_ONE;
+
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.lib.client.Resources;
 import com.asx.mdx.lib.client.util.OpenGL;
+import com.asx.mdx.lib.util.Game;
 import com.asx.mdx.lib.world.Pos;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,6 +20,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityFXElectricArc extends Particle
@@ -35,11 +40,11 @@ public class EntityFXElectricArc extends Particle
     private double                        complexity;
     public boolean                        useBlend;
     public boolean                        useLighting;
-    
-    public Entity targetEntity;
-    public Pos targetOffset;
-    public Entity originEntity;
-    public Pos originOffset;
+
+    public Entity                         targetEntity;
+    public Pos                            targetOffset;
+    public Entity                         originEntity;
+    public Pos                            originOffset;
 
     public EntityFXElectricArc(World world, double x, double y, double z, double targetX, double targetY, double targetZ, int age)
     {
@@ -79,17 +84,50 @@ public class EntityFXElectricArc extends Particle
             this.posX = this.originEntity.getPositionVector().x;
             this.posY = this.originEntity.getPositionVector().y;
             this.posZ = this.originEntity.getPositionVector().z;
+
+            if (this.originEntity instanceof EntityPlayerSP)
+            {
+                EntityPlayerSP player = (EntityPlayerSP) this.originEntity;
+                RayTraceResult result = player.rayTrace(2.0D, Game.partialTicks());
+
+                if (result != null)
+                {
+                    this.posX = result.hitVec.x;
+                    this.posY = result.hitVec.y;
+                    this.posZ = result.hitVec.z;
+                }
+            }
         }
-        
+
         if (this.targetEntity != null)
         {
             this.targetX = this.targetEntity.getPositionVector().x;
             this.targetY = this.targetEntity.getPositionVector().y;
             this.targetZ = this.targetEntity.getPositionVector().z;
+
+            if (this.originEntity instanceof EntityPlayerSP)
+            {
+                EntityPlayerSP player = (EntityPlayerSP) this.originEntity;
+                RayTraceResult result = player.rayTrace(2.0D, Game.partialTicks());
+
+                if (result != null)
+                {
+                    this.targetX = result.hitVec.x;
+                    this.targetY = result.hitVec.y;
+                    this.targetZ = result.hitVec.z;
+                }
+            }
         }
-        
+
+        double x = (posX + this.originOffset.x);
+        double y = (posY + this.originOffset.y);
+        double z = (posZ + this.originOffset.z);
+        double tX = (targetX + this.targetOffset.x);
+        double tY = (targetY + this.targetOffset.y);
+        double tZ = (targetZ + this.targetOffset.z);
+
         Resources.BLANK.bind();
-        this.drawArc(buffer, posX, posY, posZ, targetX, targetY, targetZ, displacement, complexity, density);
+        this.drawArc(buffer, x, y, z, tX, tY, tZ, displacement, complexity, density);
     }
 
     public EntityFXElectricArc setTessellation(int tessellation)
@@ -107,13 +145,13 @@ public class EntityFXElectricArc extends Particle
 
     private void drawArc(BufferBuilder buffer, double originX, double originY, double originZ, double targetX, double targetY, double targetZ, double displacement, double complexity, float density)
     {
-        double x = (originX + this.originOffset.x);
-        double y = (originY + this.originOffset.y);
-        double z = (originZ + this.originOffset.z);
-        double tX = (targetX + this.targetOffset.x);
-        double tY = (targetY + this.targetOffset.y);
-        double tZ = (targetZ + this.targetOffset.z);
-        
+        double x = (originX);
+        double y = (originY);
+        double z = (originZ);
+        double tX = (targetX);
+        double tY = (targetY);
+        double tZ = (targetZ);
+
         if (displacement < complexity)
         {
             float rx = (float) (x - tX);
@@ -128,7 +166,7 @@ public class EntityFXElectricArc extends Particle
             if (this.useBlend)
             {
                 OpenGL.enableBlend();
-                OpenGL.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_CURRENT_BIT);
+                OpenGL.blendFunc(GL11.GL_DST_ALPHA, GL11.GL_CURRENT_BIT);
             }
 
             OpenGL.disableCullFace();
@@ -138,7 +176,7 @@ public class EntityFXElectricArc extends Particle
 
             if (!this.useLighting)
             {
-                OpenGL.disableLightMapping();
+//                OpenGL.disableLightMapping();
                 OpenGL.disableLight();
             }
 
@@ -151,7 +189,7 @@ public class EntityFXElectricArc extends Particle
             int r = (color >> 16 & 255);
             int g = (color >> 8 & 255);
             int b = (color & 255);
-
+            
             for (int i2 = 0; i2 < tessellation; i2++)
             {
                 GlStateManager.rotate((360F / tessellation) / 2, 0.0F, 1.0F, 0.0F);
@@ -167,6 +205,7 @@ public class EntityFXElectricArc extends Particle
             if (!this.useLighting)
             {
                 OpenGL.enableLight();
+//                OpenGL.enableLightMapping();
             }
 
             OpenGL.color(1.0F, 1.0F, 1.0F, 1.0F);
