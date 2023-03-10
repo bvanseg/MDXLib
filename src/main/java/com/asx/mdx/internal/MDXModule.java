@@ -7,7 +7,6 @@ import com.asx.mdx.client.render.gui.GUIElementTracker;
 import com.asx.mdx.client.render.gui.notifications.NotifierModule;
 import com.asx.mdx.client.io.loaders.DummyModelLoader;
 import com.asx.mdx.common.system.SystemInfo;
-import com.asx.mdx.common.minecraft.structure.StructureGenerationHandler;
 import com.asx.mdx.common.net.http.webserver.WebModule;
 
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -42,7 +41,6 @@ public class MDXModule
         MDX.settings().pre(event);
         WebModule.startWebServer();
         SystemInfo.INSTANCE.runtimeTasks();
-        Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
     }
 
     @SideOnly(Side.CLIENT)
