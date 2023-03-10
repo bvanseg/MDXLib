@@ -18,7 +18,7 @@ public class ModIdentityMap
 
     public String getClassLocation()
     {
-        return Game.getModContainer(this.getValidIdentity()).getMod().getClass().getName();
+        return Game.instance.getModContainer(this.getValidIdentity()).getMod().getClass().getName();
     }
 
     public String getValidIdentity()
