@@ -45,7 +45,6 @@ public class MDXModule
         WebModule.startWebServer();
         SystemInfo.INSTANCE.runtimeTasks();
         Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
-        Game.registerEventHandler(JoinWorldEvent.INSTANCE);
     }
 
     @SideOnly(Side.CLIENT)
