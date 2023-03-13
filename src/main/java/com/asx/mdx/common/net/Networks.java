@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.internal.MDX;
 
 import com.asx.mdx.common.Game;
@@ -156,7 +157,7 @@ public class Networks
     public static ResourceLocation downloadResource(String URL, ResourceLocation fallback, boolean forceDownload)
     {
         ResourceLocation resource = new ResourceLocation(URL);
-        TextureManager texturemanager = Game.minecraft().getTextureManager();
+        TextureManager texturemanager = ClientGame.instance.minecraft().getTextureManager();
         Object object = forceDownload ? null : texturemanager.getTexture(resource);
 
         if (object == null)

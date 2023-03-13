@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.Draw;
 import com.asx.mdx.common.Game;
 import com.google.common.collect.ImmutableSet;
@@ -166,7 +167,7 @@ public class DummyModelLoader implements ICustomModelLoader
         @Override
         public TextureAtlasSprite getParticleTexture()
         {
-            return Game.minecraft().getTextureMapBlocks().getMissingSprite();
+            return ClientGame.instance.minecraft().getTextureMapBlocks().getMissingSprite();
         }
     }
 }
