@@ -33,7 +33,7 @@ public class Screen
      */
     public static ScaledResolution scaledDisplayResolution()
     {
-        return new ScaledResolution(Game.minecraft(), Game.minecraft().displayWidth, Game.minecraft().displayHeight);
+        return new ScaledResolution(ClientGame.instance.minecraft(), ClientGame.instance.minecraft().displayWidth, ClientGame.instance.minecraft().displayHeight);
     }
 
     /**
@@ -43,8 +43,8 @@ public class Screen
     {
         final int SCALED_WIDTH = scaledDisplayResolution().getScaledWidth();
         final int SCALED_HEIGHT = scaledDisplayResolution().getScaledHeight();
-        final int MOUSE_X = Mouse.getX() * SCALED_WIDTH / Game.minecraft().displayWidth;
-        final int MOUSE_Y = SCALED_HEIGHT - Mouse.getY() * SCALED_HEIGHT / Game.minecraft().displayHeight - 1;
+        final int MOUSE_X = Mouse.getX() * SCALED_WIDTH / ClientGame.instance.minecraft().displayWidth;
+        final int MOUSE_Y = SCALED_HEIGHT - Mouse.getY() * SCALED_HEIGHT / ClientGame.instance.minecraft().displayHeight - 1;
         return new Vector2d(MOUSE_X, MOUSE_Y);
     }
 
@@ -53,7 +53,7 @@ public class Screen
      */
     public static Dimension displayResolution()
     {
-        Minecraft mc = Game.minecraft();
+        Minecraft mc = ClientGame.instance.minecraft();
         return new Dimension(mc.displayWidth, mc.displayHeight);
     }
 
@@ -78,7 +78,7 @@ public class Screen
      */
     public static void saveScreenshot(String filename, int x, int y, int width, int height)
     {
-        File file = new File(Game.minecraft().gameDir.getPath());
+        File file = new File(ClientGame.instance.minecraft().gameDir.getPath());
         MDX.log().info("Saving screenshot to " + file.getPath());
     
         if (!file.exists())
@@ -86,7 +86,7 @@ public class Screen
             file.mkdirs();
         }
     
-        if (Game.minecraft().ingameGUI != null && Keyboard.isKeyDown(Keyboard.KEY_F3) && Keyboard.isKeyDown(Keyboard.KEY_U))
+        if (ClientGame.instance.minecraft().ingameGUI != null && Keyboard.isKeyDown(Keyboard.KEY_F3) && Keyboard.isKeyDown(Keyboard.KEY_U))
         {
             try
             {

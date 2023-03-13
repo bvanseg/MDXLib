@@ -1,5 +1,6 @@
 package com.asx.mdx.client.render.model;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.internal.MDX;
 import com.asx.mdx.client.render.model.animations.Animator;
 import com.asx.mdx.common.Game;
@@ -454,7 +455,7 @@ public abstract class Model<TYPE extends Object> extends ModelBase
     
     public static float partialTicks()
     {
-        return Game.minecraft().isGamePaused() ? 0 : Animation.getPartialTickTime();
+        return ClientGame.instance.minecraft().isGamePaused() ? 0 : Animation.getPartialTickTime();
     }
 
     /**

@@ -2,6 +2,7 @@ package com.asx.mdx.client.render;
 
 import java.util.HashMap;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.item.ItemIconRenderer;
 import com.asx.mdx.client.render.item.ItemRenderer;
 import com.asx.mdx.internal.MDX;
@@ -39,7 +40,7 @@ public class Renderers implements IPreInitEvent
 
     public static ModelManager modelManager()
     {
-        return Game.minecraft().modelManager;
+        return ClientGame.instance.minecraft().modelManager;
     }
 
     public static BlockModelShapes modelProvider()

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.vecmath.Matrix4f;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.OpenGL;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
@@ -252,12 +253,12 @@ public abstract class ItemRenderer<M extends Model> implements IBakedModel
 
     public boolean firstPersonRenderCheck(Entity entity)
     {
-        return entity == Game.minecraft().getRenderViewEntity() && Game.minecraft().gameSettings.thirdPersonView == 0 && (!(Game.minecraft().currentScreen instanceof GuiInventory) && !(Game.minecraft().currentScreen instanceof GuiContainerCreative) || Game.renderManager().playerViewY != 180.0F);
+        return entity == ClientGame.instance.minecraft().getRenderViewEntity() && ClientGame.instance.minecraft().gameSettings.thirdPersonView == 0 && (!(ClientGame.instance.minecraft().currentScreen instanceof GuiInventory) && !(ClientGame.instance.minecraft().currentScreen instanceof GuiContainerCreative) || ClientGame.instance.renderManager().playerViewY != 180.0F);
     }
 
     public float getIconRotation()
     {
         return -45F;
-        // return Game.minecraft().world.getTotalWorldTime() % 360 + Game.partialTicks();
+        // return ClientGame.instance.minecraft().world.getTotalWorldTime() % 360 + ClientGame.instance.partialTicks();
     }
 }

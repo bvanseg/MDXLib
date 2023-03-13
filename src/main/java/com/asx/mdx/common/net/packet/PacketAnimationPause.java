@@ -1,5 +1,6 @@
 package com.asx.mdx.common.net.packet;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.Game;
 import com.asx.mdx.common.minecraft.entity.animations.IAnimated;
 
@@ -30,11 +31,11 @@ public class PacketAnimationPause implements IMessage, IMessageHandler<PacketAni
     @SideOnly(Side.CLIENT)
     public PacketAnimationPause onMessage(PacketAnimationPause packet, MessageContext ctx)
     {
-        Game.minecraft().addScheduledTask(new Runnable() {
+        ClientGame.instance.minecraft().addScheduledTask(new Runnable() {
             @Override
             public void run()
             {
-                IAnimated animated = (IAnimated) Game.minecraft().player.world.getEntityByID(packet.entityID);
+                IAnimated animated = (IAnimated) ClientGame.instance.minecraft().player.world.getEntityByID(packet.entityID);
 
                 if (animated != null)
                 {

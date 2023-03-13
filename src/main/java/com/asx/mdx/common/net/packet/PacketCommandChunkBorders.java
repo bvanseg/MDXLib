@@ -1,5 +1,6 @@
 package com.asx.mdx.common.net.packet;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.internal.CommandHandler;
 import com.asx.mdx.common.Game;
 
@@ -54,12 +55,12 @@ public class PacketCommandChunkBorders implements IMessage, IMessageHandler<Pack
     @SideOnly(Side.CLIENT)
     public PacketCommandChunkBorders onMessage(PacketCommandChunkBorders packet, MessageContext ctx)
     {
-        Game.minecraft().addScheduledTask(new Runnable()
+        ClientGame.instance.minecraft().addScheduledTask(new Runnable()
         {
             @Override
             public void run()
             {
-                CommandHandler.INSTANCE.chunkBorders.executeClient(Game.minecraft().player, packet.args);
+                CommandHandler.INSTANCE.chunkBorders.executeClient(ClientGame.instance.minecraft().player, packet.args);
             }
         });
         return null;
