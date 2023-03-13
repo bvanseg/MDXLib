@@ -2,6 +2,7 @@ package com.asx.mdx.client.entity.fx;
 
 import java.util.Random;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.client.io.resource.Resources;
@@ -86,7 +87,7 @@ public class EntityFXElectricArc extends Particle
             if (this.originEntity instanceof EntityPlayerSP)
             {
                 EntityPlayerSP player = (EntityPlayerSP) this.originEntity;
-                RayTraceResult result = player.rayTrace(2.0D, Game.partialTicks());
+                RayTraceResult result = player.rayTrace(2.0D, ClientGame.instance.partialTicks());
 
                 if (result != null)
                 {
@@ -106,7 +107,7 @@ public class EntityFXElectricArc extends Particle
             if (this.originEntity instanceof EntityPlayerSP)
             {
                 EntityPlayerSP player = (EntityPlayerSP) this.originEntity;
-                RayTraceResult result = player.rayTrace(2.0D, Game.partialTicks());
+                RayTraceResult result = player.rayTrace(2.0D, ClientGame.instance.partialTicks());
 
                 if (result != null)
                 {

@@ -17,6 +17,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -262,7 +263,7 @@ public class OpenGL
      */
     public static int getTextureId(ResourceLocation resource)
     {
-        Object object = Game.minecraft().getTextureManager().getTexture(resource);
+        Object object = ClientGame.instance.minecraft().getTextureManager().getTexture(resource);
         object = object == null ? new SimpleTexture(resource) : object;
         return ((ITextureObject) object).getGlTextureId();
     }

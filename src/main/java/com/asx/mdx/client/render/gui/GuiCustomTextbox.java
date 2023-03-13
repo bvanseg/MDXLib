@@ -2,6 +2,7 @@ package com.asx.mdx.client.render.gui;
 
 import javax.vecmath.Vector2d;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -567,8 +568,8 @@ public class GuiCustomTextbox implements IGuiElement
                 l -= 4;
             }
 
-            String s = Game.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
-            this.setCursorPosition(Game.fontRenderer().trimStringToWidth(s, l).length() + this.lineScrollOffset);
+            String s = ClientGame.instance.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+            this.setCursorPosition(ClientGame.instance.fontRenderer().trimStringToWidth(s, l).length() + this.lineScrollOffset);
         }
     }
 
@@ -587,7 +588,7 @@ public class GuiCustomTextbox implements IGuiElement
             int color = this.isEnabled ? this.textColor : this.textColorDisabled;
             int pos = this.cursorPosition - this.lineScrollOffset;
             int end = this.selectionEnd - this.lineScrollOffset;
-            String textboxText = Game.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+            String textboxText = ClientGame.instance.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
             boolean flag = pos >= 0 && pos <= textboxText.length();
             boolean cursorActive = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
             int padding = this.enableBackgroundDrawing ? this.x + 4 : this.x;
@@ -602,7 +603,7 @@ public class GuiCustomTextbox implements IGuiElement
             if (textboxText.length() > 0)
             {
                 String s1 = flag ? textboxText.substring(0, pos) : textboxText;
-                cursorPosX = Game.fontRenderer().drawStringWithShadow(s1, padding, cursorHeight, color);
+                cursorPosX = ClientGame.instance.fontRenderer().drawStringWithShadow(s1, padding, cursorHeight, color);
             }
 
             boolean selectCursor = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
@@ -620,25 +621,25 @@ public class GuiCustomTextbox implements IGuiElement
 
             if (textboxText.length() > 0 && flag && pos < textboxText.length())
             {
-                Game.fontRenderer().drawStringWithShadow(textboxText.substring(pos), cursorPosX, cursorHeight, color);
+                ClientGame.instance.fontRenderer().drawStringWithShadow(textboxText.substring(pos), cursorPosX, cursorHeight, color);
             }
 
             if (cursorActive)
             {
                 if (selectCursor)
                 {
-                    Gui.drawRect(cursorWidth, cursorHeight - 1, cursorWidth + 1, cursorHeight + 1 + Game.fontRenderer().FONT_HEIGHT, 0xFFD0D0D0);
+                    Gui.drawRect(cursorWidth, cursorHeight - 1, cursorWidth + 1, cursorHeight + 1 + ClientGame.instance.fontRenderer().FONT_HEIGHT, 0xFFD0D0D0);
                 }
                 else
                 {
-                    Game.fontRenderer().drawStringWithShadow("_", cursorWidth, cursorHeight, color);
+                    ClientGame.instance.fontRenderer().drawStringWithShadow("_", cursorWidth, cursorHeight, color);
                 }
             }
 
             if (end != pos)
             {
-                int l1 = padding + Game.fontRenderer().getStringWidth(textboxText.substring(0, end));
-                this.drawCursorVertical(cursorWidth, cursorHeight - 1, l1 - 1, cursorHeight + 1 + Game.fontRenderer().FONT_HEIGHT);
+                int l1 = padding + ClientGame.instance.fontRenderer().getStringWidth(textboxText.substring(0, end));
+                this.drawCursorVertical(cursorWidth, cursorHeight - 1, l1 - 1, cursorHeight + 1 + ClientGame.instance.fontRenderer().FONT_HEIGHT);
             }
         }
 
@@ -816,19 +817,19 @@ public class GuiCustomTextbox implements IGuiElement
 
         this.selectionEnd = pos;
 
-        if (Game.fontRenderer() != null)
+        if (ClientGame.instance.fontRenderer() != null)
         {
             if (this.lineScrollOffset > textLength)
             {
                 this.lineScrollOffset = textLength;
             }
 
-            String trimmedString = Game.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.width);
+            String trimmedString = ClientGame.instance.fontRenderer().trimStringToWidth(this.text.substring(this.lineScrollOffset), this.width);
             int trimmedPos = trimmedString.length() + this.lineScrollOffset;
 
             if (pos == this.lineScrollOffset)
             {
-                this.lineScrollOffset -= Game.fontRenderer().trimStringToWidth(this.text, this.width, true).length();
+                this.lineScrollOffset -= ClientGame.instance.fontRenderer().trimStringToWidth(this.text, this.width, true).length();
             }
 
             if (pos > trimmedPos)

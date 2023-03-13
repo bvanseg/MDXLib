@@ -1,5 +1,6 @@
 package com.asx.mdx.common.net.packet;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.io.commands.CommandBlockScanner;
 import com.asx.mdx.common.Game;
 
@@ -54,12 +55,12 @@ public class PacketCommandBlockScanner implements IMessage, IMessageHandler<Pack
     @SideOnly(Side.CLIENT)
     public PacketCommandBlockScanner onMessage(PacketCommandBlockScanner packet, MessageContext ctx)
     {
-        Game.minecraft().addScheduledTask(new Runnable()
+        ClientGame.instance.minecraft().addScheduledTask(new Runnable()
         {
             @Override
             public void run()
             {
-                new CommandBlockScanner().executeClient(Game.minecraft().player, packet.args);
+                new CommandBlockScanner().executeClient(ClientGame.instance.minecraft().player, packet.args);
             }
         });
         return null;

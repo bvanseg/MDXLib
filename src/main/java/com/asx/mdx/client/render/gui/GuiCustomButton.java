@@ -2,6 +2,7 @@ package com.asx.mdx.client.render.gui;
 
 import javax.vecmath.Vector2d;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.input.Mouse;
 
 import com.asx.mdx.client.render.Draw;
@@ -56,7 +57,7 @@ public class GuiCustomButton extends GuiElement
 
     public void drawButton(float scale)
     {
-        this.drawButton(Game.minecraft(), (int) (Screen.scaledMousePosition().x * scale), (int) (Screen.scaledMousePosition().y * scale), Game.partialTicks());
+        this.drawButton(ClientGame.instance.minecraft(), (int) (Screen.scaledMousePosition().x * scale), (int) (Screen.scaledMousePosition().y * scale), ClientGame.instance.partialTicks());
     }
 
     @Override
@@ -97,7 +98,7 @@ public class GuiCustomButton extends GuiElement
     @Override
     public void mousePressed(Vector2d mousePosition)
     {
-        super.mousePressed(Game.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
+        super.mousePressed(ClientGame.instance.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
     }
 
     @Override
@@ -117,7 +118,7 @@ public class GuiCustomButton extends GuiElement
     @Override
     public void mouseDragged(Vector2d mousePosition)
     {
-        super.mouseDragged(Game.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
+        super.mouseDragged(ClientGame.instance.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
     }
 
     public GuiCustomButton setAlignment(ElementAlignment alignment)

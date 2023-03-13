@@ -114,7 +114,7 @@ public class Reflect
     {
         try
         {
-            String fieldName = Game.isDevEnvironment() ? deobfName : obfName;
+            String fieldName = Game.instance.isDevEnvironment() ? deobfName : obfName;
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(obj, value);
@@ -134,7 +134,7 @@ public class Reflect
     {
         try
         {
-            String fieldName = Game.isDevEnvironment() ? deobfName : obfName;
+            String fieldName = Game.instance.isDevEnvironment() ? deobfName : obfName;
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(obj);
