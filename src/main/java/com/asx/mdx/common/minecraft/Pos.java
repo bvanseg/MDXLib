@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Pos
@@ -503,5 +504,10 @@ public class Pos
     public IStorable store()
     {
         return stored;
+    }
+    
+    public Vec3d toVec3d()
+    {
+        return new Vec3d(this.x, this.y, this.z);
     }
 }

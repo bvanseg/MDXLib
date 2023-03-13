@@ -1,5 +1,6 @@
 package com.asx.mdx.common.net.packet;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.Game;
 import com.asx.mdx.common.minecraft.entity.animations.IAnimated;
 
@@ -30,12 +31,12 @@ public class PacketAnimation implements IMessage, IMessageHandler<PacketAnimatio
     @SideOnly(Side.CLIENT)
     public PacketAnimation onMessage(PacketAnimation packet, MessageContext ctx)
     {
-        Game.minecraft().addScheduledTask(new Runnable()
+        ClientGame.instance.minecraft().addScheduledTask(new Runnable()
         {
             @Override
             public void run()
             {
-                IAnimated entity = (IAnimated) Game.minecraft().player.world.getEntityByID(packet.entityID);
+                IAnimated entity = (IAnimated) ClientGame.instance.minecraft().player.world.getEntityByID(packet.entityID);
                 if (entity != null)
                 {
                     if (packet.index == -1)

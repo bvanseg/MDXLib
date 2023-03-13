@@ -94,7 +94,7 @@ public class ConfigSettingBiomeList extends ConfigSetting
             }
             else
             {
-                if (Game.isDevEnvironment())
+                if (Game.instance.isDevEnvironment())
                 {
                     MDX.log().info("Biome was null or had a null registry name. This is probably a bug. Biome: " + b);
                 }

@@ -56,7 +56,7 @@ public class Settings implements IPreInitEvent
     
     public int getWebserverPort()
     {
-        return Game.isDevEnvironment() ? 7762 : webserverPort.getInt();
+        return Game.instance.isDevEnvironment() ? 7762 : webserverPort.getInt();
     }
 
     public Configuration getConfig()

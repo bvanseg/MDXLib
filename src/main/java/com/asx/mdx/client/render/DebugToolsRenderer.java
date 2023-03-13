@@ -2,6 +2,7 @@ package com.asx.mdx.client.render;
 
 import java.util.ArrayList;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.internal.MDX;
 import com.asx.mdx.common.Game;
 
@@ -135,17 +136,17 @@ public class DebugToolsRenderer
             {
                 if (event.type == Type.CLIENT)
                 {
-                    if (Game.minecraft().world != null && Game.minecraft().world.getWorldTime() % 40 == 0)
+                    if (ClientGame.instance.minecraft().world != null && ClientGame.instance.minecraft().world.getWorldTime() % 40 == 0)
                     {
-                        int posX = (int) Game.minecraft().player.posX;
-                        int posY = (int) Game.minecraft().player.posY;
-                        int posZ = (int) Game.minecraft().player.posZ;
+                        int posX = (int) ClientGame.instance.minecraft().player.posX;
+                        int posY = (int) ClientGame.instance.minecraft().player.posY;
+                        int posZ = (int) ClientGame.instance.minecraft().player.posZ;
 
                         for (Scannable scanner : blockScanners)
                         {
                             if (scanner.block != null)
                             {
-                                scanner.blocksFound = com.asx.mdx.common.minecraft.block.Blocks.getBlocksInRangeIncluding(posX, posY, posZ, scanner.scanRange, Game.minecraft().world, scanner.block);
+                                scanner.blocksFound = com.asx.mdx.common.minecraft.block.Blocks.getBlocksInRangeIncluding(posX, posY, posZ, scanner.scanRange, ClientGame.instance.minecraft().world, scanner.block);
                             }
                         }
                     }
@@ -155,7 +156,7 @@ public class DebugToolsRenderer
 
         private static void drawBlockScannerBorders(RenderWorldLastEvent event, EntityPlayer p, Tessellator tess, BufferBuilder buff)
         {
-            if (isBlockScannerEnabled() && Game.minecraft().gameSettings.thirdPersonView == 0)
+            if (isBlockScannerEnabled() && ClientGame.instance.minecraft().gameSettings.thirdPersonView == 0)
             {
                 double x = p.lastTickPosX + (p.posX - p.lastTickPosX) * (double) event.getPartialTicks();
                 double y = p.lastTickPosY + (p.posY - p.lastTickPosY) * (double) event.getPartialTicks();
@@ -339,7 +340,7 @@ public class DebugToolsRenderer
         {
             if (isChunkPlaneEnabled())
             {
-                Entity e = Game.minecraft().renderViewEntity;
+                Entity e = ClientGame.instance.minecraft().renderViewEntity;
                 double x = e.lastTickPosX + (e.posX - e.lastTickPosX) * (double) event.getPartialTicks();
                 double y = e.lastTickPosY + (e.posY - e.lastTickPosY) * (double) event.getPartialTicks();
                 double z = e.lastTickPosZ + (e.posZ - e.lastTickPosZ) * (double) event.getPartialTicks();

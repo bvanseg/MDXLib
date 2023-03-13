@@ -6,6 +6,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.Game;
 
 import net.minecraft.block.Block;
@@ -33,169 +34,169 @@ public class Access
     @SideOnly(Side.CLIENT)
     public float getRenderPartialTicks()
     {
-        return ((Timer) Reflect.get(Game.minecraft(), "timer", "field_71428_T")).renderPartialTicks;
+        return ((Timer) Reflect.get(ClientGame.instance.minecraft(), "timer", "field_71428_T")).renderPartialTicks;
     }
 
     @SideOnly(Side.CLIENT)
     public int getRightClickDelayTimer()
     {
-        return Game.minecraft().rightClickDelayTimer;
+        return ClientGame.instance.minecraft().rightClickDelayTimer;
     }
 
     @SideOnly(Side.CLIENT)
     public void setRightClickDelayTimer(int value)
     {
-        Game.minecraft().rightClickDelayTimer = value;
+        ClientGame.instance.minecraft().rightClickDelayTimer = value;
     }
 
     @SideOnly(Side.CLIENT)
     public Session getSession()
     {
-        return (Session) Reflect.get(Game.minecraft(), "session", "field_71449_j");
+        return (Session) Reflect.get(ClientGame.instance.minecraft(), "session", "field_71449_j");
     }
 
     @SideOnly(Side.CLIENT)
     public void setEquippedProgress(float value)
     {
-        Game.minecraft().entityRenderer.itemRenderer.equippedProgressMainHand = value;
+        ClientGame.instance.minecraft().entityRenderer.itemRenderer.equippedProgressMainHand = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getEquippedProgress()
     {
-        return Game.minecraft().entityRenderer.itemRenderer.equippedProgressMainHand;
+        return ClientGame.instance.minecraft().entityRenderer.itemRenderer.equippedProgressMainHand;
     }
 
     @SideOnly(Side.CLIENT)
     public float getEquippedProgressPrev()
     {
-        return Game.minecraft().entityRenderer.itemRenderer.prevEquippedProgressMainHand;
+        return ClientGame.instance.minecraft().entityRenderer.itemRenderer.prevEquippedProgressMainHand;
     }
 
     @SideOnly(Side.CLIENT)
     public float getEquippedProgressOffHand()
     {
-        return Game.minecraft().entityRenderer.itemRenderer.equippedProgressOffHand;
+        return ClientGame.instance.minecraft().entityRenderer.itemRenderer.equippedProgressOffHand;
     }
 
     @SideOnly(Side.CLIENT)
     public float getEquippedProgressOffHandPrev()
     {
-        return Game.minecraft().entityRenderer.itemRenderer.prevEquippedProgressOffHand;
+        return ClientGame.instance.minecraft().entityRenderer.itemRenderer.prevEquippedProgressOffHand;
     }
 
     @SideOnly(Side.CLIENT)
     public float getTorchFlickerX()
     {
-        return Game.minecraft().entityRenderer.torchFlickerX;
+        return ClientGame.instance.minecraft().entityRenderer.torchFlickerX;
     }
 
     @SideOnly(Side.CLIENT)
     public float getTorchFlickerDX()
     {
-        return Game.minecraft().entityRenderer.torchFlickerDX;
+        return ClientGame.instance.minecraft().entityRenderer.torchFlickerDX;
     }
 
     @SideOnly(Side.CLIENT)
     public void setTorchFlickerX(float value)
     {
-        Game.minecraft().entityRenderer.torchFlickerX = value;
+        ClientGame.instance.minecraft().entityRenderer.torchFlickerX = value;
     }
     
     @SideOnly(Side.CLIENT)
     public void setTorchFlickerDX(float value)
     {
-        Game.minecraft().entityRenderer.torchFlickerDX = value;
+        ClientGame.instance.minecraft().entityRenderer.torchFlickerDX = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getBossColorModifier()
     {
-        return Game.minecraft().entityRenderer.bossColorModifier;
+        return ClientGame.instance.minecraft().entityRenderer.bossColorModifier;
     }
 
     @SideOnly(Side.CLIENT)
     public void setBossColorModifier(float value)
     {
-        Game.minecraft().entityRenderer.bossColorModifier = value;
+        ClientGame.instance.minecraft().entityRenderer.bossColorModifier = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getBossColorModifierPrev()
     {
-        return Game.minecraft().entityRenderer.bossColorModifierPrev;
+        return ClientGame.instance.minecraft().entityRenderer.bossColorModifierPrev;
     }
 
     @SideOnly(Side.CLIENT)
     public void getBossColorModifierPrev(float value)
     {
-        Game.minecraft().entityRenderer.bossColorModifierPrev = value;
+        ClientGame.instance.minecraft().entityRenderer.bossColorModifierPrev = value;
     }
 
     @SideOnly(Side.CLIENT)
     public double getCameraZoom()
     {
-        return Game.minecraft().entityRenderer.cameraZoom;
+        return ClientGame.instance.minecraft().entityRenderer.cameraZoom;
     }
 
     @SideOnly(Side.CLIENT)
     public double getCameraPitch()
     {
-        return Game.minecraft().entityRenderer.cameraPitch;
+        return ClientGame.instance.minecraft().entityRenderer.cameraPitch;
     }
 
     @SideOnly(Side.CLIENT)
     public double getCameraYaw()
     {
-        return Game.minecraft().entityRenderer.cameraYaw;
+        return ClientGame.instance.minecraft().entityRenderer.cameraYaw;
     }
 
     @SideOnly(Side.CLIENT)
     public int[] getLightmapColors()
     {
-        return Game.minecraft().entityRenderer.lightmapColors;
+        return ClientGame.instance.minecraft().entityRenderer.lightmapColors;
     }
 
     @SideOnly(Side.CLIENT)
     public float getDebugViewDirection()
     {
-        return Game.minecraft().entityRenderer.debugViewDirection;
+        return ClientGame.instance.minecraft().entityRenderer.debugViewDirection;
     }
 
     @SideOnly(Side.CLIENT)
     public DynamicTexture getLightmapTexture()
     {
-        return Game.minecraft().entityRenderer.lightmapTexture;
+        return ClientGame.instance.minecraft().entityRenderer.lightmapTexture;
     }
 
     @SideOnly(Side.CLIENT)
     public boolean isLightmapUpdateNeeded()
     {
-        return Game.minecraft().entityRenderer.lightmapUpdateNeeded;
+        return ClientGame.instance.minecraft().entityRenderer.lightmapUpdateNeeded;
     }
 
     @SideOnly(Side.CLIENT)
     public float getFarPlaneDistance()
     {
-        return Game.minecraft().entityRenderer.farPlaneDistance;
+        return ClientGame.instance.minecraft().entityRenderer.farPlaneDistance;
     }
 
     @SideOnly(Side.CLIENT)
     public void setLightmapUpdateNeeded(boolean value)
     {
-        Game.minecraft().entityRenderer.lightmapUpdateNeeded = value;
+        ClientGame.instance.minecraft().entityRenderer.lightmapUpdateNeeded = value;
     }
 
     @SideOnly(Side.CLIENT)
     public float getFOVModifier(float partialTicks, boolean b)
     {
-        return Game.minecraft().entityRenderer.getFOVModifier(partialTicks, b);
+        return ClientGame.instance.minecraft().entityRenderer.getFOVModifier(partialTicks, b);
     }
 
     @SideOnly(Side.CLIENT)
     public void setupViewBobbing(float partialTicks)
     {
-        Game.minecraft().entityRenderer.applyBobbing(partialTicks);        
+        ClientGame.instance.minecraft().entityRenderer.applyBobbing(partialTicks);        
     }
 
     public void setMoveHelper(EntityLiving living, EntityMoveHelper moveHelper)
@@ -278,11 +279,11 @@ public class Access
         {
             Method method = null;
             
-            method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "writeTag" : "func_150663_a", NBTBase.class, DataOutput.class);
+            method = CompressedStreamTools.class.getDeclaredMethod(Game.instance.isDevEnvironment() ? "writeTag" : "func_150663_a", NBTBase.class, DataOutput.class);
             method.setAccessible(true);
             COMPRESSED_STREAM_TOOLS_WRITE_TAG = MethodHandles.publicLookup().unreflect(method);
 
-            method = CompressedStreamTools.class.getDeclaredMethod(Game.isDevEnvironment() ? "read" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
+            method = CompressedStreamTools.class.getDeclaredMethod(Game.instance.isDevEnvironment() ? "read" : "func_152455_a", DataInput.class, int.class, NBTSizeTracker.class);
             method.setAccessible(true);
             COMPRESSED_STREAM_TOOLS_READ_TAG = MethodHandles.publicLookup().unreflect(method);
         }
@@ -334,7 +335,7 @@ public class Access
         {
             try
             {
-                Method method = Render.class.getDeclaredMethod(Game.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
+                Method method = Render.class.getDeclaredMethod(Game.instance.isDevEnvironment() ? "getEntityTexture" : "func_110775_a", Entity.class);
                 method.setAccessible(true);
                 GET_ENTITY_TEXTURE = MethodHandles.publicLookup().unreflect(method);
             }

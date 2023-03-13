@@ -1,5 +1,6 @@
 package com.asx.mdx.client.render.gui.windows.themes;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.internal.MDX;
@@ -116,7 +117,7 @@ public class Theme implements ITheme
 
             for (GuiButton button : window.getButtonList())
             {
-                button.drawButton(Game.minecraft(), x, y, Game.partialTicks());
+                button.drawButton(ClientGame.instance.minecraft(), x, y, ClientGame.instance.partialTicks());
                 GL11.glColor3f(1.0F, 1.0F, 1.0F);
             }
 
