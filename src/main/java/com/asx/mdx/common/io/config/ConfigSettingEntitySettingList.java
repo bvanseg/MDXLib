@@ -197,7 +197,7 @@ public class ConfigSettingEntitySettingList<T> extends ConfigSetting
             }
             else
             {
-                if (Game.isDevEnvironment())
+                if (Game.instance.isDevEnvironment())
                 {
                     MDX.log().info("Entity type was null or had a null registry name. This is probably a bug. Entity type: " + clz);
                 }

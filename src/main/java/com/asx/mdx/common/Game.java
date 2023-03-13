@@ -35,92 +35,42 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class Game
 {
-    /** A wrapper method to get the Minecraft instance. **/
-    @SideOnly(Side.CLIENT)
-    public static Minecraft minecraft()
-    {
-        return Minecraft.getMinecraft();
-    }
+    public static final Game instance = new Game();
 
-    public static MinecraftServer server()
-    {
-        return FMLCommonHandler.instance().getMinecraftServerInstance();
-    }
-
-    /** A wrapper method for the RenderManager instance. **/
-    @SideOnly(Side.CLIENT)
-    public static RenderManager renderManager()
-    {
-        return minecraft().getRenderManager();
-    }
-
-    /** A wrapper method for the FontRenderer instance. **/
-    @SideOnly(Side.CLIENT)
-    public static FontRenderer fontRenderer()
-    {
-        return Game.minecraft().fontRenderer;
-    }
-
-    /** Easy access to the partialTickTime variable. **/
-    @SideOnly(Side.CLIENT)
-    public static float partialTicks()
-    {
-        return Animation.getPartialTickTime();
-    }
-
-    /** Access to the Session instance. Please do not abuse this. **/
-    @SideOnly(Side.CLIENT)
-    public static Session session()
-    {
-        return MDX.access().getSession();
-    }
-
-    /** Easy way to set the right click delay timer variable. **/
-    @SideOnly(Side.CLIENT)
-    public static void setRightClickDelayTimer(int i)
-    {
-        MDX.access().setRightClickDelayTimer(i);
-    }
-
-    /** Easy way to set the current equipped progress variable. **/
-    @SideOnly(Side.CLIENT)
-    public static void setEquippedProgress(float f)
-    {
-        MDX.access().setEquippedProgress(f);
-    }
+    protected Game() {}
 
     /** Easy way to gain access to the lightmap texture. **/
-    public static DynamicTexture getLightmapTexture()
+    public DynamicTexture getLightmapTexture()
     {
         return MDX.access().getLightmapTexture();
     }
 
     /** Easy way to gain access to the lightmap colors array. **/
-    public static int[] getLightmapColors()
+    public int[] getLightmapColors()
     {
         return MDX.access().getLightmapColors();
     }
 
     /** Allows for the developer to specify if a lightmap update is required. **/
-    public static void setLightmapUpdateNeeded(boolean b)
+    public void setLightmapUpdateNeeded(boolean b)
     {
         MDX.access().setLightmapUpdateNeeded(b);
     }
 
     /** Get the boss color modifier. **/
-    public static float getBossColorModifier()
+    public float getBossColorModifier()
     {
         return MDX.access().getBossColorModifier();
     }
 
     /** Get the torch flicker X variable. **/
-    public static float getTorchFlickerX()
+    public float getTorchFlickerX()
     {
         return MDX.access().getTorchFlickerX();
     }
 
     /** Get the boss color modifier previous variable. **/
-    public static float getBossColorModifierPrev()
+    public float getBossColorModifierPrev()
     {
         return MDX.access().getBossColorModifierPrev();
     }
@@ -131,13 +81,13 @@ public class Game
      * 
      * @return Returns true if in a dev environment. Returns false if other.
      */
-    public static boolean isDevEnvironment()
+    public boolean isDevEnvironment()
     {
         return (Boolean) net.minecraft.launchwrapper.Launch.blackboard.get("fml.deobfuscatedEnvironment");
     }
 
     /** Register class instances through this method instead of the individual forge event busses. **/
-    public static void registerEventHandler(Object handler)
+    public void registerEventHandler(Object handler)
     {
         //FMLCommonHandler.instance().bus().register(handler);
         MinecraftForge.EVENT_BUS.register(handler);
@@ -149,7 +99,7 @@ public class Game
      * @param obj - Item or Block instance to scan for recipes.
      * @return All found instances of IRecipes registered to the specified Item or Block.
      */
-    public static List<IRecipe> getRecipes(Object obj)
+    public List<IRecipe> getRecipes(Object obj)
     {
         ItemStack stack = Inventories.newStack(obj);
         List<IRecipe> foundRecipes = new ArrayList<IRecipe>();
@@ -176,7 +126,7 @@ public class Game
      * @param obj - Item or Block instance to scan for recipes.
      * @return First found instance of an IRecipe registered to the specified Item or Block.
      */
-    public static IRecipe getRecipe(Object obj)
+    public IRecipe getRecipe(Object obj)
     {
         List<IRecipe> recipes = getRecipes(obj);
         
@@ -198,7 +148,7 @@ public class Game
      * @return The KeyBinding Instance created from the provided parameters.
      */
     @SideOnly(Side.CLIENT)
-    public static KeyBinding registerKeybinding(String keyName, int key, String keyGroup)
+    public KeyBinding registerKeybinding(String keyName, int key, String keyGroup)
     {
         KeyBinding keybind = new KeyBinding(String.format("key.%s", keyName), key, keyGroup);
         ClientRegistry.registerKeyBinding(keybind);
@@ -211,7 +161,7 @@ public class Game
      * @param id - ID of the mod retrieving an instance from.
      * @return An instance of ModContainer that is assigned to this ID.
      */
-    public static ModContainer getModContainer(String id)
+    public ModContainer getModContainer(String id)
     {
         for (ModContainer container : Loader.instance().getModList())
         {
@@ -225,7 +175,7 @@ public class Game
     }
 
     /** Retrieve the mod id of a mod class from the @Mod annotation. **/
-    public static final String getAnnotatedModId(Class<?> clazz)
+    public final String getAnnotatedModId(Class<?> clazz)
     {
         if (clazz.isAnnotationPresent(Mod.class))
         {
@@ -266,7 +216,7 @@ public class Game
 //        return block;
 //    }
 
-    public static Item getItem(Block block)
+    public Item getItem(Block block)
     {
         return Item.getItemFromBlock(block);
     }

@@ -1,5 +1,6 @@
 package com.asx.mdx.client.entity.fx;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.Draw;
 import com.asx.mdx.client.render.OpenGL;
 import com.asx.mdx.common.Game;
@@ -125,7 +126,7 @@ public class EntityBloodFX extends Particle
             v1 = this.particleTexture.getMaxV();
         }
         
-        Entity rve = Game.minecraft().getRenderViewEntity();
+        Entity rve = ClientGame.instance.minecraft().getRenderViewEntity();
         
         double ipx = rve.lastTickPosX + (rve.posX - rve.lastTickPosX) * (double)partialTicks;
         double ipy = rve.lastTickPosY + (rve.posY - rve.lastTickPosY) * (double)partialTicks;
