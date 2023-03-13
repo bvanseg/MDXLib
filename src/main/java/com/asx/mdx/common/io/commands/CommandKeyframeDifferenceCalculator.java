@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.internal.MDX;
@@ -422,7 +423,7 @@ public class CommandKeyframeDifferenceCalculator extends CommandBase
                                                         OpenGL.scale(s, s, s);
 
                                                         String info = "This tool exports the differential offsets calculated between two models, to Java source code, for use with MDX's integrated keyframe animator. Default frame delays will be set. Additional tweaking will be needed post-export. Export format will be an incomplete Java source code snippet to be used in the animate() function of the Model class.\n\nFor additional help using this tool, please reference a general keyframe animation tutorial, and MDX's source code, which is available on GitHub as an Open Source project. Link: https://github.com/Ri5ux/MDXLib";
-                                                        Game.minecraft().fontRenderer.drawSplitString(info, (this.getX() + 3) * 2, (this.getY() + 5) * 2, (this.getWidth() - 3) * 2, 0xAA000000);
+                                                        ClientGame.instance.minecraft().fontRenderer.drawSplitString(info, (this.getX() + 3) * 2, (this.getY() + 5) * 2, (this.getWidth() - 3) * 2, 0xAA000000);
                                                         Draw.drawString(fileModelO == null ? "No File Path Provided" : fileModelO.getAbsolutePath(), (buttonExportBrowse.x() + buttonExportBrowse.width() + 5) * 2, (buttonExportBrowse.y() + (buttonExportBrowse.height() / 2 - 7) + 5) * 2, 0x88000000, false);
                                                     }
                                                     OpenGL.popMatrix();
@@ -452,7 +453,7 @@ public class CommandKeyframeDifferenceCalculator extends CommandBase
                                             @Override
                                             public void drawWindowContents()
                                             {
-                                                Game.minecraft().fontRenderer.drawSplitString(error, (this.getX() + 5) * 1, (this.getY() + 5) * 1, this.getWidth() * 1, 0xFFFFFFFF);
+                                                ClientGame.instance.minecraft().fontRenderer.drawSplitString(error, (this.getX() + 5) * 1, (this.getY() + 5) * 1, this.getWidth() * 1, 0xFFFFFFFF);
                                             }
                                         };
 

@@ -1,5 +1,6 @@
 package com.asx.mdx.client.world;
 
+import com.asx.mdx.client.ClientGame;
 import org.lwjgl.opengl.GL11;
 
 import com.asx.mdx.client.render.OpenGL;
@@ -31,9 +32,9 @@ public abstract class CloudProvider extends IRenderHandler implements ICloudProv
     @SubscribeEvent
     public static void updateClouds(ClientTickEvent event)
     {
-        World world = Game.minecraft().world;
+        World world = ClientGame.instance.minecraft().world;
 
-        if (world != null && !Game.minecraft().isGamePaused())
+        if (world != null && !ClientGame.instance.minecraft().isGamePaused())
         {
             if (world.provider instanceof IClimateProvider)
             {
@@ -80,11 +81,11 @@ public abstract class CloudProvider extends IRenderHandler implements ICloudProv
 
             if (clouds.areCloudsApplicableTo(world.provider))
             {
-                if (Game.minecraft().gameSettings.shouldRenderClouds() >= 1)
+                if (ClientGame.instance.minecraft().gameSettings.shouldRenderClouds() >= 1)
                 {
                     OpenGL.pushMatrix();
                     {
-                        if (Game.minecraft().gameSettings.fancyGraphics)
+                        if (ClientGame.instance.minecraft().gameSettings.fancyGraphics)
                         {
                             OpenGL.enable(GL11.GL_FOG);
                         }
@@ -102,14 +103,14 @@ public abstract class CloudProvider extends IRenderHandler implements ICloudProv
     public void renderClouds(float renderPartialTicks)
     {
         GlStateManager.disableCull();
-        Entity entity = Game.minecraft().getRenderViewEntity();
+        Entity entity = ClientGame.instance.minecraft().getRenderViewEntity();
         float yOffset = (float) (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) renderPartialTicks);
         byte cloudSections = 4;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         double viewX = (entity.prevPosX + (entity.posX - entity.prevPosX) * (double) renderPartialTicks + getCloudMovementX(entity.world, cloudTicksPrev, cloudTicks) * 0.029999999329447746D) / 12.0D;
         double viewZ = (entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) renderPartialTicks + getCloudMovementZ(entity.world, cloudTicksPrev, cloudTicks) * 0.029999999329447746D) / 12.0D;
-        float cloudHeight = Game.minecraft().world.provider.getCloudHeight() - yOffset + 0.33F;
+        float cloudHeight = ClientGame.instance.minecraft().world.provider.getCloudHeight() - yOffset + 0.33F;
         viewX = viewX - (double) (MathHelper.floor(viewX / 2048.0D) * 2048);
         viewZ = viewZ - (double) (MathHelper.floor(viewZ / 2048.0D) * 2048);
         getCloudTexture().bind();

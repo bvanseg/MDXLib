@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.Game;
 import com.asx.mdx.common.mods.IInitEvent;
 import com.asx.mdx.common.mods.IPreInitEvent;
@@ -56,7 +57,7 @@ public class JsonResourceGenerator implements IPreInitEvent, IInitEvent
     public JsonResourceGenerator(String modid)
     {
         this.modid = modid;
-        this.baseDirectory = new File(Game.minecraft().gameDir, "jsongen");
+        this.baseDirectory = new File(ClientGame.instance.instance.minecraft().gameDir, "jsongen");
         this.defaultsDirectory = new File(baseDirectory, "default");
         this.domainDir = new File(baseDirectory, modid);
     }

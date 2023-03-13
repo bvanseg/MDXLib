@@ -2,6 +2,7 @@ package com.asx.mdx.client.render.model.animations;
 
 import java.util.HashMap;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.math.Transform;
 import com.asx.mdx.client.render.model.Model;
 import com.asx.mdx.common.Game;
@@ -240,9 +241,9 @@ public class Animator
             }
             else
             {
-                float partialTicks = Game.partialTicks();
+                float partialTicks = ClientGame.instance.partialTicks();
                 
-                if (Game.minecraft().isGamePaused() || this.entity.isAnimationPaused())
+                if (ClientGame.instance.minecraft().isGamePaused() || this.entity.isAnimationPaused())
                 {
                     partialTicks = 0;
                 }
