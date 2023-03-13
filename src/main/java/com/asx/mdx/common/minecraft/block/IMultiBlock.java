@@ -2,6 +2,7 @@ package com.asx.mdx.common.minecraft.block;
 
 import java.util.ArrayList;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.Game;
 
 import net.minecraft.block.Block;
@@ -207,11 +208,11 @@ public interface IMultiBlock
                 {
                     if (validBlastDoor == false)
                     {
-                        Game.minecraft().player.sendMessage(new TextComponentString("Can't place a " + this.getMultiblockName() + " inside of another " + this.getMultiblockName() + "."));
+                        ClientGame.instance.minecraft().player.sendMessage(new TextComponentString("Can't place a " + this.getMultiblockName() + " inside of another " + this.getMultiblockName() + "."));
                     }
                     else
                     {
-                        Game.minecraft().player.sendMessage(new TextComponentString("Unable to place a " + this.getMultiblockName() + " here. Blocks are in the way."));
+                        ClientGame.instance.minecraft().player.sendMessage(new TextComponentString("Unable to place a " + this.getMultiblockName() + " here. Blocks are in the way."));
                     }
                 }
 
@@ -224,7 +225,7 @@ public interface IMultiBlock
 
             if (tile == null)
             {
-                Game.minecraft().player.sendMessage(new TextComponentString("Internal Error: IMultiBlock.setChildTile()/multiblockTile = null"));
+                ClientGame.instance.minecraft().player.sendMessage(new TextComponentString("Internal Error: IMultiBlock.setChildTile()/multiblockTile = null"));
                 return false;
             }
 

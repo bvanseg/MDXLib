@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.vecmath.Vector2d;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.common.Game;
 
 public class GuiDropdownMenu extends GuiCustomButton
@@ -18,7 +19,7 @@ public class GuiDropdownMenu extends GuiCustomButton
     @Override
     public void mousePressed(Vector2d mousePosition)
     {
-        super.mousePressed(Game.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
+        super.mousePressed(ClientGame.instance.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
         this.drawOptions();
     }
 

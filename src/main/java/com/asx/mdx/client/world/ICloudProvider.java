@@ -1,5 +1,6 @@
 package com.asx.mdx.client.world;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.model.texture.Texture;
 import com.asx.mdx.common.Game;
 import com.asx.mdx.common.math.MDXMath;
@@ -28,7 +29,7 @@ public interface ICloudProvider
     
     public default double getCloudMovementX(World world, float cloudTicksPrev, float cloudTicks)
     {
-        return MDXMath.interpolateRotation(cloudTicksPrev, cloudTicks, Game.partialTicks());
+        return MDXMath.interpolateRotation(cloudTicksPrev, cloudTicks, ClientGame.instance.partialTicks());
     }
     
     public default double getCloudMovementZ(World world, float cloudTicksPrev, float cloudTicks)

@@ -42,7 +42,7 @@ public class MDXModule
         MDX.settings().pre(event);
         WebModule.startWebServer();
         SystemInfo.INSTANCE.runtimeTasks();
-        Game.registerEventHandler(StructureGenerationHandler.INSTANCE);
+        Game.instance.registerEventHandler(StructureGenerationHandler.INSTANCE);
     }
 
     @SideOnly(Side.CLIENT)
@@ -50,9 +50,9 @@ public class MDXModule
     public void preClient(FMLPreInitializationEvent event)
     {
         ModelLoaderRegistry.registerLoader(DummyModelLoader.INSTANCE);
-        Game.registerEventHandler(NotifierModule.instance);
-        Game.registerEventHandler(GUIElementTracker.INSTANCE);
-        Game.registerEventHandler(DebugToolsRenderer.instance);
+        Game.instance.registerEventHandler(NotifierModule.instance);
+        Game.instance.registerEventHandler(GUIElementTracker.INSTANCE);
+        Game.instance.registerEventHandler(DebugToolsRenderer.instance);
         MDX.renders().pre(event);
     }
 

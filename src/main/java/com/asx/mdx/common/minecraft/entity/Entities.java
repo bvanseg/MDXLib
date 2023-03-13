@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.internal.MDX;
 import com.asx.mdx.common.Game;
 import com.asx.mdx.common.math.MDXMath;
@@ -239,16 +240,16 @@ public class Entities
     @SideOnly(Side.CLIENT)
     public static RayTraceResult rayTraceSpecial(double reach, float partialTicks)
     {
-        if (Game.minecraft().getRenderViewEntity() != null)
+        if (ClientGame.instance.minecraft().getRenderViewEntity() != null)
         {
-            if (Game.minecraft().world != null)
+            if (ClientGame.instance.minecraft().world != null)
             {
                 pointedEntity = null;
                 double distance = reach;
-                Vec3d renderPosition = Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks);
-                Vec3d lookVec = Game.minecraft().getRenderViewEntity().getLook(partialTicks);
+                Vec3d renderPosition = ClientGame.instance.minecraft().getRenderViewEntity().getPositionEyes(partialTicks);
+                Vec3d lookVec = ClientGame.instance.minecraft().getRenderViewEntity().getLook(partialTicks);
                 Vec3d lookPos = renderPosition.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
-                RayTraceResult blockTrace = rayTraceBlocks(Game.minecraft().world, Game.minecraft().getRenderViewEntity().getPositionEyes(partialTicks), lookPos, false, true, true);
+                RayTraceResult blockTrace = rayTraceBlocks(ClientGame.instance.minecraft().world, ClientGame.instance.minecraft().getRenderViewEntity().getPositionEyes(partialTicks), lookPos, false, true, true);
 
                 if (blockTrace != null)
                 {
@@ -257,7 +258,7 @@ public class Entities
 
                 pointedEntity = null;
                 Vec3d hitVec = null;
-                List list = Game.minecraft().world.getEntitiesWithinAABBExcludingEntity(Game.minecraft().getRenderViewEntity(), Game.minecraft().getRenderViewEntity().getEntityBoundingBox().expand(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach).expand((double) 1F, (double) 1F, (double) 1F));
+                List list = ClientGame.instance.minecraft().world.getEntitiesWithinAABBExcludingEntity(ClientGame.instance.minecraft().getRenderViewEntity(), ClientGame.instance.minecraft().getRenderViewEntity().getEntityBoundingBox().expand(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach).expand((double) 1F, (double) 1F, (double) 1F));
                 double entityDist = distance;
 
                 for (int idx = 0; idx < list.size(); ++idx)
@@ -284,7 +285,7 @@ public class Entities
 
                             if (distToHit < entityDist || entityDist == 0.0D)
                             {
-                                if (entity == Game.minecraft().getRenderViewEntity().getRidingEntity() && !entity.canRiderInteract())
+                                if (entity == ClientGame.instance.minecraft().getRenderViewEntity().getRidingEntity() && !entity.canRiderInteract())
                                 {
                                     if (entityDist == 0.0D)
                                     {

@@ -2,6 +2,7 @@ package com.asx.mdx.client.render.gui;
 
 import javax.vecmath.Vector2d;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.Draw;
 import com.asx.mdx.common.Game;
 
@@ -106,7 +107,7 @@ public class GuiCustomSlider extends GuiCustomButton
     @Override
     public void mousePressed(Vector2d mousePosition)
     {
-        this.mousePressed(Game.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
+        this.mousePressed(ClientGame.instance.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
     }
 
     @Override
@@ -118,6 +119,6 @@ public class GuiCustomSlider extends GuiCustomButton
     @Override
     public void mouseDragged(Vector2d mousePosition)
     {
-        this.mouseDragged(Game.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
+        this.mouseDragged(ClientGame.instance.minecraft(), (int) mousePosition.x, (int) mousePosition.y);
     }
 }

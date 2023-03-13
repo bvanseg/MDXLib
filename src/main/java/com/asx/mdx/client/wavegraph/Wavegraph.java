@@ -3,6 +3,7 @@ package com.asx.mdx.client.wavegraph;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.asx.mdx.client.ClientGame;
 import com.asx.mdx.client.render.Draw;
 import com.asx.mdx.client.render.OpenGL;
 import com.asx.mdx.client.wavegraph.DataEntry.DisplayData;
@@ -53,7 +54,7 @@ public class Wavegraph
     {
         this.newdata = false;
 
-        if (world.getWorldTime() % Math.floor((60D / this.rate) * 20) == 0 && !Game.minecraft().isGamePaused())
+        if (world.getWorldTime() % Math.floor((60D / this.rate) * 20) == 0 && !ClientGame.instance.minecraft().isGamePaused())
         {
             this.newdata = true;
             long start = System.currentTimeMillis();
