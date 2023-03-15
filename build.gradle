@@ -39,9 +39,9 @@ def version_forge="14.23.5.2847"
 def version_mappings="stable_39"
 def curseforge_id="248278"
 def curseforge_release_type="release"
-def curseforge_api_key="${System.env.CURSEFORGE_API_KEY}"
-def mavenUsername="${System.env.MAVEN_USER}"
-def mavenPassword="${System.env.MAVEN_PASS}"
+def curseforge_api_key=${System.env.CURSEFORGE_API_KEY}
+def mavenUsername=${System.env.MAVEN_USER}
+def mavenPassword=${System.env.MAVEN_PASS}
 
 version = "${System.env.PROJECT_VERSION}"
 group = "com.asx"
@@ -71,19 +71,19 @@ def sharedManifest = {
 }
 
 jar {
-	archiveName = "${archivesBaseName}-${version}.jar"
+	archiveFileName = "${archivesBaseName}-${version}.jar"
     manifest sharedManifest
 }
 
 task srcJar(type: Jar) {
     from sourceSets.main.output
-	archiveName = "${archivesBaseName}-${version}-sources.jar"
+	archiveFileName = "${archivesBaseName}-${version}-sources.jar"
     classifier = 'sources'
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-	archiveName = "${archivesBaseName}-${version}-deobf.jar"
+	archiveFileName = "${archivesBaseName}-${version}-deobf.jar"
     classifier = 'deobf'
     manifest sharedManifest
 }
