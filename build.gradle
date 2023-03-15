@@ -53,6 +53,10 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+tasks.withType(Jar) {
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
 minecraft {
     version = "${version_minecraft}-${version_forge}"
     runDir = "run"
@@ -111,6 +115,7 @@ curseforge {
 processResources {
     inputs.property "version", version
     inputs.property "mcversion", minecraft.version
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
