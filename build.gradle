@@ -39,9 +39,9 @@ def version_forge="14.23.5.2847"
 def version_mappings="stable_39"
 def curseforge_id="248278"
 def curseforge_release_type="release"
-def curseforge_api_key=project.ext.properties.curseforge_api_key == null ? "00000-00000-00000-00000-00000" : project.ext.properties.curseforge_api_key
-def mavenUsername=project.ext.properties.mavenUsername == null ? "user" : project.ext.properties.mavenUsername
-def mavenPassword=project.ext.properties.mavenPassword == null ? "none" : project.ext.properties.mavenPassword
+def curseforge_api_key=${System.env.CURSEFORGE_API_KEY}
+def mavenUsername=${System.env.MAVEN_USER}
+def mavenPassword=${System.env.MAVEN_PASS}
 
 version = "${System.env.PROJECT_VERSION}"
 group = "com.asx"
