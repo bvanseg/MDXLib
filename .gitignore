@@ -16,10 +16,3 @@
 !/gradlew
 !/gradlew.bat
 .DS_Store
-
-# Do not include gradle.properties, in contains sensitive information.
-# Create an empty file called gradle.properties and enter the following:
-#
-# curseForgeApiKey=00000-00000-00000-00000-00000
-#
-gradle.properties
