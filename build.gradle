@@ -88,6 +88,10 @@ task deobfJar(type: Jar) {
     manifest sharedManifest
 }
 
+sourceSets {
+    main.output.resourcesDir = main.output.classesDir
+}
+
 artifacts {
     archives srcJar, deobfJar
 }
