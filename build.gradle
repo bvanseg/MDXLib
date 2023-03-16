@@ -1,10 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        mavenCentral()
+        maven { url = "https://maven.minecraftforge.net/" }
         maven {
             url = "https://oss.sonatype.org/content/groups/public"
         }
@@ -13,7 +10,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath ('com.anatawa12.forge:ForgeGradle:2.3-1.0.+') {
+            changing = true
+        }
         classpath 'org.ajoberstar:gradle-git:0.10.1'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.1.0"
     }
@@ -54,6 +53,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
 minecraft {
     version = "${version_minecraft}-${version_forge}"
     runDir = "run"
@@ -72,19 +75,19 @@ def sharedManifest = {
 }
 
 jar {
-    archiveName = "${archivesBaseName}-${version}.jar"
+    archiveFileName = "${archivesBaseName}-${version}.jar"
     manifest sharedManifest
 }
 
 task srcJar(type: Jar) {
     from sourceSets.main.output
-    archiveName = "${archivesBaseName}-${version}-sources.jar"
+    archiveFileName = "${archivesBaseName}-${version}-sources.jar"
     classifier = 'sources'
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    archiveName = "${archivesBaseName}-${version}-deobf.jar"
+    archiveFileName = "${archivesBaseName}-${version}-deobf.jar"
     classifier = 'deobf'
     manifest sharedManifest
 }
@@ -112,6 +115,7 @@ curseforge {
 processResources {
     inputs.property "version", version
     inputs.property "mcversion", minecraft.version
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -122,6 +126,31 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//
+//            pom {
+//                properties = [
+//                        forgeVersion: version_minecraft,
+//                        mcVersion: minecraft.version
+//                ]
+//            }
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            credentials {
+//                username mavenUsername
+//                password mavenPassword
+//            }
+//            url = "ftp://maven.aliensvspredator.org"
+//        }
+//    }
+//}
 
 task("publishToMaven", dependsOn:"build") {
     description = "Uploads the artifacts generated during the build process to the aliensvspredator maven repository"
