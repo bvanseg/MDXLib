@@ -70,7 +70,7 @@ println "Minecraft Forge ${version_forge} with mappings " + minecraft.mappings
 
 def sharedManifest = {
     attributes 'FMLAT': 'mdxlib_at.cfg'
-    attributes 'FMLCorePlugin' : 'com.asx.mdx.FMLModule'
+    attributes 'FMLCorePlugin' : 'com.asx.mdx.internal.FMLModule'
     attributes 'FMLCorePluginContainsFMLMod' : 'true'
 }
 
